@@ -13,6 +13,9 @@ Kami dari kelompok C-03 yang beranggotakan:
 | Adinda Maharani Wardhana | 2306165856 | 
 
 ## 📜 Deskripsi Aplikasi
+CarXpert lahir dari kebutuhan masyarakat Jakarta akan akses informasi yang lebih baik dalam mencari mobil bekas. Di tengah meningkatnya mobilitas dan tuntutan ekonomi, banyak orang yang beralih ke opsi mobil bekas sebagai solusi kendaraan pribadi yang lebih terjangkau. Namun, dengan banyaknya pilihan yang tersedia, mencari mobil bekas yang sesuai dengan kebutuhan dan anggaran bisa menjadi tantangan tersendiri.
+
+Website ini bertujuan untuk menjadi sumber informasi terpercaya bagi pengguna yang ingin membeli mobil bekas. Dengan menyediakan data yang lengkap dan transparan tentang berbagai produk mobil bekas, CarXpert membantu pengguna membuat keputusan yang lebih baik. Melalui CarXpert, pengguna tidak hanya dapat menemukan mobil bekas dengan mudah, tetapi juga mendapatkan wawasan tentang tren pasar otomotif terkini. Dengan demikian, website ini tidak hanya bermanfaat bagi mereka yang mencari mobil, tetapi juga membantu penjual dalam menjangkau calon pembeli yang lebih luas. CarXpert berkomitmen untuk memberikan pengalaman pencarian mobil bekas yang lebih baik bagi masyarakat Jakarta.
 
 ## 📚 Daftar Modul
 
@@ -24,4 +27,4 @@ Kami dari kelompok C-03 yang beranggotakan:
 - Admin bertanggung jawab dalam mengelola dan memastikan kelancaran operasional aplikasi. Mereka menangani laporan kesalahan atau masalah yang diajukan oleh pengguna melalui formulir pelaporan masalah di website, serta memastikan bahwa informasi dan berita otomotif yang ditampilkan selalu terbaru.
 
 ##  *Dataset* yang Digunakan
-*Dataset* yang kami gunakan bersumber dari ..
+*Dataset* yang kami gunakan bersumber dari https://www.kaggle.com/datasets/adhiwirahardi/used-car-data-in-dki-jakarta  
