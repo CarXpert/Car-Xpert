@@ -20,11 +20,14 @@ Website ini bertujuan untuk menjadi sumber informasi terpercaya bagi pengguna ya
 ## 📚 Daftar Modul
 
 ## 🕵️ *Role* atau Peran Pengguna 
-### 1. 👨‍💻 User (Pengguna Pencari Mobil)
-- Pengguna ini mencari mobil bekas di Jakarta sesuai dengan kebutuhan mereka. Pengguna dapat menggunakan fitur pencarian untuk menemukan mobil berdasarkan kategori seperti harga, jarak tempuh, dan tahun pembuatan. Mereka dapat melihat detail mobil, menambahkan mobil ke daftar favorit, serta menggunakan fitur peta untuk menemukan lokasi dealer atau penjual yang menyediakan mobil tersebut. Selain itu, pengguna juga dapat tetap mendapatkan berita terbaru mengenai dunia otomotif.
+### 1. 👤 Guest (Pengguna yang tidak login)
+- Guest adalah pengunjung website yang belum mendaftar atau login. Mereka dapat menelusuri daftar mobil bekas yang tersedia, menggunakan fitur pencarian, serta menyaring mobil berdasarkan kategori seperti harga, jarak tempuh, dan tahun pembuatan. Selain itu, mereka bisa melihat detail mobil, membaca berita otomotif, dan menggunakan fitur peta untuk menemukan lokasi dealer. Namun, Guest tidak dapat menambahkan mobil ke daftar favorit atau mengajukan laporan masalah melalui form. Untuk mengakses fitur tersebut, mereka perlu mendaftar atau login ke dalam akun pengguna.
 
-### 2. 👩‍💻 Admin
+### 2. 👨‍💻 User (Pengguna yang login)
+- User ini mencari mobil bekas di Jakarta sesuai dengan kebutuhan mereka. User dapat menggunakan fitur pencarian untuk menemukan mobil berdasarkan kategori seperti harga, jarak tempuh, dan tahun pembuatan. Mereka dapat melihat detail mobil, menambahkan mobil ke daftar favorit, serta menggunakan fitur peta untuk menemukan lokasi dealer atau penjual yang menyediakan mobil tersebut. Selain itu, pengguna juga dapat tetap mendapatkan berita terbaru mengenai dunia otomotif.
+
+### 3. 👩‍💻 Admin
 - Admin bertanggung jawab dalam mengelola dan memastikan kelancaran operasional aplikasi. Mereka menangani laporan kesalahan atau masalah yang diajukan oleh pengguna melalui formulir pelaporan masalah di website, serta memastikan bahwa informasi dan berita otomotif yang ditampilkan selalu terbaru.
-
+  
 ##  *Dataset* yang Digunakan
 *Dataset* yang kami gunakan bersumber dari https://www.kaggle.com/datasets/adhiwirahardi/used-car-data-in-dki-jakarta  
