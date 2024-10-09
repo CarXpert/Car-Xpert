@@ -18,6 +18,18 @@ CarXpert lahir dari kebutuhan masyarakat Jakarta akan akses informasi yang lebih
 Website ini bertujuan untuk menjadi sumber informasi terpercaya bagi pengguna yang ingin membeli mobil bekas. Dengan menyediakan data yang lengkap dan transparan tentang berbagai produk mobil bekas, CarXpert membantu pengguna membuat keputusan yang lebih baik. Melalui CarXpert, pengguna tidak hanya dapat menemukan mobil bekas dengan mudah, tetapi juga mendapatkan wawasan tentang tren pasar otomotif terkini. Dengan demikian, website ini tidak hanya bermanfaat bagi mereka yang mencari mobil, tetapi juga membantu penjual dalam menjangkau calon pembeli yang lebih luas. CarXpert berkomitmen untuk memberikan pengalaman pencarian mobil bekas yang lebih baik bagi masyarakat Jakarta.
 
 ## 📚 Daftar Modul
+### 1) Kategori → (harga rendah tinggi, mileage rendah tinggi, tahun rendah tinggi)
+Modul ini akan mengelompokkan mobil berdasarkan beberapa kriteria seperti harga (rendah ke tinggi dan tinggi ke rendah), jarak tempuh/mileage (rendah ke tinggi dan tinggi ke rendah), serta tahun produksi (lama ke baru dan baru ke lama). Hal ini membantu pengguna untuk menyaring hasil pencarian sesuai dengan preferensi mereka, misalnya mencari mobil dengan harga terjangkau atau mileage rendah.
+### 2) Tombol Detail Mobil
+Fitur ini memberikan informasi mendetail tentang mobil tertentu, seperti spesifikasi, kondisi, harga, dan fitur tambahan lainnya. Ketika pengguna mengklik tombol ini, mereka akan diarahkan ke halaman detail yang memuat semua informasi penting mengenai mobil yang mereka pilih.
+### 3) Tombol peta → redirecting ke google map
+Fitur ini memberikan kemudahan bagi pengguna yang ingin mengetahui lokasi toko yang menjual mobil bekas tersebut. Ketika pengguna mengklik tombol peta, mereka akan diarahkan ke Google Maps dengan lokasi toko tersebut, sehingga mempermudah pengguna untuk menemukan dan mengunjungi store secara langsung.
+### 4) Wishlist/favorite
+Fitur ini memungkinkan pengguna menyimpan mobil-mobil yang mereka minati ke dalam daftar favorit. Dengan demikian, pengguna dapat dengan mudah mengakses kembali mobil-mobil yang mereka sukai tanpa perlu melakukan pencarian ulang.
+### 5) News seputar otomotif 
+Modul ini menyediakan berita terkini dan artikel informatif seputar dunia otomotif. Pengguna bisa mendapatkan informasi terbaru mengenai tren mobil, tips perawatan, berita industri otomotif, dan hal-hal menarik lainnya yang dapat membantu mereka dalam mengambil keputusan pembelian.
+### 6) Form trouble website ke admin
+Jika pengguna mengalami kendala atau menemukan bug pada website, mereka dapat menggunakan form ini untuk melaporkannya kepada admin. Hal ini akan membantu tim pengembang dalam memelihara website dan memastikan bahwa pengalaman pengguna tetap optimal.
 
 ## 🕵️ *Role* atau Peran Pengguna 
 ### 1. 👤 Guest (Pengguna yang tidak login)
