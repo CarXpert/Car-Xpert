@@ -33,13 +33,13 @@ Jika pengguna mengalami kendala atau menemukan bug pada website, mereka dapat me
 
 ## 🕵️ *Role* atau Peran Pengguna 
 ### 1. 👤 Guest (Pengguna yang tidak login)
-- Guest adalah pengunjung website yang belum mendaftar atau login. Mereka dapat menelusuri daftar mobil bekas yang tersedia, menggunakan fitur pencarian, serta menyaring mobil berdasarkan kategori seperti harga, jarak tempuh, dan tahun pembuatan. Selain itu, mereka bisa melihat detail mobil, membaca berita otomotif, dan menggunakan fitur peta untuk menemukan lokasi dealer. Namun, Guest tidak dapat menambahkan mobil ke daftar favorit atau mengajukan laporan masalah melalui form. Untuk mengakses fitur tersebut, mereka perlu mendaftar atau login ke dalam akun pengguna.
+- Guest adalah pengunjung website yang belum mendaftar atau login. Mereka dapat menelusuri daftar mobil bekas yang tersedia, menggunakan fitur pencarian, serta menyaring mobil berdasarkan kategori seperti harga, jarak tempuh, dan tahun pembuatan. Selain itu, mereka bisa melihat detail mobil, membaca berita otomotif, dan menggunakan fitur peta untuk menemukan lokasi dealer. Namun, Guest tidak dapat menambahkan mobil ke daftar favorit dan membandingkan produk mobil bekas. Untuk mengakses fitur tersebut, mereka perlu mendaftar atau login ke dalam akun pengguna.
 
 ### 2. 👨‍💻 User (Pengguna yang login)
-- User ini mencari mobil bekas di Jakarta sesuai dengan kebutuhan mereka. User dapat menggunakan fitur pencarian untuk menemukan mobil berdasarkan kategori seperti harga, jarak tempuh, dan tahun pembuatan. Mereka dapat melihat detail mobil, menambahkan mobil ke daftar favorit, serta menggunakan fitur peta untuk menemukan lokasi dealer atau penjual yang menyediakan mobil tersebut. Selain itu, pengguna juga dapat tetap mendapatkan berita terbaru mengenai dunia otomotif.
+- User ini mencari mobil bekas di Jakarta sesuai dengan kebutuhan mereka. User dapat menggunakan fitur pencarian untuk menemukan mobil berdasarkan kategori seperti harga, jarak tempuh, dan tahun pembuatan. Mereka dapat melihat detail mobil, menambahkan mobil ke daftar favorit, serta menggunakan fitur membandingkan produk mobil. Selain itu, pengguna juga dapat tetap mendapatkan berita terbaru mengenai dunia otomotif.
 
 ### 3. 👩‍💻 Admin
-- Admin bertanggung jawab dalam mengelola dan memastikan kelancaran operasional aplikasi. Mereka menangani laporan kesalahan atau masalah yang diajukan oleh pengguna melalui formulir pelaporan masalah di website, serta memastikan bahwa informasi dan berita otomotif yang ditampilkan selalu terbaru.
+- Admin bertanggung jawab dalam mengelola dan memastikan kelancaran operasional aplikasi. Mereka dapat menambahkan produk mobil serta memastikan bahwa informasi dan berita otomotif yang ditampilkan selalu terbaru.
   
 ##  *Dataset* yang Digunakan
 *Dataset* yang kami gunakan bersumber dari https://www.kaggle.com/datasets/adhiwirahardi/used-car-data-in-dki-jakarta  
