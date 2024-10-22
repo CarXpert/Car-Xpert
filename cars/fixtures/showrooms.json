@@ -1,0 +1,353 @@
+[
+{
+    "model": "cars.showroom",
+    "pk": "018daf0a-d4f5-444a-b055-ff6f8bf831a9",
+    "fields": {
+        "showroom_name": "ANGEL CARS",
+        "showroom_location": "Ps. Mobil Kemayoran, Jl. Industri Raya No.11, RW.10, Kemayoran, Kec. Kemayoran, Kota Jakarta Pusat",
+        "showroom_regency": "Jakarta Pusat"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "07823d53-22c2-422f-a161-25788d4f40f9",
+    "fields": {
+        "showroom_name": "FAMILY MOTOR 1",
+        "showroom_location": "Jl. I Gusti Ngurah Rai No.9, RT.12/RW.5, Cipinang Muara, Kecamatan Jatinegara, Kota Jakarta Timur",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "0ef4f5bd-2b15-42b2-bb9e-e7db9eee1745",
+    "fields": {
+        "showroom_name": "PT.SURYA DARMA PERKAS",
+        "showroom_location": "Jl. Raya Daan Mogot No.km 1 no 99, RT.6/RW.5, Duri Kepa, Kec. Kb. Jeruk, Kota Jakarta Barat",
+        "showroom_regency": "Jakarta Barat"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "136824af-7fa5-425c-9f68-1cf14bc8de85",
+    "fields": {
+        "showroom_name": "KING AUTO CARS",
+        "showroom_location": "Jl. Pahlawan Revolusi No.6, RT.6/RW.12, Pd. Bambu, Kec. Duren Sawit, Kota Jakarta Timur",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "1525fec6-7f54-4c4e-870f-84f15c4ce735",
+    "fields": {
+        "showroom_name": "ESCO AUTO",
+        "showroom_location": "Jl. BB No. 01 A RT.3/RW.8 Cipinang Muara, Jatinegara, Jakarta Timur",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "17ff7de9-a00b-44a0-9c3e-a0cc1fe75565",
+    "fields": {
+        "showroom_name": "THOR MOTOR",
+        "showroom_location": "Jl. Marsekal Suryadarma No.52, RT.003/RW.008, Neglasari, Kec. Neglasari, Kota Tangerang, Banten 15129",
+        "showroom_regency": "Banten"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "180d3cde-c52d-43ea-8e5d-9d8ef6f9392c",
+    "fields": {
+        "showroom_name": "YANSA AUTO",
+        "showroom_location": "Jl. Boulevard Raya Gading Serpong No.2, Curug Sangereng, Banten,",
+        "showroom_regency": "Banten"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "19160e34-76a0-4c26-81d6-f8b20e2dd369",
+    "fields": {
+        "showroom_name": "FAVOR AUTO",
+        "showroom_location": "bella terra, Klp. Gading Bar., Kec. Klp. Gading, Jkt Utara",
+        "showroom_regency": "Jakarta Utara"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "1b3ad3de-c692-4e99-8478-a0ff02f5289f",
+    "fields": {
+        "showroom_name": "JUARA MOBIL",
+        "showroom_location": "Bursa Mobil Bekas Tems Grand ITC Permata Hijau Lantai 5 Lot B.8, Jl. Arteri Permata Hijau No.11, RT.11/RW.10, Grogol Utara, Kec. Kby. Lama",
+        "showroom_regency": "Jakarta Selatan"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "20ed109a-1c00-4bab-884f-3b7e6f579720",
+    "fields": {
+        "showroom_name": "SUKSES MOBILINDO 2",
+        "showroom_location": "Sebelah PT Panasonic, Jl. Raya Bogor No.Km. 28, Pekayon, Kec. Ps. Rebo",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "24552b29-948f-4b08-90a6-2ea89e1fed7e",
+    "fields": {
+        "showroom_name": "PT.SURYA DARMA PERKAS",
+        "showroom_location": "Jl. Pecenongan No.51, RT.9/RW.3, Kb. Klp., Kecamatan Gambir, Kota Jakarta Pusat",
+        "showroom_regency": "Jakarta Pusat"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "2e9b56dc-3390-4625-b5fe-cf6fc771083a",
+    "fields": {
+        "showroom_name": "DANS MOBILINDO",
+        "showroom_location": "Bursa WTC Mangga Dua, Jl. Mangga Dua Raya No.8, RW.5, Ancol, Kec. Pademangan, Jkt Utara",
+        "showroom_regency": "Jakarta Utara"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "3791965b-6b69-4132-a5ad-240ef0ce0bdf",
+    "fields": {
+        "showroom_name": "Baruna Motor",
+        "showroom_location": "Jl. RS. Fatmawati Raya No.79, RT.4/RW.4, Cilandak Bar., Jakarta, Kota Jakarta Selatan",
+        "showroom_regency": "Jakarta Selatan"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "42a3b0b1-48ec-468d-99f2-71461ae63884",
+    "fields": {
+        "showroom_name": "GARAGE 88",
+        "showroom_location": "Jl.Radio 1 No.19, Kebayoran Baru, Jakarta Selatan",
+        "showroom_regency": "Jakarta Selatan"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "54cd9949-f112-4ff6-921c-a36c16c0deaa",
+    "fields": {
+        "showroom_name": "TOKO MOBILKU",
+        "showroom_location": "Jl. Meruya Selatan No. 43, , Meruya Selatan, Kec. Kembangan, Jakarta Barat",
+        "showroom_regency": "Jakarta Barat"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "5f9079ce-9f46-4c18-9861-aa573535a455",
+    "fields": {
+        "showroom_name": "SILOAM MOBILINDO",
+        "showroom_location": "WTC Mangga Dua, Jl. Gn. Sahari No.8, RT.1/RW.13, Ancol, Kec. Pademangan, Jkt Utara",
+        "showroom_regency": "Jakarta Pusat"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "601d2a17-ede1-43cd-bd19-8f017a83e68f",
+    "fields": {
+        "showroom_name": "RND AUTO",
+        "showroom_location": "Jl. Boulevard Raya Gading Serpong No.08, Curug Sangereng, Kec. Klp. Dua, Kabupaten Tangerang, Banten",
+        "showroom_regency": "Banten"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "66f8f554-4294-4622-8201-d2e596f949be",
+    "fields": {
+        "showroom_name": "ASHENA MOBILINDO",
+        "showroom_location": "Jl. Pahlawan Revolusi No.2, Pd. Bambu, Kec. Duren Sawit, Kota Jakarta Timur",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "68210eaf-c2b2-42c7-90f0-f8f1a42d61f6",
+    "fields": {
+        "showroom_name": "TIMUR JAYA MOBIL",
+        "showroom_location": "Jl. Angkasa No.Kav B6, RW.10, South Gunung Sahari, Kemayoran, Jakarta Pusat",
+        "showroom_regency": "Jakarta Pusat"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "6d2574fd-51b1-42db-850b-2a706bb6fc21",
+    "fields": {
+        "showroom_name": "UNITY MOBILINDO",
+        "showroom_location": "Jl. Imam Bonjol No.88B, Karawaci, Kec. Karawaci, Kota Tangerang, Banten 15113",
+        "showroom_regency": "Banten"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "72ac80fc-c6a8-4af3-b17e-f3276a75ab98",
+    "fields": {
+        "showroom_name": "SAUNG MOBIL",
+        "showroom_location": "Jl. Raya Serpong No.39, Pd. Jagung, Kec. Serpong Utara, Kota Tangerang Selatan, Banten",
+        "showroom_regency": "Banten"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "7bfda121-06ba-4631-a3de-eef5470d2b9a",
+    "fields": {
+        "showroom_name": "SECOND CARS 15",
+        "showroom_location": "JL. Pahlawan Revolusi no 8, Duren SawitJakarta Timur",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "835f5191-5f28-4ccc-9c8e-b3085434534e",
+    "fields": {
+        "showroom_name": "FORESTA MOTOR",
+        "showroom_location": "RT.001/RW.013, Panunggangan Bar., Kec. Cibodas, Kota Tangerang, Banten",
+        "showroom_regency": "Banten"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "86829f39-305a-449b-96fd-fefa0011f839",
+    "fields": {
+        "showroom_name": "FARREL MOTOR",
+        "showroom_location": "Pondok kelapa 2 blok A 8 no.35 jakarta timur Jakarta, RT.2/RW.4, Pd. Klp., Kec. Duren Sawit, Kota Jakarta Timur",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "8c7882f0-64e2-4fbe-8c49-0213e264844f",
+    "fields": {
+        "showroom_name": "ARJUNA MOTOR DEALER MOBIL BEKAS",
+        "showroom_location": "jln raya jatiwaringin no 2 pangkalan jati kalimalang Jakarta timur",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "8e71af42-9f7f-4e3f-aea0-ae646dec6cfd",
+    "fields": {
+        "showroom_name": "BELLI AUTO CAR",
+        "showroom_location": "Pasar Mobil kemayoran Blok T no 8-9, RT.3/RW.6, Kemayoran, Kec. Kemayoran, Kota Jakarta Pusat",
+        "showroom_regency": "Jakarta Pusat"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "949a44dc-571a-4f28-b2aa-f8c07553e055",
+    "fields": {
+        "showroom_name": "NOAH AUTO",
+        "showroom_location": "Bursa Mobil Sumarecon Blok G no 28, Curug Sangereng, Kec. Klp. Dua, Kabupaten Tangerang, Banten",
+        "showroom_regency": "Banten"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "9708b3e7-617a-4a91-a1f7-53f90ab60897",
+    "fields": {
+        "showroom_name": "ZUL GCR AUTO CARS",
+        "showroom_location": "Wtc Mangga Dua Jl. Raya Pantura No.8, Ancol, Kec. Pademangan, Jkt Utara",
+        "showroom_regency": "Jakarta Utara"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "a6777617-e8ad-4cd1-97ed-70541bdbe5c6",
+    "fields": {
+        "showroom_name": "DHL AUTOCARS",
+        "showroom_location": "Bursa Mobil, Mall WTC Matahari, Pd. Jagung, Kec. Serpong Utara, Kota Tangerang Selatan, Banten",
+        "showroom_regency": "Banten"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "ac3d8670-fdc0-4e8a-a8df-7ccce4f8a79c",
+    "fields": {
+        "showroom_name": "TOKO MOBILKU",
+        "showroom_location": "Jl. Industri Raya No.10, RW.10, Danau Sunter Dll, Kec. Pademangan, Kota Jkt Utara",
+        "showroom_regency": "Jakarta Utara"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "b9280c36-88d3-4c13-8668-eb0d0a048ad1",
+    "fields": {
+        "showroom_name": "Martak Auto Boutique",
+        "showroom_location": "Jl Pahlawan Revolusi no 39A, Pondok Bambu Jakarta Timur",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "ba8d3cdf-a6c7-4653-a801-34ea6d25287a",
+    "fields": {
+        "showroom_name": "GARASI MOBILKU",
+        "showroom_location": "Jl. Gading Serpong Boulevard, Pakulonan Bar., Kec. Klp. Dua, Kabupaten Tangerang, Banten",
+        "showroom_regency": "Banten"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "c008bc5c-58c9-4837-aa85-2adfce0e7385",
+    "fields": {
+        "showroom_name": "SURYA ABADI MOTOR",
+        "showroom_location": "Jl. Pahlawan Revolusi No.8, RT.6/RW.12, Pd. Bambu, Kec. Duren Sawit, Kota Jakarta Timur",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "cebb4e24-31e6-4bc5-85a4-fc9fefd5baec",
+    "fields": {
+        "showroom_name": "BEST MOBILINDO",
+        "showroom_location": "Jl. Industri Raya No.10, RW.10, Danau Sunter Dll, Kec. Pademangan, Kota Jkt Utara",
+        "showroom_regency": "Jakarta Utara"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "d495124e-73ff-492e-8b87-fcee05272061",
+    "fields": {
+        "showroom_name": "SPECTRUM MOTOR",
+        "showroom_location": "Bursa otomotif, Jl. Sunter Kirana Raya, RT.10/RW.11, Sunter Jaya, Tanjung Priok, JAKARTA UTARA",
+        "showroom_regency": "Jakarta Utara"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "e94968f1-35af-42b9-a3b9-8921cb8e288b",
+    "fields": {
+        "showroom_name": "HANS MOTOR",
+        "showroom_location": "Ruko WR, Jl. Imam Bonjol Blok A No.11-12, RT.002/RW.003, Sukajadi, Kec. Karawaci, Kota Tangerang, Banten 15115",
+        "showroom_regency": "Banten"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "ed3b8c5a-e61b-4893-91a5-b7bbb7caabfa",
+    "fields": {
+        "showroom_name": "MAJU JAYA MOTOR",
+        "showroom_location": "JL. Mangga Dua Raya, No. 8, RW.5, Ancol, Kec. Pademangan, Jkt Utara",
+        "showroom_regency": "Jakarta Utara"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "ef8148b8-a2e2-40f5-a28e-1933ccd87d75",
+    "fields": {
+        "showroom_name": "Mirza Mobil",
+        "showroom_location": "Jl. I Gusti Ngurah Rai Jl. Kp. Sumur Utara No.80-81, RT.15/RW.17, Klender, Kec. Duren Sawit, Kota Jakarta Timur",
+        "showroom_regency": "Jakarta Timur"
+    }
+},
+{
+    "model": "cars.showroom",
+    "pk": "ef99a3e6-c0e5-45a4-b949-a238ca1bd787",
+    "fields": {
+        "showroom_name": "O2 Auto",
+        "showroom_location": "Bintaro, Banten",
+        "showroom_regency": "Banten"
+    }
+}
+]
