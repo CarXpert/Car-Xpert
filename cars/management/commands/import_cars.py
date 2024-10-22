@@ -40,7 +40,7 @@ class Command(BaseCommand):
                     doors=row['door'],
                     cylinder_size=row['cylinder_size'],
                     cylinder_total=row['cylinder_total'],
-                    turbo=row['turbo'] == 1,  # Convert to boolean
+                    turbo=row['turbo'] == '1',  # Convert to boolean
                     mileage=row['mileage'],
                     license_plate=row['license_plate'],
                     price_cash=row['price_cash'],
