@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'comparecars',
     'news',
     'wishlist',
+    'cars',
 ]
 
 MIDDLEWARE = [
