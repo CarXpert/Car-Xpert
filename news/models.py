@@ -6,6 +6,7 @@ class NewsArticle(models.Model):
     content = models.TextField()
     author = models.CharField(max_length=100)
     published_date = models.DateTimeField(default=timezone.now)
+    image = models.ImageField(upload_to='news_images/', null=True, blank=True)  # Gambar artikel
 
     def __str__(self):
         return self.title
