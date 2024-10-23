@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Cars</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #0c0f2a; color: white; margin: 0; padding: 0;">
+
+    <!-- Include Navbar -->
+    {% include 'navbar.html' %}
+
+    <section class="car-comparison" style="max-width: 1200px; margin: 20px auto; padding: 20px;">
+        <div class="car-select" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <label for="car1">Select Car 1:</label>
+            <select id="car1" style="background-color: #333; border: none; padding: 10px; border-radius: 5px; color: white;">
+                <option value="Honda BR-V">Honda BR-V</option>
+                <option value="Toyota Rush">Toyota Rush</option>
+                <option value="BMW X5">BMW X5</option>
+            </select>
+
+            <label for="car2">Select Car 2:</label>
+            <select id="car2" style="background-color: #333; border: none; padding: 10px; border-radius: 5px; color: white;">
+                <option value="Honda BR-V">Honda BR-V</option>
+                <option value="Toyota Rush">Toyota Rush</option>
+                <option value="BMW X5">BMW X5</option>
+            </select>
+
+            <button id="compare-btn" style="padding: 10px 20px; background-color: #444; color: white; border: none; cursor: pointer; border-radius: 5px;">Compare</button>
+        </div>
+
+        <div class="car-cards" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+            <div class="car-card" id="car1-card" style="background-color: #333; border-radius: 10px; padding: 20px; text-align: center; width: 300px;">
+                <h2>Select a car</h2>
+            </div>
+            <div class="car-card" id="car2-card" style="background-color: #333; border-radius: 10px; padding: 20px; text-align: center; width: 300px;">
+                <h2>Select a car</h2>
+            </div>
+        </div>
+
+        <table class="comparison-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+            <tr>
+                <th style="padding: 15px; text-align: center; background-color: #444;">Specification</th>
+                <th id="car1-name" style="padding: 15px; text-align: center; background-color: #444;">Car 1</th>
+                <th id="car2-name" style="padding: 15px; text-align: center; background-color: #444;">Car 2</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="padding: 15px; text-align: center; background-color: #333;">Brand</td>
+                <td id="car1-brand" style="padding: 15px; text-align: center; background-color: #333;">-</td>
+                <td id="car2-brand" style="padding: 15px; text-align: center; background-color: #333;">-</td>
+            </tr>
+            <tr>
+                <td style="padding: 15px; text-align: center; background-color: #333;">Model</td>
+                <td id="car1-model" style="padding: 15px; text-align: center; background-color: #333;">-</td>
+                <td id="car2-model" style="padding: 15px; text-align: center; background-color: #333;">-</td>
+            </tr>
+            <tr>
+                <td style="padding: 15px; text-align: center; background-color: #333;">Year</td>
+                <td id="car1-year" style="padding: 15px; text-align: center; background-color: #333;">-</td>
+                <td id="car2-year" style="padding: 15px; text-align: center; background-color: #333;">-</td>
+            </tr>
+            <tr>
+                <td style="padding: 15px; text-align: center; background-color: #333;">Fuel Type</td>
+                <td id="car1-fuel" style="padding: 15px; text-align: center; background-color: #333;">-</td>
+                <td id="car2-fuel" style="padding: 15px; text-align: center; background-color: #333;">-</td>
+            </tr>
+            <tr>
+                <td style="padding: 15px; text-align: center; background-color: #333;">Color</td>
+                <td id="car1-color" style="padding: 15px; text-align: center; background-color: #333;">-</td>
+                <td id="car2-color" style="padding: 15px; text-align: center; background-color: #333;">-</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+
+    <script src="compare.js"></script>
+
+</body>
+</html>
