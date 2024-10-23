@@ -6,9 +6,6 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-def compare_view(request):
-    return render(request, 'compare.html')
-
 @csrf_exempt
 def compare_cars(request):
     if request.method == 'POST':
@@ -34,7 +31,7 @@ def compare_cars(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     elif request.method == 'GET':
-        # Ambil semua perbandingan mobil
+        # Ambil semua perbandingan mobil (untuk menampilkan data JSON via API)
         comparisons = CompareCarUser.objects.all()
         comparison_list = [
             {
@@ -45,10 +42,17 @@ def compare_cars(request):
             }
             for comp in comparisons
         ]
-        return JsonResponse(comparison_list, safe=False)
+
+        # Jika permintaan datang dari API, kirim respons JSON
+        if request.headers.get('Content-Type') == 'application/json':
+            return JsonResponse(comparison_list, safe=False)
+
+        # Render HTML jika permintaan dari browser
+        return render(request, 'compare.html', {'comparisons': comparison_list})
 
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
+
 
 @csrf_exempt
 def compare_cars_with_id(request, id):
