@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+.calendar-container {
+    width: 320px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.month-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.month-navigation button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.month-navigation button:hover {
+    background-color: #0056b3;
+}
+.month-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 10px;
+    text-align: center;
+}
+.weekdays div {
+    font-weight: bold;
+    padding: 5px 0;
+}
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+.days button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.days button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+.days button:hover:enabled {
+    background-color: #007bff;
+    color: white;
+}
+.days button.booked {
+    background-color: #007bff;
+    color: white;
+}
