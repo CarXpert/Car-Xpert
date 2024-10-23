@@ -152,7 +152,7 @@
         <!-- Car Grid Section -->
         <h1>Available Cars</h1>
         <div class="car-grid">
-            {% for car in cars|slice:":8" %}  <!-- Limit to 8 cars -->
+            {% for car in cars|slice:":40" %}  <!-- Limit to 8 cars -->
             <div class="car-card">
                 <img src="{{ car.image_url }}" alt="{{ car.brand }} {{ car.model }}">
                 <h3>{{ car.brand }} {{ car.model }}</h3>
