@@ -47,6 +47,7 @@ def compare_cars(request):
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
+
 @csrf_exempt
 def compare_cars_with_id(request, id):
     comparison = get_object_or_404(CompareCarUser, id=id)
