@@ -5,5 +5,6 @@ from . import views
 app_name = 'cars_detail'
 
 urlpatterns = [
-    path('car/<uuid:car_id>/', views.car_detail, name='car_detail'),  # URL untuk detail mobil
+    path('car/<uuid:car_id>/', views.car_detail, name='car_detail'),  # URL untuk detail mobilhvvhb
+    
 ]
