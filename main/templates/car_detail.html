@@ -22,8 +22,8 @@
     <p><strong>Updated at:</strong> {{ car.updated_at }}</p>
 
     <!-- Tombol untuk kembali ke homepage -->
-    <a href="{% url 'main:car_list' %}">
+    {% comment %} <a href="{% url 'main:car_list' %}">
         <button type="button">Back to Home</button>
-    </a>
+    </a> {% endcomment %}
 </body>
 </html>

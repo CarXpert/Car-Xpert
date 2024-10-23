@@ -40,7 +40,7 @@
             <p>Color: {{ car.color }}</p>
             <p>Year: {{ car.year }}</p>
             <!-- Link menuju halaman detail mobil -->
-            <a href="{% url 'cars_detail:car_detail' car.id %}">View Details</a>
+            <a href="{% url 'main:car_detail' car.id %}">View Details</a>
         </div>
         {% endfor %}
     </div>
