@@ -14,7 +14,7 @@ def show_main(request):
     return render(request, 'main.html', context)  # Render ke 'main/main.html'
 
 def car_detail(request, car_id):
-    car = Car.objects.filter(pk=car_id)
+    car = Car.objects.get(pk=car_id)
     context = {
         'car': car,
     }
