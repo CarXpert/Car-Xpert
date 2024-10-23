@@ -35,5 +35,5 @@ class Car(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
- 
-
+    def __str__(self):
+            return f"{self.brand} {self.model}"
