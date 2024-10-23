@@ -6,6 +6,20 @@ from django.views.decorators.http import require_POST
 from .models import Wishlist, Car
 from django.utils.html import strip_tags
 
+from django.shortcuts import render
+from django.db.models import Min, Max
+from .models import Wishlist  # Adjust import according to your app structure
+from cars.models import Car  # Import Car model
+
+def show_wishlist(request):
+    # Get the wishlist items for the logged-in user
+    wishlist_items = Wishlist.objects.filter(user=request.user)
+    context = {
+        'wishlist_items': wishlist_items,
+    }
+    return render(request, 'wishlist/wishlist_page.html', context)
+
+
 # Fungsi untuk menambahkan atau memperbarui catatan pada wishlist melalui AJAX
 @csrf_exempt
 @require_POST

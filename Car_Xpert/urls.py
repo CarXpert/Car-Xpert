@@ -22,4 +22,7 @@ urlpatterns = [
     path('', include('main.urls')),  # Mengarah ke app main (main.html untuk daftar mobil)
     path('cars/', include('cars_detail.urls')),  # Mengarah ke app cars_detail (detail mobil)
     path('comparecars/', include('comparecars.urls')),
+    path('wishlist/', include('wishlist.urls')),
+    path('auth/', include('authentication.urls', namespace='authentication')),
+    path("wishlist/",include("wishlist.urls")),
 ]
