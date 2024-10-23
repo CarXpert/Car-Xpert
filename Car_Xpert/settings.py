@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'cars',
     'authentication',
     'bookshowroom'
+    'bookshowroom',
 ]
 
 MIDDLEWARE = [
