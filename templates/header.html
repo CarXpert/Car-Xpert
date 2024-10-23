@@ -1,0 +1,89 @@
+<!-- templates/shared/navbar.html -->
+<nav style="background-color: #0c0f2a; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <!-- Logo / Title -->
+    <div style="color: white; font-size: 24px; font-family: 'Arial', sans-serif; letter-spacing: 2px;">
+        CARXPERT
+    </div>
+
+    <!-- Search bar and icons -->
+    <div style="display: flex; align-items: center; gap: 400px;"> <!-- Ubah gap menjadi lebih kecil -->
+        <!-- Search bar -->
+        <div style="position: relative; display: flex; align-items: center;">
+            <span style="position: absolute; left: 15px; color: white;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.44 0a5.5 5.5 0 1 1 0-7.778 5.5 5.5 0 0 1 0 7.778z"/>
+                </svg>
+            </span>
+            <input type="text" placeholder="SEARCH" 
+                   style="background-color: #333; border: none; padding: 10px 20px; border-radius: 25px; color: white; padding-left: 40px; width: 300px; outline: none; font-size: 16px;">
+        </div>
+
+        <!-- Icons -->
+        <div style="display: flex; gap: 20px;"> <!-- Ikon sekarang lebih dekat ke search bar -->
+            <!-- Heart icon -->
+            <div style="color: white; cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                  <path d="M8 2.748-.717 1.737C4.92-.688 8.002 3.314 8 3.314 8-.688 11.08-.688 15.682 3.314c1.098 1.077 1.798 2.616 1.798 4.385 0 1.768-.7 3.308-1.798 4.385C11.08 15.312 8.002 15.312 8 15.312c-.002 0-3.08-.001-7.682-7.313C-.717 10.312 0 .688 0 .688z"/>
+                </svg>
+            </div>
+
+            <!-- Sync icon -->
+            <div style="color: white; cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                  <path d="M2 8a6 6 0 1 1 4.916 5.923V12.62l-2.75 1.625L7.5 16.65v-2.686A5.998 5.998 0 1 0 2 8z"/>
+                </svg>
+            </div>
+
+            <!-- User icon -->
+            <div style="color: white; cursor: pointer;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm4-3a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM2 13s1-3 6-3 6 3 6 3v1H2v-1z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</nav>
+
+{% load static %}
+
+<nav style="background-color: #0c0f2a; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="color: white; font-size: 24px; font-family: 'Arial', sans-serif; letter-spacing: 2px;">
+        CARXPERT
+    </div>
+
+    <div style="display: flex; align-items: center;">
+        <!-- Search bar -->
+        <div style="position: relative; margin-right: 20px;">
+            <input type="text" placeholder="SEARCH" style="background-color: #333; border: none; padding: 10px; border-radius: 25px; color: white; padding-left: 40px;">
+            <span style="position: absolute; top: 50%; left: 15px; transform: translateY(-50%); color: white;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.44 0a5.5 5.5 0 1 1 0-7.778 5.5 5.5 0 0 1 0 7.778z"/>
+                </svg>
+            </span>
+        </div>
+
+        <!-- Icons -->
+        <div style="color: white;">
+            <a href="{% url 'wishlist_view' %}">
+                <img src="{% static 'images/heart.png' %}" alt="Wishlist" width="24" height="24">
+            </a>
+        </div>
+
+        <!-- Sync icon -->
+        <div style="color: white;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+              <path d="M2 8a6 6 0 1 1 4.916 5.923V12.62l-2.75 1.625L7.5 16.65v-2.686A5.998 5.998 0 1 0 2 8z"/>
+            </svg>
+        </div>
+
+        <!-- User icon -->
+        <div style="color: white;">
+            <a href="{% url 'authentication:login' %}">  <!-- Keep this as is -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm4-3a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM2 13s1-3 6-3 6 3 6 3v1H2v-1z"/>
+                </svg>
+            </a>
+        </div>
+
+    </div>
+</nav>

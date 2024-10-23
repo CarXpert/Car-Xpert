@@ -9,8 +9,8 @@ import json
 @csrf_exempt
 def compare_cars(request):
     if request.method == 'POST':
-        # Parsing data dari POST request
         try:
+            # Parsing data dari POST request
             data = json.loads(request.body)
             user_id = data.get('user_id')
             car_one_id = data.get('car_one_id')
@@ -31,7 +31,10 @@ def compare_cars(request):
             return JsonResponse({'error': str(e)}, status=400)
 
     elif request.method == 'GET':
-        # Ambil semua perbandingan mobil
+        # Ambil semua data mobil
+        cars = Car.objects.all()
+
+        # Ambil semua perbandingan mobil (jika diperlukan untuk keperluan lain)
         comparisons = CompareCarUser.objects.all()
         comparison_list = [
             {
@@ -42,11 +45,12 @@ def compare_cars(request):
             }
             for comp in comparisons
         ]
-        return JsonResponse(comparison_list, safe=False)
+
+        # Render HTML dan kirimkan daftar mobil ke template
+        return render(request, 'compare.html', {'cars': cars, 'comparisons': comparison_list})
 
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
-
 
 @csrf_exempt
 def compare_cars_with_id(request, id):
@@ -68,8 +72,8 @@ def compare_cars_with_id(request, id):
         return JsonResponse({'message': 'Comparison deleted successfully'}, status=204)
 
     elif request.method == 'PUT':
-        # Memperbarui perbandingan mobil
         try:
+            # Parsing data dari PUT request untuk memperbarui perbandingan mobil
             data = json.loads(request.body)
             car_one_id = data.get('car_one_id')
             car_two_id = data.get('car_two_id')
@@ -89,3 +93,27 @@ def compare_cars_with_id(request, id):
 
     else:
         return HttpResponseNotAllowed(['GET', 'DELETE', 'PUT'])
+
+def get_cars(request):
+    try:
+        # Ambil semua data mobil
+        cars = Car.objects.all()
+        car_list = []
+        for car in cars:
+            car_list.append({
+                'id': str(car.id),  # Pastikan UUID dikonversi ke string
+                'brand': car.brand,
+                'model': car.model,
+                'year': car.year,
+                'fuel_type': car.fuel_type,
+                'color': car.color,
+                'price_cash': car.price_cash,
+            })
+        return JsonResponse(car_list, safe=False)
+    except Exception as e:
+        # Jika terjadi error, log errornya dan kembalikan status 500
+        return JsonResponse({'error': str(e)}, status=500)
+
+def list_comparisons(request):
+    comparisons = CompareCarUser.objects.all()  # Atau filter berdasarkan user jika diperlukan
+    return render(request, 'compare_list.html', {'comparisons': comparisons})

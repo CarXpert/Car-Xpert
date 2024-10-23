@@ -97,31 +97,45 @@
             cursor: pointer;
         }
 
+        .compare-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #5a67d8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .compare-button:hover {
+            background-color: #434190;
+        }
     </style>
 </head>
 <body>
-
-<header>
-    <h1>CARXPERT</h1>
-    <input type="text" placeholder="SEARCH">
-</header>
-
+{% include 'header.html' %}
 <section class="car-comparison">
     <!-- Dropdown untuk memilih mobil -->
     <div class="car-cards">
         <div class="car-card">
             <select id="car1">
                 <option value="">Pilih Mobil 1</option>
-                <!-- Data mobil akan diisi oleh JavaScript -->
+                {% for car in cars %}
+                    <option value="{{ car.id }}">{{ car.brand }} - {{ car.model }}</option>
+                {% endfor %}
             </select>
         </div>
         <div class="car-card">
             <select id="car2">
                 <option value="">Pilih Mobil 2</option>
-                <!-- Data mobil akan diisi oleh JavaScript -->
+                {% for car in cars %}
+                    <option value="{{ car.id }}">{{ car.brand }} - {{ car.model }}</option>
+                {% endfor %}
             </select>
         </div>
     </div>
+    <button class="compare-button" onclick="compareCars()">Bandingkan</button>
 
     <!-- Tabel untuk menampilkan hasil perbandingan -->
     <table class="comparison-table">
@@ -160,8 +174,8 @@
             </tr>
             <tr>
                 <td>Harga</td>
-                <td id="car1-price">-</td>
-                <td id="car2-price">-</td>
+                <td id="car1-price_cash">-</td>
+                <td id="car2-price_cash">-</td>
             </tr>
         </tbody>
     </table>
@@ -174,23 +188,34 @@
 
     // Fetch data mobil dari server
     function loadCars() {
-        fetch('/get-cars/')
+        fetch('/comparecars/get-cars/')
             .then(response => response.json())
             .then(data => {
-                carData = data.reduce((acc, car) => {
-                    acc[car.id] = car;
-                    return acc;
-                }, {});
+                console.log('Fetched car data:', data);  // Debug log
+
+                // Menyimpan data mobil ke carData tanpa menggunakan reduce
+                carData = {};  // Reset carData sebelum menyimpan
+                for (let i = 0; i < data.length; i++) {
+                    const car = data[i];
+                    carData[car.id] = car;  // Menyimpan setiap mobil berdasarkan ID
+                }
+
+                // Memasukkan data ke dropdown
                 populateDropdowns(data);
             })
-            .catch(error => console.error('Error fetching cars:', error));
+            .catch(error => {
+                console.error('Error fetching cars:', error);
+                alert('Gagal mengambil data mobil');
+            });
     }
 
     // Memasukkan mobil ke dropdown
     function populateDropdowns(cars) {
+        console.log("Populating Dropdowns:", cars);  // Pastikan data ini muncul
         const car1Dropdown = document.getElementById('car1');
         const car2Dropdown = document.getElementById('car2');
-
+        console.log(cars)
+        // Iterasi mobil dan tambahkan ke dropdown
         cars.forEach(car => {
             const option1 = new Option(`${car.brand} ${car.model}`, car.id);
             const option2 = new Option(`${car.brand} ${car.model}`, car.id);
@@ -199,42 +224,100 @@
         });
     }
 
-    // Simpan perbandingan ke server
-    function saveComparison() {
-        const car1 = document.getElementById('car1').value;
-        const car2 = document.getElementById('car2').value;
-        const user_id = 1;  // Misalnya user dengan ID 1
+    // Fungsi untuk memicu perbandingan setelah tombol "Bandingkan" diklik
+    function compareCars() {
+        const car1Id = document.getElementById('car1').value;
+        const car2Id = document.getElementById('car2').value;
 
-        if (car1 && car2) {
-            const comparisonData = {
-                user_id: user_id,
-                car_one_id: car1,
-                car_two_id: car2
-            };
+        console.log('Selected cars:', car1Id, car2Id);  // Debug log
+        console.log('Available car data:', carData);    // Debug log
 
-            fetch('/compare/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(comparisonData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    alert(data.message);
-                } else {
-                    alert('Gagal menyimpan perbandingan.');
-                }
-            })
-            .catch(error => console.error('Error saving comparison:', error));
-        } else {
+        if (!car1Id || !car2Id) {
             alert('Pilih dua mobil untuk dibandingkan.');
+            return;
         }
+
+        const car1 = carData[car1Id];
+        const car2 = carData[car2Id];
+
+        if (!car1 || !car2) {
+            alert('Data mobil tidak lengkap. ID Mobil 1: ' + car1Id + ', ID Mobil 2: ' + car2Id);
+            return;
+        }
+
+        updateTable(1, car1);
+        updateTable(2, car2);
+    }
+
+    // Update tabel dengan detail mobil
+    function updateTable(carNumber, car) {
+        console.log(`Updating table for car ${carNumber}:`, car);  // Debug log
+
+        document.getElementById(`car${carNumber}-brand`).textContent = car.brand || '-';
+        document.getElementById(`car${carNumber}-model`).textContent = car.model || '-';
+        document.getElementById(`car${carNumber}-year`).textContent = car.year || '-';
+        document.getElementById(`car${carNumber}-fuel`).textContent = car.fuel_type || '-';
+        document.getElementById(`car${carNumber}-color`).textContent = car.color || '-';
+        document.getElementById(`car${carNumber}-price_cash`).textContent = car.price_cash ? `${car.price_cash} IDR` : '-';
     }
 
     // Load data mobil ketika halaman di-load
     document.addEventListener('DOMContentLoaded', loadCars);
+
+    function saveComparison() {
+        const car1Id = document.getElementById('car1').value;
+        const car2Id = document.getElementById('car2').value;
+
+        // Validasi apakah pengguna sudah memilih dua mobil
+        if (!car1Id || !car2Id) {
+            alert('Pilih dua mobil untuk dibandingkan.');
+            return;
+        }
+
+        // Simpan perbandingan ke backend
+        fetch('/comparecars/compare/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')  // Jangan lupa tambahkan CSRF token
+            },
+            body: JSON.stringify({
+                car_one_id: car1Id,
+                car_two_id: car2Id,
+                user_id: 1  // Ganti dengan ID pengguna yang benar
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert('Perbandingan berhasil disimpan!');
+                // Arahkan pengguna ke halaman daftar perbandingan
+                window.location.href = '/comparecars/list-comparisons/';
+            } else {
+                alert('Gagal menyimpan perbandingan. ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menyimpan perbandingan.');
+        });
+    }
+
+    // Fungsi untuk mendapatkan CSRF token dari cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 </script>
 
 </body>

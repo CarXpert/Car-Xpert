@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Perbandingan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0c0f2a;
+            color: white;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #1f2235;
+        }
+
+        header h1 {
+            margin: 0;
+            color: white;
+        }
+
+        .comparison-list {
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .comparison-card {
+            background-color: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: inline-block;
+            width: 200px;
+            text-align: left;
+            position: relative;
+        }
+
+        .comparison-card button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: red;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Daftar Perbandingan</h1>
+</header>
+
+<div class="comparison-list">
+    {% for comparison in comparisons %}
+    <div class="comparison-card">
+        <button onclick="deleteComparison({{ comparison.id }})">X</button>
+        <h3>Perbandingan {{ forloop.counter }}</h3>
+        <p>{{ comparison.car_one.brand }} vs {{ comparison.car_two.brand }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function deleteComparison(id) {
+        fetch(`/comparecars/compare/${id}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Gagal menghapus perbandingan');
+            }
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+</body>
+</html>
