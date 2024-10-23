@@ -4,80 +4,238 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compare Cars</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0c0f2a;
+            color: white;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #1f2235;
+        }
+
+        header h1 {
+            margin: 0;
+            color: white;
+        }
+
+        input[type="text"] {
+            background-color: #333;
+            border: none;
+            padding: 10px;
+            border-radius: 25px;
+            color: white;
+        }
+
+        .car-comparison {
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .car-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .car-card {
+            background-color: #333;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            color: white;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 15px;
+            border: 1px solid #444;
+            text-align: center;
+        }
+
+        .comparison-table th {
+            background-color: #444;
+        }
+
+        .comparison-table td {
+            background-color: #333;
+        }
+
+        .save-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    </style>
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #0c0f2a; color: white; margin: 0; padding: 0;">
+<body>
 
-    <!-- Include Navbar -->
-    {% include 'navbar.html' %}
+<header>
+    <h1>CARXPERT</h1>
+    <input type="text" placeholder="SEARCH">
+</header>
 
-    <section class="car-comparison" style="max-width: 1200px; margin: 20px auto; padding: 20px;">
-        <div class="car-select" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-            <label for="car1">Select Car 1:</label>
-            <select id="car1" style="background-color: #333; border: none; padding: 10px; border-radius: 5px; color: white;">
-                <option value="Honda BR-V">Honda BR-V</option>
-                <option value="Toyota Rush">Toyota Rush</option>
-                <option value="BMW X5">BMW X5</option>
+<section class="car-comparison">
+    <!-- Dropdown untuk memilih mobil -->
+    <div class="car-cards">
+        <div class="car-card">
+            <select id="car1">
+                <option value="">Pilih Mobil 1</option>
+                <!-- Data mobil akan diisi oleh JavaScript -->
             </select>
-
-            <label for="car2">Select Car 2:</label>
-            <select id="car2" style="background-color: #333; border: none; padding: 10px; border-radius: 5px; color: white;">
-                <option value="Honda BR-V">Honda BR-V</option>
-                <option value="Toyota Rush">Toyota Rush</option>
-                <option value="BMW X5">BMW X5</option>
+        </div>
+        <div class="car-card">
+            <select id="car2">
+                <option value="">Pilih Mobil 2</option>
+                <!-- Data mobil akan diisi oleh JavaScript -->
             </select>
-
-            <button id="compare-btn" style="padding: 10px 20px; background-color: #444; color: white; border: none; cursor: pointer; border-radius: 5px;">Compare</button>
         </div>
+    </div>
 
-        <div class="car-cards" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
-            <div class="car-card" id="car1-card" style="background-color: #333; border-radius: 10px; padding: 20px; text-align: center; width: 300px;">
-                <h2>Select a car</h2>
-            </div>
-            <div class="car-card" id="car2-card" style="background-color: #333; border-radius: 10px; padding: 20px; text-align: center; width: 300px;">
-                <h2>Select a car</h2>
-            </div>
-        </div>
+    <!-- Tabel untuk menampilkan hasil perbandingan -->
+    <table class="comparison-table">
+        <thead>
+            <tr>
+                <th>Spesifikasi</th>
+                <th id="car1-name">Mobil 1</th>
+                <th id="car2-name">Mobil 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Brand</td>
+                <td id="car1-brand">-</td>
+                <td id="car2-brand">-</td>
+            </tr>
+            <tr>
+                <td>Model</td>
+                <td id="car1-model">-</td>
+                <td id="car2-model">-</td>
+            </tr>
+            <tr>
+                <td>Tahun</td>
+                <td id="car1-year">-</td>
+                <td id="car2-year">-</td>
+            </tr>
+            <tr>
+                <td>Jenis Bahan Bakar</td>
+                <td id="car1-fuel">-</td>
+                <td id="car2-fuel">-</td>
+            </tr>
+            <tr>
+                <td>Warna</td>
+                <td id="car1-color">-</td>
+                <td id="car2-color">-</td>
+            </tr>
+            <tr>
+                <td>Harga</td>
+                <td id="car1-price">-</td>
+                <td id="car2-price">-</td>
+            </tr>
+        </tbody>
+    </table>
 
-        <table class="comparison-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-            <thead>
-            <tr>
-                <th style="padding: 15px; text-align: center; background-color: #444;">Specification</th>
-                <th id="car1-name" style="padding: 15px; text-align: center; background-color: #444;">Car 1</th>
-                <th id="car2-name" style="padding: 15px; text-align: center; background-color: #444;">Car 2</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td style="padding: 15px; text-align: center; background-color: #333;">Brand</td>
-                <td id="car1-brand" style="padding: 15px; text-align: center; background-color: #333;">-</td>
-                <td id="car2-brand" style="padding: 15px; text-align: center; background-color: #333;">-</td>
-            </tr>
-            <tr>
-                <td style="padding: 15px; text-align: center; background-color: #333;">Model</td>
-                <td id="car1-model" style="padding: 15px; text-align: center; background-color: #333;">-</td>
-                <td id="car2-model" style="padding: 15px; text-align: center; background-color: #333;">-</td>
-            </tr>
-            <tr>
-                <td style="padding: 15px; text-align: center; background-color: #333;">Year</td>
-                <td id="car1-year" style="padding: 15px; text-align: center; background-color: #333;">-</td>
-                <td id="car2-year" style="padding: 15px; text-align: center; background-color: #333;">-</td>
-            </tr>
-            <tr>
-                <td style="padding: 15px; text-align: center; background-color: #333;">Fuel Type</td>
-                <td id="car1-fuel" style="padding: 15px; text-align: center; background-color: #333;">-</td>
-                <td id="car2-fuel" style="padding: 15px; text-align: center; background-color: #333;">-</td>
-            </tr>
-            <tr>
-                <td style="padding: 15px; text-align: center; background-color: #333;">Color</td>
-                <td id="car1-color" style="padding: 15px; text-align: center; background-color: #333;">-</td>
-                <td id="car2-color" style="padding: 15px; text-align: center; background-color: #333;">-</td>
-            </tr>
-            </tbody>
-        </table>
-    </section>
+    <button class="save-button" onclick="saveComparison()">Simpan Perbandingan</button>
+</section>
 
+<script>
+    let carData = {};  // Menyimpan data mobil yang diambil dari server
 
-    <script src="compare.js"></script>
+    // Fetch data mobil dari server
+    function loadCars() {
+        fetch('/get-cars/')
+            .then(response => response.json())
+            .then(data => {
+                carData = data.reduce((acc, car) => {
+                    acc[car.id] = car;
+                    return acc;
+                }, {});
+                populateDropdowns(data);
+            })
+            .catch(error => console.error('Error fetching cars:', error));
+    }
+
+    // Memasukkan mobil ke dropdown
+    function populateDropdowns(cars) {
+        const car1Dropdown = document.getElementById('car1');
+        const car2Dropdown = document.getElementById('car2');
+
+        cars.forEach(car => {
+            const option1 = new Option(`${car.brand} ${car.model}`, car.id);
+            const option2 = new Option(`${car.brand} ${car.model}`, car.id);
+            car1Dropdown.add(option1);
+            car2Dropdown.add(option2);
+        });
+    }
+
+    // Simpan perbandingan ke server
+    function saveComparison() {
+        const car1 = document.getElementById('car1').value;
+        const car2 = document.getElementById('car2').value;
+        const user_id = 1;  // Misalnya user dengan ID 1
+
+        if (car1 && car2) {
+            const comparisonData = {
+                user_id: user_id,
+                car_one_id: car1,
+                car_two_id: car2
+            };
+
+            fetch('/compare/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(comparisonData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    alert('Gagal menyimpan perbandingan.');
+                }
+            })
+            .catch(error => console.error('Error saving comparison:', error));
+        } else {
+            alert('Pilih dua mobil untuk dibandingkan.');
+        }
+    }
+
+    // Load data mobil ketika halaman di-load
+    document.addEventListener('DOMContentLoaded', loadCars);
+</script>
 
 </body>
 </html>

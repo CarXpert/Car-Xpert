@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 import json
 
+def compare_view(request):
+    return render(request, 'compare.html')
+
 @csrf_exempt
 def compare_cars(request):
     if request.method == 'POST':

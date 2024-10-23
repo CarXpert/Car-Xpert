@@ -6,3 +6,6 @@ class CompareCarUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     car_one = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='comparecaruser_car_one')
     car_two = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='comparecaruser_car_two')
+
+    def __str__(self):
+        return f"{self.car_one.brand} vs {self.car_two.brand}"
