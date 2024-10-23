@@ -1,6 +1,7 @@
 # views.py di app main
-from django.shortcuts import render
-from .models import Car
+from django.shortcuts import render, get_object_or_404
+from cars.models import Car
+
 
 
 def car_list(request):
@@ -8,4 +9,13 @@ def car_list(request):
     context = {
         'cars': cars,
     }
-    return render(request, 'main/main.html', context)  # Render ke 'main/main.html'
+    return render(request, 'main.html', context)  # Render ke 'main/main.html'
+
+def car_detail(request, car_id):
+    car = Car.objects.filter(pk=car_id)
+    context = {
+        'car': car,
+    }
+    return render(request, 'car_detail.html', context)
+
+
