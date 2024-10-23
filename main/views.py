@@ -9,3 +9,4 @@ def car_list(request):
         'cars': cars,
     }
     return render(request, 'main/main.html', context)  # Render ke 'main/main.html'
+

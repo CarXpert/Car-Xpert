@@ -10,3 +10,4 @@ urlpatterns = [
 
     path('', views.car_list, name='car_list'),  # URL untuk menampilkan daftar mobil di main.html
 ]
+
