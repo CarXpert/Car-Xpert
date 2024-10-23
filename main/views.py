@@ -1,6 +1,12 @@
+# views.py di app main
 from django.shortcuts import render
+from .models import Car
 
-# Create your views here.
-def show_main(request):
-    context = {"user": request.user}
-    return render(request, "main.html", context)
+
+def car_list(request):
+    cars = Car.objects.all()  # Mengambil semua mobil dari database
+    context = {
+        'cars': cars,
+    }
+    return render(request, 'main/main.html', context)  # Render ke 'main/main.html'
+
