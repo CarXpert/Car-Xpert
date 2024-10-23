@@ -4,7 +4,6 @@
     <title>Car List</title>
     <style>
         /* Gradient Background */
-        /* Gradient Background */
         body {
             margin: 0;
             padding: 0;
@@ -12,7 +11,6 @@
             background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c); /* Black to Dark Blue gradient */
             color: #fff;
         }
-        
 
         /* Main Container Styling */
         .main-container {
@@ -143,6 +141,9 @@
             color: #bbb;
         }
     </style>
+
+    <!-- Load static tag -->
+    {% load static %}
 </head>
 <body>
     {% include 'header.html' %}
@@ -152,18 +153,17 @@
         <!-- Car Grid Section -->
         <h1>Available Cars</h1>
         <div class="car-grid">
-            {% for car in cars|slice:":40" %}  <!-- Limit to 8 cars -->
+            {% for car in cars|slice:":40" %}  <!-- Limit to 40 cars -->
             <div class="car-card">
-                <img src="{{ car.image_url }}" alt="{{ car.brand }} {{ car.model }}">
+                <!-- Gambar diambil dari static/images/ berdasarkan brand -->
+                <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} {{ car.model }}">
                 <h3>{{ car.brand }} {{ car.model }}</h3>
                 <p>Type: {{ car.car_type }}</p>
                 <p>Color: {{ car.color }}</p>
                 <p>Year: {{ car.year }}</p>
 
                 <div class="card-actions">
-                    <a href="{% url 'main:car_detail' car.id %}">
-                        View Details
-                    </a>
+                    <a href="{% url 'main:car_detail' car.id %}">View Details</a>
                     <button>
                         <i class="fa fa-ellipsis-h"></i>
                     </button>
