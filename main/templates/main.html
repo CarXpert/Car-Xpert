@@ -1,3 +1,4 @@
+<!-- main.html  di app main -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,6 +32,7 @@
     </style>
 </head>
 <body>
+    {% include 'navbar.html' %}
     <h1>Available Cars</h1>
     <div class="car-grid">
         {% for car in cars %}

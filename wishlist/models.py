@@ -7,3 +7,6 @@ class Wishlist(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE)  # Car that is wishlisted
     notes = models.TextField(blank=True, null=True)  # Optional notes for each car
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+            return self.name
