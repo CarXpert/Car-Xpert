@@ -9,9 +9,6 @@ from authentication.models import UserProfile
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-# Create your views here.
-
-
 def login_user(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -81,7 +78,6 @@ def logout_mobile(request):
             "message": "Logout failed."
         }, status=401)
 
-
 def register(request):
     form = RegisterForm()
     if request.method == "POST":
@@ -143,3 +139,8 @@ def logout_user(request):
     response = redirect("main:show_main")
     response.delete_cookie('user_logged_in')
     return response
+
+def login_view(request):
+    if request.method == 'POST':
+        pass
+    return render(request, 'login.html')
