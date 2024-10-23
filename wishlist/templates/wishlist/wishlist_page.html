@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .wishlist-grid {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .wishlist-card {
+        width: 30%;
+        margin: 1%;
+        border: 1px solid #ddd;
+        padding: 10px;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+    .wishlist-card h3 {
+        margin-top: 0;
+    }
+    .edit-note-button {
+        display: inline-block;
+        margin-top: 10px;
+        background-color: #007bff;
+        color: white;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    .edit-note-button:hover {
+        background-color: #0056b3;
+    }
+    .total-price-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #38a169;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .total-price-btn:hover {
+        background-color: #2f855a;
+    }
+</style>
+
+<div class="container mx-auto mt-20 p-6">
+    <h2 class="text-2xl font-bold mb-4">My Wishlist</h2>
+    <div class="wishlist-grid">
+        {% for item in wishlist_items %}
+        <div class="wishlist-card">
+            <h3>{{ item.car.brand }} {{ item.car.model }}</h3>
+            <p>Notes: {{ item.notes }}</p>
+            <p>Type: {{ item.car.car_type }}</p>
+            <p>Color: {{ item.car.color }}</p>
+            <p>Year: {{ item.car.year }}</p>
+            <a href="{% url 'main:car_detail' item.car.id %}" class="edit-note-button">View Details</a>
+        </div>
+        {% empty %}
+        <p>No items in your wishlist.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
