@@ -1,3 +1,4 @@
+#models.py di app main
 from django.db import models
 import uuid
 
