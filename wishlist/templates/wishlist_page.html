@@ -1,0 +1,15 @@
+{% for item in wishlists %}
+    <div class="card">
+        <h2>{{ item.car.brand }} {{ item.car.model }}</h2>
+        <p>{{ item.notes }}</p>
+        <form method="POST" action="{% url 'wishlist:update_note' item.id %}">
+            {% csrf_token %}
+            <textarea name="notes">{{ item.notes }}</textarea>
+            <button type="submit">Save Note</button>
+        </form>
+        <form method="POST" action="{% url 'wishlist:remove' item.id %}">
+            {% csrf_token %}
+            <button type="submit">Remove from Wishlist</button>
+        </form>
+    </div>
+{% endfor %}
