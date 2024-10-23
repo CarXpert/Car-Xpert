@@ -1,3 +1,4 @@
+#models di app cars_detail
 from django.db import models
 import uuid
 
@@ -7,6 +8,8 @@ class ShowRoom(models.Model):
     showroom_location = models.TextField()
     showroom_regency = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.showroom_name  # Menampilkan nama showroom ketika objek ShowRoom dipanggil
 
 class Car(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -35,5 +38,5 @@ class Car(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
- 
-
+    def __str__(self):
+        return f'{self.brand} {self.model}'  # Menampilkan brand dan model ketika objek Car dipanggil
