@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car List</title>
+    <style>
+        .car-grid {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .car-card {
+            width: 30%;
+            margin: 1%;
+            border: 1px solid #ddd;
+            padding: 10px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .car-card h3 {
+            margin-top: 0;
+        }
+        .car-card a {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            text-decoration: none;
+        }
+        .car-card a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Available Cars</h1>
+    <div class="car-grid">
+        {% for car in cars %}
+        <div class="car-card">
+            <h3>{{ car.brand }} {{ car.model }}</h3>
+            <p>Type: {{ car.car_type }}</p>
+            <p>Color: {{ car.color }}</p>
+            <p>Year: {{ car.year }}</p>
+            <!-- Link menuju halaman detail mobil -->
+            <a href="{% url 'cars_detail:car_detail' car.id %}">View Details</a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

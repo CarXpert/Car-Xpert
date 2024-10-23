@@ -15,8 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('main.urls')),  # Mengarah ke app main (main.html untuk daftar mobil)
+    path('cars/', include('cars_detail.urls')),  # Mengarah ke app cars_detail (detail mobil)
 ]

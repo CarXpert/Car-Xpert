@@ -36,3 +36,4 @@ class Car(models.Model):
     updated_at = models.DateTimeField()
 
  
+
