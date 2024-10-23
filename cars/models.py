@@ -34,5 +34,6 @@ class Car(models.Model):
     total_levy = models.FloatField()
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
-    def __str__(self):
-            return f"{self.brand} {self.model}"
+
+ 
+
