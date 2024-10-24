@@ -411,13 +411,12 @@
             body: JSON.stringify({
                 car_one_id: car1Id,
                 car_two_id: car2Id,
-                user_id: 1  // Ganti dengan ID pengguna yang benar
+                // user_id: 1  // Ganti dengan ID pengguna yang benar
             })
         })
         .then(response => response.json())
         .then(data => {
             if (data.message) {
-                alert('Perbandingan berhasil disimpan!');
                 window.location.href = '/comparecars/list-comparisons/';
             } else {
                 alert('Gagal menyimpan perbandingan. ' + data.error);
