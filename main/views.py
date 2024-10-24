@@ -17,6 +17,7 @@ def car_detail(request, car_id):
     car = Car.objects.get(pk=car_id)
     context = {
         'car': car,
+        'showroom': car.showroom,  # The related showroom
     }
     return render(request, 'car_detail.html', context)
 
