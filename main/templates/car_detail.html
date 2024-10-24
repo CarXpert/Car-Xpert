@@ -36,7 +36,7 @@
 
         /* Car Image Styling */
         .car-details img {
-            width: 400px;
+            width: 300px;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
@@ -99,21 +99,48 @@
             color: #fff;
         }
 
-        /* Button Styling */
-        .btn-back {
-            display: inline-block;
+        /* Button Section */
+        .button-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .btn-back, .btn-edit {
             padding: 12px 20px;
             background-color: #28a745;
             color: white;
             text-decoration: none;
             font-size: 16px;
             border-radius: 5px;
-            margin-top: 30px;
             transition: background-color 0.3s ease;
         }
 
-        .btn-back:hover {
+        .btn-back:hover, .btn-edit:hover {
             background-color: #218838;
+        }
+
+        .btn-edit {
+            background-color: #007bff;
+        }
+
+        .btn-edit:hover {
+            background-color: #0056b3;
+        }
+
+        /* Date Styling */
+        .date-info {
+            font-size: 12px;
+            color: #ddd;
+        }
+
+        /* Styling for Gmaps Image */
+        .right img {
+            width: 300px;
+            border-radius: 15px;  /* Rounded corners */
+            margin-left: 20px;    /* Shift the image to the right */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add a shadow for consistency */
         }
 
         /* Responsive Design */
@@ -150,7 +177,7 @@
                 font-size: 20px;
             }
 
-            .btn-back {
+            .btn-back, .btn-edit {
                 font-size: 14px;
                 padding: 10px 15px;
             }
@@ -175,34 +202,64 @@
                     <h1>{{ car.brand }} {{ car.model }}</h1>
                     <p class="price">Rp {{ car.price_cash|intcomma }}</p>
                 </div>
+            </div>
+        </div>
 
-                <!-- Black Box for Additional Information with Title -->
-                <div class="description-box">
-                    <h2>Car Description</h2>
-                    <div class="additional-info">
-                        <div class="left">
-                            <p><strong>Car Type:</strong> {{ car.car_type }}</p>
-                            <p><strong>Color:</strong> {{ car.color }}</p>
-                            <p><strong>Year:</strong> {{ car.year }}</p>
-                            <p><strong>Fuel Type:</strong> {{ car.fuel_type }}</p>
-                            <p><strong>Cylinder Size:</strong> {{ car.cylinder_size }} cc</p>
-                            <p><strong>Mileage:</strong> {{ car.mileage }} km</p>
-                        </div>
-                        <div class="right">
-                            <p><strong>STNK Expiry:</strong> {{ car.stnk_date }}</p>
-                            <p><strong>Levy Expiry:</strong> {{ car.levy_date }}</p>
-                            <p><strong>License Plate:</strong> {{ car.license_plate }}</p>
-                            <p><strong>Price (Cash):</strong> Rp {{ car.price_cash|intcomma }}</p>
-                            <p><strong>Price (Credit):</strong> Rp {{ car.price_credit|intcomma }}</p>
-                            <p><strong>Showroom:</strong> {{ car.showroom.showroom_name }}</p>
-                        </div>
-                    </div>
+        <!-- Black Box for Additional Information with Title -->
+        <div class="description-box">
+            <h2>Car Description</h2>
+            <div class="additional-info">
+                <div class="left">
+                    <p><strong>Car Type:</strong> {{ car.car_type }}</p>
+                    <p><strong>Color:</strong> {{ car.color }}</p>
+                    <p><strong>Year:</strong> {{ car.year }}</p>
+                    <p><strong>Fuel Type:</strong> {{ car.fuel_type }}</p>
+                    <p><strong>Cylinder Size:</strong> {{ car.cylinder_size }} cc</p>
+                    <p><strong>Mileage:</strong> {{ car.mileage }} km</p>
+                </div>
+                <div class="right">
+                    <p><strong>STNK Expiry:</strong> {{ car.stnk_date }}</p>
+                    <p><strong>Levy Expiry:</strong> {{ car.levy_date }}</p>
+                    <p><strong>License Plate:</strong> {{ car.license_plate }}</p>
+                    <p><strong>Price (Cash):</strong> Rp {{ car.price_cash|intcomma }}</p>
+                    <p><strong>Price (Credit):</strong> Rp {{ car.price_credit|intcomma }}</p>
+                    <p><strong>Showroom:</strong> {{ car.showroom.showroom_name }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- Back to Home Button -->
-        <a href="{% url 'main:show_main' %}" class="btn-back">Back to Home</a>
+        <!-- Dealership Information Section -->
+        <div class="description-box">
+            <h2>Dealership Information</h2>
+            <div class="additional-info">
+                <div class="left">
+                    <p><strong>Dealership Name:</strong> {{ car.showroom.showroom_name }}</p>
+                    <p><strong>Location:</strong> {{ car.showroom.showroom_location }}</p>
+                    <p><strong>Regency:</strong> {{ car.showroom.showroom_regency }}</p>
+                </div>
+                <div class="right">
+                    <img src="{% static 'images/Gmaps.png' %}" alt="Google Maps">
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons and Date Info Section -->
+        <div class="button-section">
+            <!-- Date Information -->
+            <div class="date-info">
+                <p>Created: {{ car.created_at|date:"d M Y" }}</p>
+                <p>Last Updated: {{ car.updated_at|date:"d M Y" }}</p>
+            </div>
+
+            <!-- Buttons: Back to Home and Edit Data -->
+            <div>
+                <a href="{% url 'main:show_main' %}" class="btn-back">Back to Home</a>
+                <a href="#" class="btn-edit">Edit Data</a> <!-- Link to Edit -->
+                {% comment "" %} ini masih dummy button untuk edit pagenya
+                <a href="{% url 'main:edit_car' car.id %}" class="btn-edit">Edit Data</a> <!-- Link to Edit -->
+                {% endcomment %}
+            </div>
+        </div>
     </div>
 </body>
 </html>
