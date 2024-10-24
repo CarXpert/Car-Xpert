@@ -23,18 +23,19 @@ def login_view(request):
 
             # Log in the admin user
             login(request, admin_user)
-            return redirect('admin_dashboard')  # Redirect to admin dashboard
+            return redirect('main:show_main')
 
         # Otherwise, proceed with normal authentication
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
             login(request, user)
-            return redirect('main:show_main')
+            return redirect('main:show_main')  # Redirect to main page after login
         else:
             messages.error(request, 'Invalid username or password.')
 
     return render(request, 'login.html')
+
 
 def signup_view(request):
     if request.method == 'POST':

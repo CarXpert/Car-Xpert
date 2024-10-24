@@ -228,13 +228,19 @@
                     </select>
                 </form>
             </div>
-        </div>
+
+            {% comment %} <!-- Admin-only: Add Car Button -->
+            {% if user.is_staff %}
+                <div>
+                    <a href="{% url 'admin:add_car' %}" class="btn btn-primary">Add New Car</a>
+                </div>
+            {% endif %}
+        </div> {% endcomment %}
 
         <!-- Car Grid Section -->
         <div class="car-grid">
-            {% for car in cars|slice:":40" %}  <!-- Limit to 40 cars -->
+            {% for car in cars|slice:":40" %}
             <div class="car-card">
-                <!-- Gambar diambil dari static/images/ berdasarkan brand -->
                 <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} {{ car.model }}">
                 <h3>{{ car.brand }} {{ car.car_type }}</h3>
                 <p>Type: {{ car.model }}</p>
@@ -257,9 +263,24 @@
         <div class="news-section">
             <h2 class="news-title">NEWS</h2>
             <div class="news-grid">
-                {% include 'news_article_list.html' with news_limit=3 %} 
-                <!-- This will include the news_article_list.html and limit it to 3 articles -->
+                {% include 'news_article_list.html' with news_limit=3 %}
             </div>
+
+            <!-- Admin-only: Manage News Options -->
+            {% if user.is_staff %}
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="{% url 'news:create_article' %}" class="btn btn-success">Add News Article</a>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    {% for article in other_articles %}
+                        <div>
+                            <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
 
             <!-- Fallback message if no news exists -->
             {% if news|length == 0 %}
@@ -267,12 +288,12 @@
                 <img src="{% static 'images/Sorry-icon.png' %}" alt="Sorry">
                 <p style="color:#000;">Sorry, we don't have any news yet.</p>
             </div>
-            {% endif %}
 
             <!-- "See all News" link -->
             <div class="see-all-news">
                 <a href="{% url 'news:news_article_list' %}">See all News</a>
             </div>
+            {% endif %}
         </div>
     </div>
 </body>
