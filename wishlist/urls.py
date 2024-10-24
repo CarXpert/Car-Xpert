@@ -11,5 +11,5 @@ urlpatterns = [
     path('wishlist/', show_wishlist, name='wishlist_view'),
     path('add-remove/', add_remove_wishlist, name='add_remove_wishlist'),
     path('add-to-wishlist/', add_to_wishlist, name='add_to_wishlist'),
-    path('remove-from-wishlist/', remove_from_wishlist, name='remove_from_wishlist'),
+    path('remove/', remove_from_wishlist, name='remove_from_wishlist'),
 ]
