@@ -16,7 +16,6 @@ def news_article_list(request):
         'featured_article': featured_article,
         'other_articles': other_articles,
     })
-
 # View untuk membuat artikel (hanya admin)
 @user_passes_test(is_admin)
 def create_article(request):
@@ -24,7 +23,7 @@ def create_article(request):
         form = NewsArticleForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('news_article_list')
+            return redirect('news:news_article_list')  # Use namespaced URL
     else:
         form = NewsArticleForm()
     return render(request, 'news/create_article.html', {'form': form})
@@ -37,7 +36,7 @@ def edit_article(request, id):
         form = NewsArticleForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
             form.save()
-            return redirect('news_article_list')
+            return redirect('news:news_article_list')  # Use namespaced URL
     else:
         form = NewsArticleForm(instance=article)
     return render(request, 'news/edit_article.html', {'form': form})
@@ -48,5 +47,5 @@ def delete_article(request, id):
     article = get_object_or_404(NewsArticle, id=id)
     if request.method == "POST":
         article.delete()
-        return redirect('news_article_list')
+        return redirect('news:news_article_list')  # Use namespaced URL
     return render(request, 'news/delete_article.html', {'article': article})
