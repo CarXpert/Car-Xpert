@@ -1,67 +1,140 @@
-{% extends 'base.html' %}
-
 {% block content %}
-<style>
-    .wishlist-grid {
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .wishlist-card {
-        width: 30%;
-        margin: 1%;
-        border: 1px solid #ddd;
-        padding: 10px;
-        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-    }
-    .wishlist-card h3 {
-        margin-top: 0;
-    }
-    .edit-note-button {
-        display: inline-block;
-        margin-top: 10px;
-        background-color: #007bff;
-        color: white;
-        padding: 5px 10px;
-        text-decoration: none;
-        border-radius: 5px;
-    }
-    .edit-note-button:hover {
-        background-color: #0056b3;
-    }
-    .total-price-btn {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: #38a169;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-size: 18px;
-        font-weight: bold;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-    .total-price-btn:hover {
-        background-color: #2f855a;
-    }
-</style>
+{% load static %}
+{% load humanize %} 
 
-<div class="container mx-auto mt-20 p-6">
-    <h2 class="text-2xl font-bold mb-4">My Wishlist</h2>
-    <div class="wishlist-grid">
-        {% for item in wishlist_items %}
-        <div class="wishlist-card">
-            <h3>{{ item.car.brand }} {{ item.car.model }}</h3>
-            <p>Notes: {{ item.notes }}</p>
-            <p>Type: {{ item.car.car_type }}</p>
-            <p>Color: {{ item.car.color }}</p>
-            <p>Year: {{ item.car.year }}</p>
-            <a href="{% url 'main:car_detail' item.car.id %}" class="edit-note-button">View Details</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>My Wishlist</title>
+    <style>
+        /* Layout dasar responsif dengan grid */
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .wishlist-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative; /* Untuk posisi ikon */
+        }
+        .wishlist-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        .wishlist-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .wishlist-card h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: #333;
+        }
+        .showroom-name {
+            font-size: 14px; /* Ukuran font lebih kecil untuk showroom */
+            color: #ccc; /* Ubah warna jika diperlukan */
+            text-transform: none; /* Hilangkan huruf kapital */
+        }
+        .edit-note-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #07325f;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        .edit-note-button:hover {
+            background-color: #0056b3;
+        }
+
+        .remove-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #ff4d4d; /* Warna merah untuk ikon */
+            cursor: pointer; /* Menunjukkan bahwa ini dapat diklik */
+            font-size: 20px; /* Ukuran ikon */
+        }
+
+        .love-icon {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: red; /* Warna merah untuk ikon love */
+            cursor: pointer; /* Menunjukkan bahwa ini dapat diklik */
+            font-size: 24px; /* Ukuran ikon */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
+            color: white;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="container mx-auto mt-20 p-6">   
+        <h1>My Wishlist</h1>
+        <div class="wishlist-grid">
+            {% for item in wishlist_items %}
+            <div class="wishlist-card" data-id="{{ item.id }}">
+                <i class="fas fa-heart love-icon" onclick="removeFromWishlist()"></i>
+                <img src="{% static 'images/' %}{{ item.car.brand }}.png" alt="{{ item.car.brand }} logo">
+                <h3>{{ item.car.brand }} - {{ item.car.model|title }}</h3>
+                <h3 class="showroom-name">{{ item.car.showroom.showroom_name|title }}</h3>
+                <a href="{% url 'main:car_detail' item.car.id %}" class="edit-note-button">Details</a>
+            </div>
+            {% empty %}
+            <p>No items in your wishlist.</p>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p>No items in your wishlist.</p>
-        {% endfor %}
     </div>
 
-</div>
+    <script>
+        function removeFromWishlist() {
+            // Mengirim permintaan untuk menghapus item dari wishlist
+            fetch(`/wishlist/remove/${itemId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Hapus card dari DOM jika penghapusan berhasil
+                    const card = document.querySelector(`.wishlist-card[data-id="${itemId}"]`);
+                    if (card) {
+                        card.remove();
+                    }
+                    alert('Item removed from wishlist.');
+                } else {
+                    alert('Failed to remove item from wishlist.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
 {% endblock %}

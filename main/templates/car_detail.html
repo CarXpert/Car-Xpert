@@ -5,6 +5,8 @@
     <!-- Load static tag -->
     {% load static %}
     {% load humanize %} <!-- Load humanize after enabling it in settings -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         /* Background Gradient */
         body {
@@ -45,9 +47,11 @@
         /* Car Info Container */
         .car-info-container {
             display: flex;
-            flex-direction: column;
             flex-grow: 1;
             margin-left: 20px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
         }
 
         /* Car Info - Name and Price */
@@ -183,6 +187,38 @@
             }
         }
 
+        /* Wishlist Icon Styling */
+        .wishlist-icon {
+            font-size: 50px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            background: none; 
+            border: none; 
+            display: inline-block;
+            position: relative;
+        }
+
+        .wishlist-icon.in-wishlist {
+            color: red; /* Gaya untuk ikon yang ditambahkan ke wishlist */
+        }
+
+        .wishlist-icon i {
+            color: white; /* Warna default */
+            transition: color 0.3s; /* Transisi halus untuk perubahan warna */
+        }
+
+        .wishlist-icon i.active {
+            color: red; /* Warna ketika ikon aktif */
+        }
+
+        .wishlist-icon .fas {
+            color: white; /* Warna default */
+        }
+
+        .wishlist-icon .fas.active {
+            color: red; /* Warna ketika mobil ada di wishlist */
+        }
+
     </style>
 </head>
 <body>
@@ -202,6 +238,11 @@
                     <h1>{{ car.brand }} {{ car.model }}</h1>
                     <p class="price">Rp {{ car.price_cash|intcomma }}</p>
                 </div>
+
+            <!-- Wishlist Icon -->
+            <button id="wishlist-btn" class="wishlist-icon" data-car-id="{{ car.id }}">
+                <i class="fas fa-heart {% if car.is_in_wishlist %}active{% endif %}"></i>
+            </button>
             </div>
         </div>
 
@@ -260,6 +301,57 @@
                 {% endcomment %}
             </div>
         </div>
-    </div>
+    </div>   
 </body>
+
+<script>
+$('#wishlist-btn').click(function() {
+    var carId = $(this).data('car-id');
+    var $icon = $(this).find('.fas');
+
+    $.ajax({
+        url: '{% url "wishlist:add_remove_wishlist" %}',
+        type: 'POST',
+        data: {
+            'car_id': carId,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+            if (response.in_wishlist) {
+                $icon.addClass('active');  // Mengubah warna jadi merah
+            } else {
+                $icon.removeClass('active');  // Mengembalikan warna ke putih
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+});
+document.querySelectorAll('.wishlist-icon').forEach(icon => {
+    icon.addEventListener('click', function() {
+        const carId = this.dataset.carId; // Ambil ID mobil dari data attribute
+        fetch('/add-remove-wishlist/', { // Ganti dengan URL yang sesuai
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') // Fungsi untuk mendapatkan CSRF token
+            },
+            body: JSON.stringify({ car_id: carId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.in_wishlist) {
+                this.classList.add('in-wishlist'); // Tambahkan kelas jika di wishlist
+                this.style.color = 'red'; // Atur warna ikon
+            } else {
+                this.classList.remove('in-wishlist'); // Hapus kelas jika tidak di wishlist
+                this.style.color = 'white'; // Kembalikan warna ikon
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+</script>
+
 </html>
