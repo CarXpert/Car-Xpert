@@ -235,7 +235,7 @@
             <div class="car-info-container">
                 <!-- Car Name and Price -->
                 <div class="car-info">
-                    <h1>{{ car.brand }} {{ car.model }}</h1>
+                    <h1>{{ car.brand }} {{ car.car_type }}</h1>
                     <p class="price">Rp {{ car.price_cash|intcomma }}</p>
                 </div>
 
@@ -251,7 +251,7 @@
             <h2>Car Description</h2>
             <div class="additional-info">
                 <div class="left">
-                    <p><strong>Car Type:</strong> {{ car.car_type }}</p>
+                    <p><strong>Car Model:</strong> {{ car.model }}</p>
                     <p><strong>Color:</strong> {{ car.color }}</p>
                     <p><strong>Year:</strong> {{ car.year }}</p>
                     <p><strong>Fuel Type:</strong> {{ car.fuel_type }}</p>
