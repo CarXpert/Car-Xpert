@@ -22,6 +22,28 @@
             font-family: 'Arial', sans-serif;
         }
 
+        /* Filter Styling */
+        .filter-container {
+            display: flex;
+            justify-content: flex-end; /* Align the filter to the right */
+            margin-bottom: 20px;
+        }
+
+        .filter-dropdown {
+            padding: 8px;
+            background-color: #1f2937; /* Dark background */
+            color: white;
+            border-radius: 5px;
+            border: 1px solid #4b5563; /* Darker border */
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .filter-dropdown option {
+            background-color: #1f2937;
+            color: white;
+        }
+
         /* Car Grid Styling */
         .car-grid {
             display: flex;
@@ -151,8 +173,25 @@
 
     <div class="main-container">
 
+        <!-- Title and Filter Section -->
+        <div class="flex justify-between items-center mb-4">
+            <h1>Available Cars</h1>
+            <div class="filter-container">
+                <form method="GET" action="{% url 'main:show_main' %}">
+                    <select name="filter" class="filter-dropdown" onchange="this.form.submit()">
+                        <option value="">Sort by...</option>
+                        <option value="mileage_high">Highest Mileage</option>
+                        <option value="mileage_low">Lowest Mileage</option>
+                        <option value="year_high">Newest Year</option>
+                        <option value="year_low">Oldest Year</option>
+                        <option value="price_high">Highest Price</option>
+                        <option value="price_low">Lowest Price</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
         <!-- Car Grid Section -->
-        <h1>Available Cars</h1>
         <div class="car-grid">
             {% for car in cars|slice:":40" %}  <!-- Limit to 40 cars -->
             <div class="car-card">

@@ -1,3 +1,4 @@
+# models.py di app cars
 from django.db import models
 import uuid
 
