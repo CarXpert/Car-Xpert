@@ -32,6 +32,7 @@
             font-size: 24px;
             font-weight: bold;
             letter-spacing: 2px;
+            text-decoration: none; /* Remove underline */
         }
 
         .nav-content {
@@ -135,9 +136,10 @@
 <body>
 
 <nav class="navbar">
-    <div class="logo">
+    <!-- Updated logo link -->
+    <a class="logo" href="{% url 'main:show_main' %}">
         CARXPERT
-    </div>
+    </a>
     
     <div class="nav-content">
         <div class="search-container">
@@ -146,12 +148,16 @@
         </div>
         
         <div class="nav-icons">
-            <button aria-label="Favorites">
-                <i class="fas fa-heart"></i>
-            </button>
-            <button aria-label="Compare">
-                <i class="fas fa-exchange-alt"></i>
-            </button>
+            <a href="{% url 'wishlist_view' %}">
+                <button aria-label="Favorites">
+                    <i class="fas fa-heart"></i>
+                </button>
+            <!-- Wrapped the compare icon in an anchor tag -->
+            <a href="{% url 'compare_cars' %}">
+                <button aria-label="Compare">
+                    <i class="fas fa-exchange-alt"></i>
+                </button>
+            </a>
             <button aria-label="Profile">
                 <i class="fas fa-user"></i>
             </button>

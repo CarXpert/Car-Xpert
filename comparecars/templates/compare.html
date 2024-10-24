@@ -138,7 +138,8 @@
         <div class="button-container">
             <button class="compare-button" onclick="compareCars()">Compare</button>
             <button class="save-button" onclick="saveComparison()">Save Comparison</button>
-            <button class="compare-list" onclick="compare_list.html">Go to comparison list</button>
+            <button class="compare-list" onclick="goToComparisonList()">Go to comparison list</button>
+
         </div>
     </div>
 
@@ -310,6 +311,10 @@
             }
         }
         return cookieValue;
+    }
+
+    function goToComparisonList() {
+        window.location.href = '/comparecars/list-comparisons/';
     }
 </script>
 
