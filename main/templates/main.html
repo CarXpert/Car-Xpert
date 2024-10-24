@@ -1,50 +1,238 @@
-<!-- main.html  di app main -->
+<!-- main.html di app main -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Car List</title>
     <style>
+        /* Gradient Background */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c); /* Black to Dark Blue gradient */
+            color: #fff;
+        }
+
+        /* Main Container Styling */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Filter Styling */
+        .filter-container {
+            display: flex;
+            justify-content: flex-end; /* Align the filter to the right */
+            margin-bottom: 20px;
+        }
+
+        .filter-dropdown {
+            padding: 8px;
+            background-color: #1f2937; /* Dark background */
+            color: white;
+            border-radius: 5px;
+            border: 1px solid #4b5563; /* Darker border */
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .filter-dropdown option {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        /* Car Grid Styling */
         .car-grid {
             display: flex;
+            justify-content: space-around;
+            gap: 20px;
             flex-wrap: wrap;
         }
+
+        /* Car Card Styling */
         .car-card {
-            width: 30%;
-            margin: 1%;
-            border: 1px solid #ddd;
-            padding: 10px;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff; /* Set background color to white */
+            width: 220px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: transform 0.3s ease;
+            color: #000; /* Ensure text color contrasts with white background */
         }
+
+        .car-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .car-card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
         .car-card h3 {
-            margin-top: 0;
+            margin: 10px 0;
+            font-size: 18px;
+            color: #000; /* Text color inside card */
         }
+
+        .car-card p {
+            font-size: 14px;
+            color: #555; /* Text color inside card */
+        }
+
+        /* Action buttons */
         .car-card a {
-            display: inline-block;
-            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
             background-color: #007bff;
             color: white;
-            padding: 5px 10px;
             text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background 0.3s ease;
         }
+
         .car-card a:hover {
             background-color: #0056b3;
         }
+
+        /* Icon buttons in the card */
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .card-actions button {
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .card-actions button i {
+            color: #000; /* Change icon color for better visibility */
+            font-size: 20px;
+        }
+
+        /* News Section */
+        .news-section {
+            margin-top: 40px;
+        }
+
+        .news-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .news-grid {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        .news-card {
+            background-color: #2c2c4b;
+            width: 220px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .news-card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .news-card h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .news-card p {
+            font-size: 12px;
+            color: #bbb;
+        }
     </style>
+
+    <!-- Load static tag -->
+    {% load static %}
 </head>
 <body>
     {% include 'header.html' %}
-    <h1>Available Cars</h1>
-    <div class="car-grid">
-        {% for car in cars %}
-        <div class="car-card">
-            <h3>{{ car.brand }} {{ car.model }}</h3>
-            <p>Type: {{ car.car_type }}</p>
-            <p>Color: {{ car.color }}</p>
-            <p>Year: {{ car.year }}</p>
-            <!-- Link menuju halaman detail mobil -->
-            <a href="{% url 'main:car_detail' car.id %}">View Details</a>
+
+    <div class="main-container">
+
+        <!-- Title and Filter Section -->
+        <div class="flex justify-between items-center mb-4">
+            <h1>Available Cars</h1>
+            <div class="filter-container">
+                <form method="GET" action="{% url 'main:show_main' %}">
+                    <select name="filter" class="filter-dropdown" onchange="this.form.submit()">
+                        <option value="">Sort by...</option>
+                        <option value="mileage_high">Highest Mileage</option>
+                        <option value="mileage_low">Lowest Mileage</option>
+                        <option value="year_high">Newest Year</option>
+                        <option value="year_low">Oldest Year</option>
+                        <option value="price_high">Highest Price</option>
+                        <option value="price_low">Lowest Price</option>
+                    </select>
+                </form>
+            </div>
         </div>
-        {% endfor %}
+
+        <!-- Car Grid Section -->
+        <div class="car-grid">
+            {% for car in cars|slice:":40" %}  <!-- Limit to 40 cars -->
+            <div class="car-card">
+                <!-- Gambar diambil dari static/images/ berdasarkan brand -->
+                <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} {{ car.model }}">
+                <h3>{{ car.brand }} {{ car.model }}</h3>
+                <p>Type: {{ car.car_type }}</p>
+                <p>Color: {{ car.color }}</p>
+                <p>Year: {{ car.year }}</p>
+
+                <div class="card-actions">
+                    <a href="{% url 'main:car_detail' car.id %}">View Details</a>
+                    <button>
+                        <i class="fa fa-ellipsis-h"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- News Section -->
+        <div class="news-section">
+            <h2 class="news-title">NEWS</h2>
+            <div class="news-grid">
+                <div class="news-card">
+                    <img src="path_to_image" alt="News 1">
+                    <h4>Automotive</h4>
+                    <p>Prestone EV coolants</p>
+                </div>
+                <div class="news-card">
+                    <img src="path_to_image" alt="News 2">
+                    <h4>Cars & Concepts</h4>
+                    <p>Next-gen Chevrolet Bolt EV</p>
+                </div>
+                <div class="news-card">
+                    <img src="path_to_image" alt="News 3">
+                    <h4>AM Newscast</h4>
+                    <p>GM will drop Ultium name</p>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

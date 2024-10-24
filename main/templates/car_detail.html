@@ -1,11 +1,18 @@
-<!-- car_detail.html  di app main -->
+<!-- car_detail.html di app -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>{{ car.brand }} {{ car.model }} - Details</title>
+        <!-- Muat static tag -->
+        {% load static %}
 </head>
 <body>
     <h1>{{ car.brand }} {{ car.model }}</h1>
+    
+    <!-- Gambar Brand -->
+    <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} logo" style="width:200px;height:auto;">
+
+    
     <p><strong>Car Type:</strong> {{ car.car_type }}</p>
     <p><strong>Color:</strong> {{ car.color }}</p>
     <p><strong>Year:</strong> {{ car.year }}</p>
