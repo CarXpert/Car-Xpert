@@ -19,7 +19,7 @@
         }
 
         .navbar {
-            background-color: #black;
+            background-color: #000000;
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -32,7 +32,7 @@
             font-size: 24px;
             font-weight: bold;
             letter-spacing: 2px;
-            text-decoration: none; /* Remove underline */
+            text-decoration: none;
         }
 
         .nav-content {
@@ -96,6 +96,34 @@
             transform: scale(1.1);
         }
 
+        .btn-login {
+            background-color: #006400; /* Dark Green */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background-color: #004d00;
+        }
+
+        .btn-logout {
+            background-color: #ff0000; /* Red */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: #cc0000;
+        }
+
         @media (max-width: 768px) {
             .nav-content {
                 gap: 1rem;
@@ -145,9 +173,17 @@
                 <i class="fas fa-search"></i>
                 <input id="search-input" type="text" class="search-input" placeholder="SEARCH">
             </div>
+
+            <div>
+                {% if user.is_authenticated %}
+                    <span style="color: white;">Welcome, {{ user.username }}!</span>
+                {% else %}
+                    <span style="color: white;">Welcome, Guest!</span>
+                {% endif %}
+            </div>
             
             <div class="nav-icons">
-                <a href="{% url 'wishlist_view' %}">
+                <a href="{% url 'wishlist:wishlist_view' %}">
                     <button aria-label="Favorites">
                         <i class="fas fa-heart"></i>
                     </button>
@@ -157,9 +193,17 @@
                         <i class="fas fa-exchange-alt"></i>
                     </button>
                 </a>
-                <button aria-label="Profile">
-                    <i class="fas fa-user"></i>
-                </button>
+
+                {% if user.is_authenticated %}
+                    <form method="POST" action="{% url 'authentication:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-logout">Log Out</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'authentication:login' %}">
+                        <button class="btn-login">Login</button>
+                    </a>
+                {% endif %}
             </div>
         </div>
     </nav>
