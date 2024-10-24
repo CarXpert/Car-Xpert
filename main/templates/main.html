@@ -1,5 +1,6 @@
 <!-- main.html di app main -->
 <!DOCTYPE html>
+{% load humanize %}
 <html>
 <head>
     <title>Car List</title>
@@ -201,6 +202,8 @@
                 <p>Type: {{ car.car_type }}</p>
                 <p>Color: {{ car.color }}</p>
                 <p>Year: {{ car.year }}</p>
+                <p>Mileage: {{ car.mileage }} km</p>
+                <p>Price: Rp {{ car.price_cash|intcomma }}</p>
 
                 <div class="card-actions">
                     <a href="{% url 'main:car_detail' car.id %}">View Details</a>
