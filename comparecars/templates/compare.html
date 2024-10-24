@@ -259,6 +259,18 @@
                         <th id="car2-name">Mobil 2</th>
                     </tr>
                 </thead>
+                <div class="button-container">
+                    <button class="action-button compare-button" onclick="compareCars()">
+                        Compare Cars
+                    </button>
+                    <button class="action-button save-button" onclick="saveComparison()">
+                        Save Comparison
+                    </button>
+                    <button class="action-button compare-list" onclick="goToComparisonList()">
+                        View All Comparisons
+                    </button>
+                </div>
+            </div>
                 <tbody>
                     <tr>
                         <td>Brand</td>
@@ -292,19 +304,6 @@
                     </tr>
                 </tbody>
             </table>
-
-            <div class="button-container">
-                <button class="action-button compare-button" onclick="compareCars()">
-                    Compare Cars
-                </button>
-                <button class="action-button save-button" onclick="saveComparison()">
-                    Save Comparison
-                </button>
-                <button class="action-button compare-list" onclick="goToComparisonList()">
-                    View All Comparisons
-                </button>
-            </div>
-        </div>
     </section>
 
 <script>
