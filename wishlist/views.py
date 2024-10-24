@@ -22,7 +22,6 @@ def show_wishlist(request):
     return render(request, 'wishlist/wishlist_page.html', context)
 
 
-
 # Fungsi untuk menambahkan atau memperbarui catatan pada wishlist melalui AJAX
 @csrf_exempt
 @require_POST
@@ -60,13 +59,6 @@ def update_note(request, wishlist_id):
         note = request.POST.get('note', '')
         wishlist_item.note = note
         wishlist_item.save()
-    return redirect('wishlist_view')
-
-# Fungsi untuk menghapus item dari wishlist
-@login_required
-def remove_from_wishlist(request, wishlist_id):
-    wishlist_item = get_object_or_404(Wishlist, id=wishlist_id, user=request.user)
-    wishlist_item.delete()
     return redirect('wishlist_view')
 
 @login_required
@@ -115,4 +107,22 @@ def add_remove_wishlist(request):
             return JsonResponse({'error': 'Car not found'}, status=404)
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@login_required
+def remove_from_wishlist(request):
+    if request.method == 'POST':
+        car_id = request.POST.get('car_id')
+        user = request.user
+        
+        try:
+            # Get the wishlist item for the specified car and user
+            wishlist_item = Wishlist.objects.get(user=user, car__id=car_id)
+            wishlist_item.delete()  # Delete the item from the wishlist
+            return JsonResponse({'status': 'success', 'message': 'Item removed from wishlist.'}, status=200)
+        except Wishlist.DoesNotExist:
+            return JsonResponse({'status': 'not found', 'message': 'Item not found in wishlist.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    return JsonResponse({'status': 'bad request', 'message': 'Invalid request method.'}, status=400)
 
