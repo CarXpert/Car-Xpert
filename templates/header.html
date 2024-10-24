@@ -1,46 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navbar Example</title>
+    <!-- Add FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-<!-- header.html dengan direktori Car-Xpert\templates\header.html -->
-<nav style="background-color: #0c0f2a; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-    <!-- Logo / Title -->
-    <div style="color: white; font-size: 24px; font-family: 'Arial', sans-serif; letter-spacing: 2px;">
+        body {
+            background-color: #f0f0f0;
+        }
+
+        .navbar {
+            background-color: #0c0f2a;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-decoration: none; /* Remove underline */
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .search-input {
+            background-color: #1a1f4d;
+            border: none;
+            padding: 12px 20px 12px 40px;
+            border-radius: 25px;
+            color: white;
+            width: 300px;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            background-color: #242a5a;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #666;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-icons button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-icons button:hover {
+            color: #a0a0a0;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .nav-content {
+                gap: 1rem;
+            }
+
+            .search-input {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .nav-content {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .search-container {
+                width: 100%;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .nav-icons {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <!-- Updated logo link -->
+    <a class="logo" href="{% url 'main:show_main' %}">
         CARXPERT
-    </div>
-
-    <!-- Search bar and icons -->
-    <div style="display: flex; align-items: center; gap: 400px;"> <!-- Ubah gap menjadi lebih kecil -->
-        <!-- Search bar -->
-        <div style="position: relative; display: flex; align-items: center;">
-            <span style="position: absolute; left: 15px; color: white;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.44 0a5.5 5.5 0 1 1 0-7.778 5.5 5.5 0 0 1 0 7.778z"/>
-                </svg>
-            </span>
-            <input type="text" placeholder="SEARCH" 
-                   style="background-color: #333; border: none; padding: 10px 20px; border-radius: 25px; color: white; padding-left: 40px; width: 300px; outline: none; font-size: 16px;">
+    </a>
+    
+    <div class="nav-content">
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" class="search-input" placeholder="SEARCH">
         </div>
-
-        <!-- Icons -->
-        <div style="display: flex; gap: 20px;"> <!-- Ikon sekarang lebih dekat ke search bar -->
-            <!-- Heart icon -->
-            <div style="color: white; cursor: pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                  <path d="M8 2.748-.717 1.737C4.92-.688 8.002 3.314 8 3.314 8-.688 11.08-.688 15.682 3.314c1.098 1.077 1.798 2.616 1.798 4.385 0 1.768-.7 3.308-1.798 4.385C11.08 15.312 8.002 15.312 8 15.312c-.002 0-3.08-.001-7.682-7.313C-.717 10.312 0 .688 0 .688z"/>
-                </svg>
-            </div>
-
-            <!-- Sync icon -->
-            <div style="color: white; cursor: pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-                  <path d="M2 8a6 6 0 1 1 4.916 5.923V12.62l-2.75 1.625L7.5 16.65v-2.686A5.998 5.998 0 1 0 2 8z"/>
-                </svg>
-            </div>
-
-            <!-- User icon -->
-            <div style="color: white; cursor: pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm4-3a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM2 13s1-3 6-3 6 3 6 3v1H2v-1z"/>
-                </svg>
-            </div>
+        
+        <div class="nav-icons">
+            <a href="{% url 'wishlist_view' %}">
+                <button aria-label="Favorites">
+                    <i class="fas fa-heart"></i>
+                </button>
+            <!-- Wrapped the compare icon in an anchor tag -->
+            <a href="{% url 'compare_cars' %}">
+                <button aria-label="Compare">
+                    <i class="fas fa-exchange-alt"></i>
+                </button>
+            </a>
+            <button aria-label="Profile">
+                <i class="fas fa-user"></i>
+            </button>
         </div>
     </div>
 </nav>
+
+</body>
+</html>

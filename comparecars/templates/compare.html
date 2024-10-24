@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'header.html' %}
     <title>Compare Cars</title>
     <style>
         body {
@@ -14,49 +15,32 @@
             text-align: center;
         }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background-color: #1f2235;
-        }
-
-        header h1 {
-            margin: 0;
-            color: white;
-        }
-
-        input[type="text"] {
-            background-color: #333;
-            border: none;
-            padding: 10px;
-            border-radius: 25px;
-            color: white;
-        }
-
+        /* Container utama */
         .car-comparison {
             max-width: 1200px;
             margin: 40px auto;
         }
 
+        /* Container untuk card dan tombol */
         .car-cards {
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
+        /* Card mobil dengan dropdown */
         .car-card {
             background-color: #333;
             border-radius: 10px;
             padding: 40px;
-            text-align: center;
             width: 300px;
             height: 300px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
+            text-align: center;
+            color: white;
         }
 
         select {
@@ -64,11 +48,49 @@
             font-size: 16px;
             border: none;
             border-radius: 5px;
+            width: 100%;
+            margin-top: 20px;
         }
 
+        /* Tombol Compare dan Save */
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .compare-button, .save-button, .compare-list {
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 150px;
+            background-color: #5a67d8;
+            color: white;
+            border: none;
+        }
+
+        .compare-button:hover {
+            background-color: #434190;
+        }
+
+        .save-button {
+            background-color: #444;
+        }
+
+        .save-button:hover {
+            background-color: #333;
+        }
+
+        .compare-list:hover {
+            background-color: #434190;
+        }
+
+        /* Tabel perbandingan mobil */
         .comparison-table {
             width: 80%;
-            margin: 0 auto;
+            margin: 20px auto;
             border-collapse: collapse;
             color: white;
         }
@@ -87,38 +109,14 @@
             background-color: #333;
         }
 
-        .save-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #444;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .compare-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #5a67d8;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .compare-button:hover {
-            background-color: #434190;
-        }
     </style>
 </head>
 <body>
-{% include 'header.html' %}
 <section class="car-comparison">
     <!-- Dropdown untuk memilih mobil -->
     <div class="car-cards">
         <div class="car-card">
+            <h3>Pilih Mobil 1</h3>
             <select id="car1">
                 <option value="">Pilih Mobil 1</option>
                 {% for car in cars %}
@@ -127,6 +125,7 @@
             </select>
         </div>
         <div class="car-card">
+            <h3>Pilih Mobil 2</h3>
             <select id="car2">
                 <option value="">Pilih Mobil 2</option>
                 {% for car in cars %}
@@ -134,8 +133,15 @@
                 {% endfor %}
             </select>
         </div>
+
+        <!-- Tombol untuk perbandingan dan penyimpanan -->
+        <div class="button-container">
+            <button class="compare-button" onclick="compareCars()">Compare</button>
+            <button class="save-button" onclick="saveComparison()">Save Comparison</button>
+            <button class="compare-list" onclick="goToComparisonList()">Go to comparison list</button>
+
+        </div>
     </div>
-    <button class="compare-button" onclick="compareCars()">Bandingkan</button>
 
     <!-- Tabel untuk menampilkan hasil perbandingan -->
     <table class="comparison-table">
@@ -179,8 +185,6 @@
             </tr>
         </tbody>
     </table>
-
-    <button class="save-button" onclick="saveComparison()">Simpan Perbandingan</button>
 </section>
 
 <script>
@@ -211,10 +215,8 @@
 
     // Memasukkan mobil ke dropdown
     function populateDropdowns(cars) {
-        console.log("Populating Dropdowns:", cars);  // Pastikan data ini muncul
         const car1Dropdown = document.getElementById('car1');
         const car2Dropdown = document.getElementById('car2');
-        console.log(cars)
         // Iterasi mobil dan tambahkan ke dropdown
         cars.forEach(car => {
             const option1 = new Option(`${car.brand} ${car.model}`, car.id);
@@ -228,9 +230,6 @@
     function compareCars() {
         const car1Id = document.getElementById('car1').value;
         const car2Id = document.getElementById('car2').value;
-
-        console.log('Selected cars:', car1Id, car2Id);  // Debug log
-        console.log('Available car data:', carData);    // Debug log
 
         if (!car1Id || !car2Id) {
             alert('Pilih dua mobil untuk dibandingkan.');
@@ -251,8 +250,6 @@
 
     // Update tabel dengan detail mobil
     function updateTable(carNumber, car) {
-        console.log(`Updating table for car ${carNumber}:`, car);  // Debug log
-
         document.getElementById(`car${carNumber}-brand`).textContent = car.brand || '-';
         document.getElementById(`car${carNumber}-model`).textContent = car.model || '-';
         document.getElementById(`car${carNumber}-year`).textContent = car.year || '-';
@@ -268,18 +265,16 @@
         const car1Id = document.getElementById('car1').value;
         const car2Id = document.getElementById('car2').value;
 
-        // Validasi apakah pengguna sudah memilih dua mobil
         if (!car1Id || !car2Id) {
             alert('Pilih dua mobil untuk dibandingkan.');
             return;
         }
 
-        // Simpan perbandingan ke backend
         fetch('/comparecars/compare/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')  // Jangan lupa tambahkan CSRF token
+                'X-CSRFToken': getCookie('csrftoken')
             },
             body: JSON.stringify({
                 car_one_id: car1Id,
@@ -291,7 +286,6 @@
         .then(data => {
             if (data.message) {
                 alert('Perbandingan berhasil disimpan!');
-                // Arahkan pengguna ke halaman daftar perbandingan
                 window.location.href = '/comparecars/list-comparisons/';
             } else {
                 alert('Gagal menyimpan perbandingan. ' + data.error);
@@ -317,6 +311,10 @@
             }
         }
         return cookieValue;
+    }
+
+    function goToComparisonList() {
+        window.location.href = '/comparecars/list-comparisons/';
     }
 </script>
 
