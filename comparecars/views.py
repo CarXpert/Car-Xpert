@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponseNotAllowed
-from .models import CompareCarUser
+from .models import CompareCarUser, CompareCar
 from cars.models import Car
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
@@ -12,18 +12,18 @@ def compare_cars(request):
         try:
             # Parsing data dari POST request
             data = json.loads(request.body)
-            user_id = data.get('user_id')
+            # user_id = data.get('user_id')
             car_one_id = data.get('car_one_id')
             car_two_id = data.get('car_two_id')
 
             # Validasi user dan mobil
-            user = get_object_or_404(User, id=user_id)
+            # user = get_object_or_404(User, id=user_id)
             car_one = get_object_or_404(Car, id=car_one_id)
             car_two = get_object_or_404(Car, id=car_two_id)
 
-            # Membuat objek CompareCarUser
-            comparison = CompareCarUser(user=user, car_one=car_one, car_two=car_two)
-            comparison.save()
+            # Membuat objek CompareCar dan CompareCarUser
+            comparecar = CompareCar.objects.create(car1=car_one, car2=car_two)
+            # comparison = CompareCarUser.objects.create(user=user, comparecar=comparecar)
 
             return JsonResponse({'message': 'Comparison created successfully'}, status=201)
 
@@ -34,46 +34,30 @@ def compare_cars(request):
         # Ambil semua data mobil
         cars = Car.objects.all()
 
-        # Ambil semua perbandingan mobil (jika diperlukan untuk keperluan lain)
+        # Ambil semua perbandingan mobil
         comparisons = CompareCarUser.objects.all()
-        comparison_list = [
-            {
-                'id': comp.id,
-                'user': comp.user.username,
-                'car_one': comp.car_one.brand + " " + comp.car_one.model,
-                'car_two': comp.car_two.brand + " " + comp.car_two.model
-            }
-            for comp in comparisons
-        ]
-
-        # Render HTML dan kirimkan daftar mobil ke template
-        return render(request, 'compare.html', {'cars': cars, 'comparisons': comparison_list})
+        return render(request, 'compare.html', {'cars': cars, 'comparisons': comparisons})
 
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
 @csrf_exempt
 def compare_cars_with_id(request, id):
-    comparison = get_object_or_404(CompareCarUser, id=id)
+    # Gunakan CompareCar, bukan CompareCarUser
+    comparison = get_object_or_404(CompareCar, id=id)
 
     if request.method == 'GET':
-        # Menampilkan detail perbandingan mobil berdasarkan ID
-        data = {
-            'id': comparison.id,
-            'user': comparison.user.username,
-            'car_one': comparison.car_one.brand + " " + comparison.car_one.model,
-            'car_two': comparison.car_two.brand + " " + comparison.car_two.model
-        }
-        return JsonResponse(data)
+        return render(request, 'view_compare.html', {
+            'car1': comparison.car1,
+            'car2': comparison.car2
+        })
 
     elif request.method == 'DELETE':
-        # Menghapus perbandingan mobil
         comparison.delete()
         return JsonResponse({'message': 'Comparison deleted successfully'}, status=204)
 
     elif request.method == 'PUT':
         try:
-            # Parsing data dari PUT request untuk memperbarui perbandingan mobil
             data = json.loads(request.body)
             car_one_id = data.get('car_one_id')
             car_two_id = data.get('car_two_id')
@@ -81,9 +65,8 @@ def compare_cars_with_id(request, id):
             car_one = get_object_or_404(Car, id=car_one_id)
             car_two = get_object_or_404(Car, id=car_two_id)
 
-            # Update comparison
-            comparison.car_one = car_one
-            comparison.car_two = car_two
+            comparison.car1 = car_one
+            comparison.car2 = car_two
             comparison.save()
 
             return JsonResponse({'message': 'Comparison updated successfully'}, status=200)
@@ -115,5 +98,11 @@ def get_cars(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 def list_comparisons(request):
-    comparisons = CompareCarUser.objects.all()  # Atau filter berdasarkan user jika diperlukan
+    # Cek apakah pengguna adalah anonymous user (belum login)
+    # if request.user.is_authenticated:
+    #     comparisons = CompareCar.objects.all()
+    # else:
+    #     comparisons = []  # Jika pengguna tidak login, beri daftar perbandingan kosong
+    comparisons = CompareCar.objects.all()
+
     return render(request, 'compare_list.html', {'comparisons': comparisons})
