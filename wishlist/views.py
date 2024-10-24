@@ -11,13 +11,16 @@ from django.db.models import Min, Max
 from .models import Wishlist  # Adjust import according to your app structure
 from cars.models import Car  # Import Car model
 
+@login_required
 def show_wishlist(request):
-    # Get the wishlist items for the logged-in user
     wishlist_items = Wishlist.objects.filter(user=request.user)
+    wishlist_ids = wishlist_items.values_list('car_id', flat=True)
     context = {
         'wishlist_items': wishlist_items,
+        'wishlist_ids': wishlist_ids, 
     }
     return render(request, 'wishlist/wishlist_page.html', context)
+
 
 
 # Fungsi untuk menambahkan atau memperbarui catatan pada wishlist melalui AJAX
@@ -66,16 +69,6 @@ def remove_from_wishlist(request, wishlist_id):
     wishlist_item.delete()
     return redirect('wishlist_view')
 
-# Fungsi untuk menampilkan halaman wishlist
-@login_required
-def wishlist_view(request):
-    # Mengambil semua item wishlist untuk pengguna yang sedang login
-    wishlist_items = Wishlist.objects.filter(user=request.user)
-    context = {
-        'wishlist_items': wishlist_items,
-    }
-    return render(request, 'wishlist.html', context)  # Pastikan untuk mengganti dengan template yang sesuai
-
 @login_required
 def car_list_view(request):
     cars = Car.objects.all()  # Ambil semua mobil
@@ -96,4 +89,30 @@ def car_list_view(request):
         'cars': cars,
     }
     return render(request, 'car_list.html', context)  # Ganti dengan template yang sesuai
+
+@login_required
+def add_remove_wishlist(request):
+    if request.method == 'POST':
+        car_id = request.POST.get('car_id')
+        user = request.user  # Asumsikan Anda ingin mengaitkan wishlist dengan pengguna yang login
+
+        # Logika untuk menambah atau menghapus dari wishlist
+        try:
+            car = Car.objects.get(id=car_id)
+
+            # Periksa apakah mobil sudah ada di wishlist
+            wishlist_item, created = Wishlist.objects.get_or_create(user=user, car=car)
+
+            if created:  # Jika item baru dibuat, berarti mobil ditambahkan ke wishlist
+                in_wishlist = True
+            else:  # Jika item sudah ada, hapus dari wishlist
+                wishlist_item.delete()
+                in_wishlist = False
+
+            return JsonResponse({'in_wishlist': in_wishlist})
+
+        except Car.DoesNotExist:
+            return JsonResponse({'error': 'Car not found'}, status=404)
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
