@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -6,4 +6,5 @@ urlpatterns = [
     path('compare/<int:id>/', views.compare_cars_with_id, name='compare_cars_with_id'),  
     path('get-cars/', views.get_cars, name='get_cars'),  
     path('list-comparisons/', views.list_comparisons, name='list_comparisons'),
+    path('authentication/', include('authentication.urls')),
 ]

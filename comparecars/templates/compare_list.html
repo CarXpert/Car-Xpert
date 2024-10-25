@@ -131,10 +131,10 @@
         <!-- Link to comparison details -->
         <a href="{% url 'compare_cars_with_id' comparison.id %}" class="comparison-card">
             <button onclick="event.preventDefault(); deleteComparison({{ comparison.id }})">X</button>
-            <img src="{% static 'images/' %}{{ comparison.car1.brand }}.png" alt="Mobil 1" class="car-image" />
-            <img src="{% static 'images/' %}{{ comparison.car2.brand }}.png" alt="Mobil 2" class="car-image" />
+            <img src="{% static 'images/' %}{{ comparison.comparecar.car1.brand }}.png" alt="{{ comparison.comparecar.car1.brand }}" />
+            <img src="{% static 'images/' %}{{ comparison.comparecar.car2.brand }}.png" alt="{{ comparison.comparecar.car2.brand }}" />
             <h3>Comparison {{ forloop.counter }}</h3>
-            <p>{{ comparison.car1.brand }} vs {{ comparison.car2.brand }}</p>
+            <p>{{ comparison.comparecar.car1.brand }} vs {{ comparison.comparecar.car2.brand }}</p>
         </a>
         {% endfor %}
     {% else %}
