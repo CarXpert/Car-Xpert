@@ -4,7 +4,6 @@ from cars.models import Car, ShowRoom
 from wishlist.models import Wishlist
 from django.contrib.auth.decorators import user_passes_test
 from django.utils import timezone
-from .models import Car
 from .forms import CarEditForm
 
 
