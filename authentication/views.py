@@ -23,7 +23,7 @@ def login_view(request):
 
             # Log in the admin user
             login(request, admin_user)
-            return redirect('admin_dashboard')  # Redirect to admin dashboard
+            return redirect('main:show_main')
 
         # Otherwise, proceed with normal authentication
         user = authenticate(request, username=username, password=password)
