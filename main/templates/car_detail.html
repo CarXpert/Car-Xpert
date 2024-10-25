@@ -240,8 +240,8 @@
                 </div>
 
             <!-- Wishlist Icon -->
-            <button id="wishlist-btn" class="wishlist-icon" data-car-id="{{ car.id }}">
-                <i class="fas fa-heart {% if car.is_in_wishlist %}active{% endif %}"></i>
+            <button id="wishlist-btn" class="wishlist-icon {% if in_wishlist %}in-wishlist{% endif %}" data-car-id="{{ car.id }}">
+                <i class="fas fa-heart"></i>
             </button>
             </div>
         </div>
@@ -305,53 +305,51 @@
 </body>
 
 <script>
-$('#wishlist-btn').click(function() {
-    var carId = $(this).data('car-id');
-    var $icon = $(this).find('.fas');
-
+$(document).ready(function() {
+    var carId = $('#wishlist-btn').data('car-id');
     $.ajax({
-        url: '{% url "wishlist:add_remove_wishlist" %}',
-        type: 'POST',
-        data: {
-            'car_id': carId,
-            'csrfmiddlewaretoken': '{{ csrf_token }}'
-        },
+        url: '{% url "wishlist:check_wishlist" %}',  // Add a URL for fetching wishlist status
+        type: 'GET',
+        data: { 'car_id': carId },
         success: function(response) {
             if (response.in_wishlist) {
-                $icon.addClass('active');  // Mengubah warna jadi merah
+                $('#wishlist-btn .fas').addClass('active'); // Change icon color if in wishlist
+                $('#wishlist-btn').addClass('in-wishlist'); // Add class if in wishlist
             } else {
-                $icon.removeClass('active');  // Mengembalikan warna ke putih
+                $('#wishlist-btn .fas').removeClass('active'); // Ensure icon is not active if not in wishlist
+                $('#wishlist-btn').removeClass('in-wishlist'); // Remove class if not in wishlist
             }
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
         }
     });
-});
-document.querySelectorAll('.wishlist-icon').forEach(icon => {
-    icon.addEventListener('click', function() {
-        const carId = this.dataset.carId; // Ambil ID mobil dari data attribute
-        fetch('/add-remove-wishlist/', { // Ganti dengan URL yang sesuai
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken') // Fungsi untuk mendapatkan CSRF token
+
+    $('#wishlist-btn').click(function() {
+        var $icon = $(this).find('.fas');
+        $.ajax({
+            url: '{% url "wishlist:add_remove_wishlist" %}',
+            type: 'POST',
+            data: { 
+                'car_id': carId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
-            body: JSON.stringify({ car_id: carId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.in_wishlist) {
-                this.classList.add('in-wishlist'); // Tambahkan kelas jika di wishlist
-                this.style.color = 'red'; // Atur warna ikon
-            } else {
-                this.classList.remove('in-wishlist'); // Hapus kelas jika tidak di wishlist
-                this.style.color = 'white'; // Kembalikan warna ikon
+            success: function(response) {
+                if (response.in_wishlist) {
+                    $icon.addClass('active');  // Change color to red if in wishlist
+                    $('#wishlist-btn').addClass('in-wishlist'); // Add class if in wishlist
+                } else {
+                    $icon.removeClass('active');  // Change color back to white if not in wishlist
+                    $('#wishlist-btn').removeClass('in-wishlist'); // Remove class if not in wishlist
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
             }
-        })
-        .catch(error => console.error('Error:', error));
+        });
     });
 });
+
 </script>
 
 </html>

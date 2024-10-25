@@ -64,22 +64,33 @@
         .showroom-name {
             font-size: 14px;
             color: #666;
+            margin-bottom: 5px;
+        }
+        .wishlist-note {
+            font-size: 13px;
+            color: #444;
+            font-style: italic;
             margin-bottom: 15px;
         }
         .action-buttons {
             display: flex;
-            justify-content: space-between;
             width: 100%;
+            align-items: center;
         }
-        .remove-icon {
+        .remove-icon, .edit-note-icon {
             font-size: 25px;
             color: rgb(0, 30, 70);
             cursor: pointer;
             background: none;
             border: none;
+            margin: 0 10px;
         }
         .remove-icon:hover {
-            color: #4184cb;
+            color: #cb4141;
+            transform: translateY(-3px);
+        }
+        .edit-note-icon:hover {
+            color: #41cb41;
             transform: translateY(-3px);
         }
         .edit-note-button {
@@ -88,12 +99,12 @@
             font-weight: bold;
             color: #fff;
             background-color: #0056b3;
-            border-radius: 12px;
+            border-radius: 20px;
             text-decoration: none;
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .edit-note-button:hover {
-            background-color: #01274f;
+            background-color: #6998e3;
             transform: translateY(-3px);
         }
     </style>
@@ -109,10 +120,14 @@
                     <div class="card-content">
                         <h3>{{ item.car.brand }} - {{ item.car.model|title }}</h3>
                         <p class="showroom-name">{{ item.car.showroom.showroom_name|title }}</p>
+                        <p class="wishlist-note">{{ item.note|default:"No notes yet" }}</p> <!-- Display notes -->
                     </div>
                     <div class="action-buttons">
                         <button class="remove-icon" data-car-id="{{ item.car.id }}">
                             <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="edit-note-icon" data-car-id="{{ item.car.id }}">
+                            <i class="fas fa-pencil-alt"></i>
                         </button>
                         <a href="{% url 'main:car_detail' item.car.id %}" class="edit-note-button">Details</a>
                     </div>
@@ -148,6 +163,33 @@
                         console.error('Error:', error);
                     }
                 });
+            });
+
+            // Add functionality for the edit note button
+            $('.edit-note-icon').click(function() {
+                const carId = $(this).data('car-id');
+                const currentNote = $(this).closest('.wishlist-card').find('.wishlist-note').text();
+
+                const newNote = prompt("Enter your note:", currentNote !== "No notes yet" ? currentNote : "");
+
+                if (newNote !== null) {
+                    $.ajax({
+                        url: '{% url "wishlist:add_or_edit_note" %}',
+                        type: 'POST',
+                        data: {
+                            'car_id': carId,
+                            'note': newNote,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            $(`[data-id="${carId}"] .wishlist-note`).text(newNote);
+                            $(`[data-id="${carId}"] .edit-note-icon i`).removeClass("fa-plus").addClass("fa-pencil-alt");
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
             });
         });
     </script>

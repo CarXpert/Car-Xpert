@@ -86,22 +86,27 @@ def car_list_view(request):
 def add_remove_wishlist(request):
     if request.method == 'POST':
         car_id = request.POST.get('car_id')
-        user = request.user  
+        user = request.user
 
-        # Logika untuk menambah atau menghapus dari wishlist
         try:
+            # Ambil mobil dari database
             car = Car.objects.get(id=car_id)
 
-            # Periksa apakah mobil sudah ada di wishlist
+            # Buat atau hapus wishlist item
             wishlist_item, created = Wishlist.objects.get_or_create(user=user, car=car)
 
-            if created:  # Jika item baru dibuat, berarti mobil ditambahkan ke wishlist
-                in_wishlist = True
-            else:  # Jika item sudah ada, hapus dari wishlist
+            # Periksa apakah item baru dibuat atau dihapus
+            if created:
+                in_wishlist = True  # Mobil ditambahkan ke wishlist
+            else:
                 wishlist_item.delete()
-                in_wishlist = False
+                in_wishlist = False  # Mobil dihapus dari wishlist
 
-            return JsonResponse({'in_wishlist': in_wishlist})
+            # Berikan respons JSON
+            return JsonResponse({
+                'in_wishlist': in_wishlist,
+                'message': 'Wishlist updated successfully.'
+            })
 
         except Car.DoesNotExist:
             return JsonResponse({'error': 'Car not found'}, status=404)
@@ -131,3 +136,19 @@ def get_wishlist(request):
     wishlist_items = Wishlist.objects.filter(user=user)
     return JsonResponse({'wishlist': list(wishlist_items.values())})
 
+@require_POST
+def add_or_edit_note(request):
+    car_id = request.POST.get('car_id')
+    note = request.POST.get('note')
+    
+    wishlist_item = Wishlist.objects.get(car__id=car_id, user=request.user)
+    wishlist_item.note = note
+    wishlist_item.save()
+    
+    return JsonResponse({'success': True})
+
+def check_wishlist(request):
+    car_id = request.GET.get('car_id')
+    car = get_object_or_404(Car, id=car_id)
+    in_wishlist = Wishlist.objects.filter(user=request.user, car=car).exists()
+    return JsonResponse({'in_wishlist': in_wishlist})
