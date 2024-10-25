@@ -86,7 +86,7 @@ def car_list_view(request):
 def add_remove_wishlist(request):
     if request.method == 'POST':
         car_id = request.POST.get('car_id')
-        user = request.user  # Asumsikan Anda ingin mengaitkan wishlist dengan pengguna yang login
+        user = request.user  
 
         # Logika untuk menambah atau menghapus dari wishlist
         try:
@@ -115,9 +115,9 @@ def remove_from_wishlist(request):
         user = request.user
         
         try:
-            # Get the wishlist item for the specified car and user
+            # Ambil item wishlist untuk mobil dan pengguna yang ditentukan
             wishlist_item = Wishlist.objects.get(user=user, car__id=car_id)
-            wishlist_item.delete()  # Delete the item from the wishlist
+            wishlist_item.delete()  # Hapus item dari wishlist
             return JsonResponse({'status': 'success', 'message': 'Item removed from wishlist.'}, status=200)
         except Wishlist.DoesNotExist:
             return JsonResponse({'status': 'not found', 'message': 'Item not found in wishlist.'}, status=404)
@@ -125,4 +125,9 @@ def remove_from_wishlist(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
     return JsonResponse({'status': 'bad request', 'message': 'Invalid request method.'}, status=400)
+
+def get_wishlist(request):
+    user = request.user
+    wishlist_items = Wishlist.objects.filter(user=user)
+    return JsonResponse({'wishlist': list(wishlist_items.values())})
 
