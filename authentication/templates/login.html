@@ -3,95 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
     <title>Login</title>
+    <!-- Font Import -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
+        /* General body styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            background: url('{% static "images/login-background.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            position: relative;
         }
 
+        /* Dark overlay with diagonal cut */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            clip-path: polygon(0 0, 65% 0, 35% 100%, 0% 100%);
+            z-index: 1;
+        }
+
+        /* Login form container */
         .login-container {
-            background-color: #fff;
-            padding: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            z-index: 2;
             max-width: 400px;
             width: 100%;
-        }
-
-        h2 {
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             text-align: center;
-            color: #333;
         }
 
-        label {
-            display: block;
-            margin: 15px 0 5px;
+        /* Heading */
+        .login-container h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
             font-weight: bold;
         }
 
-        input[type="text"], input[type="password"] {
+        /* Input fields */
+        .login-container input[type="text"], 
+        .login-container input[type="password"] {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
-            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 30px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+        }
+
+        /* Placeholder styling */
+        .login-container input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Login button */
+        .login-container button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 30px;
+            background-color: #000;
+            color: white;
+            font-size: 1rem;
             cursor: pointer;
-            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
 
-        button:hover {
-            background-color: #218838;
+        .login-container button:hover {
+            background-color: #333;
         }
 
-        .signup-link {
-            text-align: center;
-            margin-top: 15px;
+        /* Link to signup */
+        .login-container .signup-link {
+            margin-top: 20px;
+            font-size: 0.9rem;
         }
 
-        .signup-link a {
+        .login-container .signup-link a {
             color: #007bff;
             text-decoration: none;
         }
 
-        .signup-link a:hover {
+        .login-container .signup-link a:hover {
             text-decoration: underline;
+        }
+
+        /* Navigation bar styles */
+        .navbar {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 50px;
+            z-index: 3;
+            font-weight: 700;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-logo img {
+            width: 100px;
+            height: 100px;
+        }
+
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 20px;
+            }
+
+            .login-container {
+                padding: 20px;
+            }
+
+            .login-container h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="login-container">
-    <h2>Login</h2>
-    <form method="POST" action="{% url 'authentication:login' %}">
-        {% csrf_token %}
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+    <!-- Overlay for the background effect -->
+    <div class="overlay"></div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <button type="submit">Login</button>
-    </form>
-
-    <div class="signup-link">
-        <p>Don't have an account yet? <a href="{% url 'authentication:signup' %}">Sign up</a></p>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="navbar-logo">
+            <img src="{% static 'images/logobulat.png' %}" alt="Logo">
+            <a href="{% url 'main:show_main' %}">CARXPERT</a>
+        </div>
     </div>
-</div>
+
+    <!-- Login Form -->
+    <div class="login-container">
+        <h2>Welcome Back,</h2>
+        <form method="POST" action="{% url 'authentication:login' %}">
+            {% csrf_token %}
+            <input type="text" id="username" name="username" placeholder="username" required>
+            <input type="password" id="password" name="password" placeholder="password" required>
+            <button type="submit">Log In</button>
+        </form>
+
+        <div class="signup-link">
+            <p>Don't have an account? <a href="{% url 'authentication:signup' %}">Register</a></p>
+        </div>
+    </div>
 
 </body>
 </html>
