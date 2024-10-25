@@ -1,17 +1,24 @@
 {% block content %}
 {% load static %}
-{% load humanize %} 
+{% load humanize %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>My Wishlist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Layout dasar responsif dengan grid */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
+            color: white;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            min-height: 100vh;
+        }
         .wishlist-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -19,13 +26,16 @@
             padding: 20px;
         }
         .wishlist-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             background-color: white;
             border: 1px solid #ddd;
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative; /* Untuk posisi ikon */
+            position: relative;
         }
         .wishlist-card:hover {
             transform: translateY(-5px);
@@ -38,102 +48,108 @@
             border-radius: 5px;
             margin-bottom: 15px;
         }
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: start;
+        }
         .wishlist-card h3 {
-            margin: 0 0 10px;
+            margin: 0;
             font-size: 18px;
             color: #333;
+            margin-bottom: 5px;
         }
         .showroom-name {
-            font-size: 14px; /* Ukuran font lebih kecil untuk showroom */
-            color: #ccc; /* Ubah warna jika diperlukan */
-            text-transform: none; /* Hilangkan huruf kapital */
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .remove-icon {
+            font-size: 25px;
+            color: rgb(0, 30, 70);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .remove-icon:hover {
+            color: #4184cb;
+            transform: translateY(-3px);
         }
         .edit-note-button {
-            display: inline-block;
             padding: 10px 20px;
-            background-color: #07325f;
-            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #0056b3;
+            border-radius: 12px;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .edit-note-button:hover {
-            background-color: #0056b3;
-        }
-
-        .remove-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: #ff4d4d; /* Warna merah untuk ikon */
-            cursor: pointer; /* Menunjukkan bahwa ini dapat diklik */
-            font-size: 20px; /* Ukuran ikon */
-        }
-
-        .love-icon {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: red; /* Warna merah untuk ikon love */
-            cursor: pointer; /* Menunjukkan bahwa ini dapat diklik */
-            font-size: 24px; /* Ukuran ikon */
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
-            color: white;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            min-height: 100vh;
+            background-color: #01274f;
+            transform: translateY(-3px);
         }
     </style>
 </head>
 <body>
     {% include 'header.html' %}
-    <div class="container mx-auto mt-20 p-6">   
-        <h1>My Wishlist</h1>
+    <div class="container mx-auto mt-20 p-6">
+        <br> <h1>My Wishlist</h1> <br>
         <div class="wishlist-grid">
             {% for item in wishlist_items %}
-            <div class="wishlist-card" data-id="{{ item.id }}">
-                <i class="fas fa-heart love-icon" onclick="removeFromWishlist()"></i>
-                <img src="{% static 'images/' %}{{ item.car.brand }}.png" alt="{{ item.car.brand }} logo">
-                <h3>{{ item.car.brand }} - {{ item.car.model|title }}</h3>
-                <h3 class="showroom-name">{{ item.car.showroom.showroom_name|title }}</h3>
-                <a href="{% url 'main:car_detail' item.car.id %}" class="edit-note-button">Details</a>
-            </div>
+                <div class="wishlist-card" data-id="{{ item.car.id }}">
+                    <img src="{% static 'images/' %}{{ item.car.brand }}.png" alt="{{ item.car.brand }} logo">
+                    <div class="card-content">
+                        <h3>{{ item.car.brand }} - {{ item.car.model|title }}</h3>
+                        <p class="showroom-name">{{ item.car.showroom.showroom_name|title }}</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="remove-icon" data-car-id="{{ item.car.id }}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <a href="{% url 'main:car_detail' item.car.id %}" class="edit-note-button">Details</a>
+                    </div>
+                </div>
             {% empty %}
-            <p>No items in your wishlist.</p>
+                <p>No items in your wishlist.</p>
             {% endfor %}
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function removeFromWishlist() {
-            // Mengirim permintaan untuk menghapus item dari wishlist
-            fetch(`/wishlist/remove/${itemId}/`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Hapus card dari DOM jika penghapusan berhasil
-                    const card = document.querySelector(`.wishlist-card[data-id="${itemId}"]`);
-                    if (card) {
-                        card.remove();
+        $(document).ready(function() {
+            $('.remove-icon').click(function() {
+                const carId = $(this).data('car-id');
+                const $card = $(this).closest('.wishlist-card');
+
+                $.ajax({
+                    url: '{% url "wishlist:remove_from_wishlist" %}',
+                    type: 'POST',
+                    data: {
+                        'car_id': carId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (!response.in_wishlist) {
+                            $card.fadeOut(300, function() {
+                                $card.remove();
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
                     }
-                    alert('Item removed from wishlist.');
-                } else {
-                    alert('Failed to remove item from wishlist.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
+                });
+            });
+        });
     </script>
 </body>
 </html>
