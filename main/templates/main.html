@@ -263,38 +263,33 @@
         <div class="news-section">
             <h2 class="news-title">NEWS</h2>
             <div class="news-grid">
-                {% include 'news_article_list.html' with news_limit=3 %}
+                {% for article in news %}
+                <div class="news-card">
+                    {% if article.image %}
+                        <img src="{{ article.image.url }}" alt="{{ article.title }}">
+                    {% else %}
+                        <img src="{% static 'images/default-placeholder.png' %}" alt="No image available">
+                    {% endif %}
+                    <h4>{{ article.title }}</h4>
+                    <p>{{ article.content|truncatewords:20 }}</p>
+                </div>
+                {% endfor %}
             </div>
-
-            <!-- Admin-only: Manage News Options -->
-            {% if user.is_staff %}
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="{% url 'news:create_article' %}" class="btn btn-success">Add News Article</a>
-                </div>
-
-                <div style="text-align: center; margin-top: 20px;">
-                    {% for article in other_articles %}
-                        <div>
-                            <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-
+        
             <!-- Fallback message if no news exists -->
             {% if news|length == 0 %}
             <div class="no-news">
                 <img src="{% static 'images/Sorry-icon.png' %}" alt="Sorry">
                 <p style="color:#000;">Sorry, we don't have any news yet.</p>
             </div>
-
+            {% endif %}
+        
             <!-- "See all News" link -->
             <div class="see-all-news">
                 <a href="{% url 'news:news_article_list' %}">See all News</a>
             </div>
-            {% endif %}
         </div>
+        
     </div>
 </body>
 </html>
