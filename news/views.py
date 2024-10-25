@@ -26,7 +26,7 @@ def create_article(request):
             return redirect('news:news_article_list')  # Use namespaced URL
     else:
         form = NewsArticleForm()
-    return render(request, 'news/create_article.html', {'form': form})
+    return render(request, 'create_article.html', {'form': form})
 
 # View untuk mengedit artikel (hanya admin)
 @user_passes_test(is_admin)
@@ -39,13 +39,16 @@ def edit_article(request, id):
             return redirect('news:news_article_list')  # Use namespaced URL
     else:
         form = NewsArticleForm(instance=article)
-    return render(request, 'news/edit_article.html', {'form': form})
+    return render(request, 'edit_article.html', {'form': form})
 
 # View untuk menghapus artikel (hanya admin)
 @user_passes_test(is_admin)
-def delete_article(request, id):
+def delete_article_direct(request, id):
+    # Get the article based on the id
     article = get_object_or_404(NewsArticle, id=id)
+    
+    # If this is a POST request, delete the article
     if request.method == "POST":
         article.delete()
-        return redirect('news:news_article_list')  # Use namespaced URL
-    return render(request, 'news/delete_article.html', {'article': article})
+        return redirect('news:news_article_list')  # Redirect back to the news list
+

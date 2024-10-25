@@ -30,11 +30,12 @@ def login_view(request):
         
         if user is not None:
             login(request, user)
-            return redirect('main:show_main')
+            return redirect('main:show_main')  # Redirect to main page after login
         else:
             messages.error(request, 'Invalid username or password.')
 
     return render(request, 'login.html')
+
 
 def signup_view(request):
     if request.method == 'POST':

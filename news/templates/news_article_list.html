@@ -4,28 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Articles</title>
+    {% load static %}
     <style>
+        /* Body background with gradient */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
+            background: linear-gradient(to bottom, #000000, #0f0f3d); /* Black to dark blue gradient */
+            color: #fff;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-        }
-
-        header {
-            background: linear-gradient(135deg, black, blue);
-            color: white;
-            padding: 50px;
-            text-align: center;
         }
 
         .container {
             flex: 1;
             width: 85%;
             margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+            padding: 20px;
+            border-radius: 10px; /* Rounded corners */
         }
 
         .article-grid {
@@ -35,10 +34,15 @@
         }
 
         .article-card {
-            background-color: white;
+            background-color: #1c1c3b;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px);
         }
 
         .article-card img {
@@ -49,15 +53,28 @@
 
         .article-card .content {
             padding: 15px;
+            color: #fff;
         }
 
         .article-card h3 {
             margin: 0;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .article-card p {
+            margin: 5px 0;
+            color: #bdbdbd;
         }
 
     </style>
 </head>
 <body>
+
+    <!-- Only include the header if this template is accessed directly -->
+    {% if not request.resolver_match.view_name == "main:show_main" %}
+        {% include 'header.html' %}
+    {% endif %}
 
     <div class="container">
         <!-- Grid of articles -->
@@ -65,11 +82,22 @@
             {% if other_articles %}
                 {% for article in other_articles|slice:":news_limit" %}
                 <div class="article-card">
-                    <img src="{{ article.image.url }}" alt="{{ article.title }}">
+                    {% if article.image %}
+                        <img src="{{ article.image.url }}" alt="{{ article.title }}">
+                    {% else %}
+                        <img src="{% static 'images/default-placeholder.png' %}" alt="No image available">
+                    {% endif %}
                     <div class="content">
                         <h3>{{ article.title }}</h3>
                         <p>Published by {{ article.author }} on {{ article.published_date|date:"F j, Y" }}</p>
                         <p>{{ article.content|truncatewords:20 }}</p>
+
+                        {% if user.is_staff %}
+                            <form method="POST" action="{% url 'news:delete_article_direct' article.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
@@ -78,7 +106,6 @@
             {% endif %}
         </div>
     </div>
-
 
 </body>
 </html>
