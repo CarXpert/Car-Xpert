@@ -7,6 +7,7 @@ from django.utils import timezone
 from .forms import CarEditForm
 
 
+
 def main_view(request):
     cars = Car.objects.all()  # Retrieve all cars from the database
     return render(request, 'main.html', {'cars': cars})  # Pass cars to the template
@@ -34,16 +35,17 @@ def car_detail(request, car_id):
 # Ensure only staff members (admins) can access this view
 @user_passes_test(lambda u: u.is_staff)
 def edit_car_view(request, car_id):
+    # Fetch the car instance or return a 404 if not found
     car = get_object_or_404(Car, id=car_id)
     
     if request.method == 'POST':
+        # Bind form with POST data
         form = CarEditForm(request.POST, instance=car)
         if form.is_valid():
-            car = form.save(commit=False)
-            car.updated_at = timezone.now()  # Update the last updated date
-            car.save()
-            return redirect('main:car_detail', car_id=car.id)  # Redirect to the car details page after saving
+            form.save()  # Save changes to the car instance
+            return redirect('main:car_detail', car_id=car.id)  # Redirect to car_detail after save
     else:
+        # For GET requests, populate the form with the car's existing data
         form = CarEditForm(instance=car)
 
     return render(request, 'edit_car.html', {'form': form, 'car': car})

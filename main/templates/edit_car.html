@@ -7,42 +7,18 @@
 <body>
     <h1>Edit Car - {{ car.brand }} {{ car.model }}</h1>
     
-    <form method="POST">
+    <!-- Start of the form -->
+    <form method="POST" action="{% url 'main:edit_car' car.id %}">
         {% csrf_token %}
-        <label for="model">Model:</label>
-        <input type="text" name="model" id="model" value="{{ car.model }}"><br>
         
-        <label for="color">Color:</label>
-        <input type="text" name="color" id="color" value="{{ car.color }}"><br>
-
-        <label for="year">Year:</label>
-        <input type="text" name="year" id="year" value="{{ car.year }}"><br>
-
-        <label for="fuel_type">Fuel Type:</label>
-        <input type="text" name="fuel_type" id="fuel_type" value="{{ car.fuel_type }}"><br>
-
-        <label for="cylinder_size">Cylinder Size (cc):</label>
-        <input type="text" name="cylinder_size" id="cylinder_size" value="{{ car.cylinder_size }}"><br>
-
-        <label for="mileage">Mileage (km):</label>
-        <input type="text" name="mileage" id="mileage" value="{{ car.mileage }}"><br>
-
-        <label for="stnk_date">STNK Expiry:</label>
-        <input type="date" name="stnk_date" id="stnk_date" value="{{ car.stnk_date }}"><br>
-
-        <label for="levy_date">Levy Expiry:</label>
-        <input type="date" name="levy_date" id="levy_date" value="{{ car.levy_date }}"><br>
-
-        <label for="license_plate">License Plate:</label>
-        <input type="text" name="license_plate" id="license_plate" value="{{ car.license_plate }}"><br>
-
-        <label for="price_cash">Price (Cash):</label>
-        <input type="text" name="price_cash" id="price_cash" value="{{ car.price_cash }}"><br>
-
-        <label for="price_credit">Price (Credit):</label>
-        <input type="text" name="price_credit" id="price_credit" value="{{ car.price_credit }}"><br>
+        <!-- Render the form fields using Django's form rendering -->
+        {{ form.as_p }}
         
+        <!-- Save button to submit the form -->
         <button type="submit">Save Changes</button>
     </form>
+    
+    <!-- Optional: Link back to the car detail page in case of cancellation -->
+    <a href="{% url 'main:car_detail' car.id %}">Cancel</a>
 </body>
 </html>
