@@ -228,9 +228,9 @@
     <section class="car-comparison">
         <div class="car-cards">
             <div class="car-card">
-                <h3>Pilih Mobil 1</h3>
+                <h3>Car 1</h3>
                 <select id="car1">
-                    <option value="">Pilih Mobil 1</option>
+                    <option value="">Choose</option>
                     {% for car in cars %}
                         <option value="{{ car.id }}">{{ car.brand }} - {{ car.model }}</option>
                     {% endfor %}
@@ -239,9 +239,9 @@
             </div>
 
             <div class="car-card">
-                <h3>Pilih Mobil 2</h3>
+                <h3>Car 2</h3>
                 <select id="car2">
-                    <option value="">Pilih Mobil 2</option>
+                    <option value="">Choose</option>
                     {% for car in cars %}
                         <option value="{{ car.id }}">{{ car.brand }} - {{ car.model }}</option>
                     {% endfor %}
