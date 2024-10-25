@@ -2,17 +2,17 @@
 from django.shortcuts import render, get_object_or_404
 from cars.models import Car
 from wishlist.models import Wishlist
-from news.models import NewsArticle  # Import model NewsArticle
+from news.models import NewsArticle 
 
 def show_main(request):
     cars = Car.objects.all()
     news = NewsArticle.objects.all().order_by('-published_date')[:3]  # Ambil berita terbaru, maksimal 3 berita
     context = {
         'cars': cars,
-        'news': news,  # Tambahkan news ke context
+        'news': news,  
         'user': request.user
     }
-    return render(request, 'main.html', context)  # Render ke 'main/main.html'
+    return render(request, 'main.html', context)  
 
 def car_detail(request, car_id):
     car = Car.objects.get(pk=car_id)

@@ -2,21 +2,17 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import NewsArticle
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import NewsArticleForm
-from django.views.decorators.cache import never_cache
 
 # Cek apakah user adalah admin
 def is_admin(user):
     return user.is_staff
 
 # View untuk menampilkan semua artikel berita
-@never_cache
+
 def news_article_list(request):
-    articles = NewsArticle.objects.all() # Urutkan artikel dari yang terbaru
-    featured_article = articles.first()  # Artikel yang di-highlight
-    other_articles = articles[1:8]  # Ambil 7 artikel selanjutnya
+    articles = NewsArticle.objects.all()  # Tampilkan semua artikel tanpa urutan
     return render(request, 'news_article_list.html', {
-        'featured_article': featured_article,
-        'other_articles': other_articles,
+        'articles': articles,
     })
 # View untuk membuat artikel (hanya admin)
 @user_passes_test(is_admin)

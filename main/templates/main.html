@@ -229,14 +229,6 @@
                 </form>
             </div>
 
-            {% comment %} <!-- Admin-only: Add Car Button -->
-            {% if user.is_staff %}
-                <div>
-                    <a href="{% url 'admin:add_car' %}" class="btn btn-primary">Add New Car</a>
-                </div>
-            {% endif %}
-        </div> {% endcomment %}
-
         <!-- Car Grid Section -->
         <div class="car-grid">
             {% for car in cars|slice:":40" %}
@@ -275,6 +267,20 @@
                 </div>
                 {% endfor %}
             </div>
+
+            <!-- Admin-only: Manage News Options -->
+            {% if user.is_staff %}
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="{% url 'news:create_article' %}" class="btn btn-success">Add News Article</a>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    {% for article in other_articles %}
+                        <div>
+                            <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         
             <!-- Fallback message if no news exists -->
             {% if news|length == 0 %}

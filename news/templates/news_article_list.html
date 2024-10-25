@@ -79,8 +79,8 @@
     <div class="container">
         <!-- Grid of articles -->
         <div class="article-grid">
-            {% if other_articles %}
-                {% for article in other_articles %}
+            {% if articles %}
+                {% for article in articles %}
                 <div class="article-card">
                     {% if article.image %}
                         <img src="{{ article.image.url }}" alt="{{ article.title }}">
