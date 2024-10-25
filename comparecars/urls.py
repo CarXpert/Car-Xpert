@@ -7,4 +7,5 @@ urlpatterns = [
     path('get-cars/', views.get_cars, name='get_cars'),  
     path('list-comparisons/', views.list_comparisons, name='list_comparisons'),
     path('authentication/', include('authentication.urls')),
+    path('compare/<int:id>/edit-comparison-title/', views.edit_comparison_title, name='edit_comparison_title'),
 ]
