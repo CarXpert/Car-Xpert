@@ -144,24 +144,41 @@
         document.getElementById(`car${carNumber}-price_cash`).textContent = `${car.price_cash} IDR`;
     }
 
-    // Save comparison
     function saveComparison() {
         const car1Id = document.getElementById('car1').value;
         const car2Id = document.getElementById('car2').value;
-        if (!car1Id || !car2Id) return alert('Select two cars to save comparison.');
-
+    
+        if (!car1Id || !car2Id) {
+            alert('Please select two cars to compare.');
+            return;
+        }
+    
         fetch('/comparecars/compare/', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
-            body: JSON.stringify({ car_one_id: car1Id, car_two_id: car2Id })
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')  // For CSRF protection
+            },
+            body: JSON.stringify({
+                car_one_id: car1Id,
+                car_two_id: car2Id
+            })
         })
         .then(response => response.json())
         .then(data => {
-            if (data.message) window.location.href = '/comparecars/list-comparisons/';
-            else alert('Failed to save comparison.');
+            if (data.message) {;
+                // Optionally refresh the comparisons list or navigate to another page
+                window.location.href = '/comparecars/list-comparisons/';
+            } else {
+                alert('Failed to create comparison: ' + data.error);
+            }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while creating the comparison.');
+        });
     }
+    
 
     // Get CSRF token
     function getCookie(name) {

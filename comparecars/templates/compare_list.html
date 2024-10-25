@@ -16,20 +16,27 @@
     <div class="comparison-list grid gap-8 max-w-6xl mx-auto grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {% if comparisons %}
             {% for comparison in comparisons %}
-            <!-- Link to comparison details -->
-            <a href="{% url 'compare_cars_with_id' comparison.id %}" class="comparison-card bg-white text-black rounded-xl p-4 shadow-lg hover:shadow-2xl transform transition hover:-translate-y-2 relative">
-                <button class="absolute top-2 right-2 text-red-600 hover:text-red-800 text-lg" onclick="event.preventDefault(); deleteComparison({{ comparison.id }})">X</button>
-                
-                <!-- Car Images -->
-                <div class="flex gap-2 mb-4">
-                    <img class="w-1/2 rounded-md" src="{% static 'images/' %}{{ comparison.comparecar.car1.brand }}.png" alt="{{ comparison.comparecar.car1.brand }}">
-                    <img class="w-1/2 rounded-md" src="{% static 'images/' %}{{ comparison.comparecar.car2.brand }}.png" alt="{{ comparison.comparecar.car2.brand }}">
-                </div>
+            <!-- Comparison Card -->
+            <div id="comparison-{{ comparison.id }}" class="comparison-card bg-white text-black rounded-xl p-4 shadow-lg hover:shadow-2xl transform transition hover:-translate-y-2 relative">
 
-                <!-- Comparison Details -->
-                <h3 class="text-lg font-semibold mb-2">Comparison {{ forloop.counter }}</h3>
-                <p class="text-sm text-gray-700">{{ comparison.comparecar.car1.brand }} vs {{ comparison.comparecar.car2.brand }}</p>
-            </a>
+                <!-- Delete Button -->
+                <button class="absolute top-2 right-2 text-red-600 hover:text-red-800 text-lg" onclick="event.preventDefault(); event.stopPropagation(); deleteComparison({{ comparison.id }})">
+                    X
+                </button>
+
+                <!-- Wrap the card content in an <a> tag -->
+                <a href="{% url 'compare_cars_with_id' comparison.id %}" class="block w-full h-full">
+                    <!-- Car Images -->
+                    <div class="flex gap-2 mb-4">
+                        <img class="w-1/2 rounded-md" src="{% static 'images/' %}{{ comparison.comparecar.car1.brand }}.png" alt="{{ comparison.comparecar.car1.brand }}">
+                        <img class="w-1/2 rounded-md" src="{% static 'images/' %}{{ comparison.comparecar.car2.brand }}.png" alt="{{ comparison.comparecar.car2.brand }}">
+                    </div>
+
+                    <!-- Comparison Details -->
+                    <h3 class="text-lg font-semibold mb-2">Comparison {{ forloop.counter }}</h3>
+                    <p class="text-sm text-gray-700">{{ comparison.comparecar.car1.brand }} vs {{ comparison.comparecar.car2.brand }}</p>
+                </a>
+            </div>
             {% endfor %}
         {% else %}
             <p class="text-center text-lg">No saved comparisons yet.</p>
@@ -39,18 +46,27 @@
 
 <script>
     function deleteComparison(id) {
+        // Make a DELETE request using AJAX
         fetch(`/comparecars/compare/${id}/`, {
             method: 'DELETE',
             headers: {
-                'X-CSRFToken': getCookie('csrftoken')
+                'X-CSRFToken': getCookie('csrftoken')  // CSRF token for security
             }
         })
         .then(response => {
             if (response.ok) {
-                location.reload();
+                // Remove the deleted comparison card from the DOM
+                const comparisonCard = document.getElementById(`comparison-${id}`);
+                if (comparisonCard) {
+                    comparisonCard.remove();
+                }
             } else {
                 alert('Failed to delete comparison');
             }
+        })
+        .catch(error => {
+            console.error('Error during deletion:', error);
+            alert('An error occurred while deleting the comparison.');
         });
     }
 
