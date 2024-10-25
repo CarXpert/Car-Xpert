@@ -1,0 +1,22 @@
+<!-- edit_car.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit {{ car.brand }} {{ car.model }}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="edit-car-container">
+        <h1>Edit {{ car.brand }} {{ car.model }}</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit">Save Changes</button>
+        </form>
+        <a href="{% url 'main:car_detail' car.id %}">Cancel</a>
+    </div>
+</body>
+</html>

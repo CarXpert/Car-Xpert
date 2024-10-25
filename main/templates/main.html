@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load humanize %}
+{% load static %}
 <html>
 <head>
     <title>Car List</title>
@@ -13,7 +14,6 @@
             color: #fff;
         }
 
-        /* Main Container Styling */
         .main-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -22,7 +22,6 @@
             font-family: 'Arial', sans-serif;
         }
 
-        /* Filter Styling */
         .filter-container {
             display: flex;
             justify-content: flex-end; /* Align the filter to the right */
@@ -31,10 +30,10 @@
 
         .filter-dropdown {
             padding: 8px;
-            background-color: #1f2937; /* Dark background */
+            background-color: #1f2937;
             color: white;
             border-radius: 5px;
-            border: 1px solid #4b5563; /* Darker border */
+            border: 1px solid #4b5563;
             cursor: pointer;
             font-size: 16px;
         }
@@ -44,7 +43,6 @@
             color: white;
         }
 
-        /* Car Grid Styling */
         .car-grid {
             display: flex;
             justify-content: space-around;
@@ -52,16 +50,15 @@
             flex-wrap: wrap;
         }
 
-        /* Car Card Styling */
         .car-card {
-            background-color: #fff; /* Set background color to white */
+            background-color: #fff;
             width: 220px;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
             transition: transform 0.3s ease;
-            color: #000; /* Ensure text color contrasts with white background */
+            color: #000;
         }
 
         .car-card:hover {
@@ -77,15 +74,14 @@
         .car-card h3 {
             margin: 10px 0;
             font-size: 18px;
-            color: #000; /* Text color inside card */
+            color: #000;
         }
 
         .car-card p {
             font-size: 14px;
-            color: #555; /* Text color inside card */
+            color: #555;
         }
 
-        /* Action buttons */
         .car-card a {
             display: inline-flex;
             align-items: center;
@@ -103,7 +99,6 @@
             background-color: #0056b3;
         }
 
-        /* Icon buttons in the card */
         .card-actions {
             display: flex;
             justify-content: space-between;
@@ -117,7 +112,7 @@
         }
 
         .card-actions button i {
-            color: #000; /* Change icon color for better visibility */
+            color: #000;
             font-size: 20px;
         }
 
@@ -126,30 +121,27 @@
             margin-top: 40px;
             padding: 30px;
             background-color: #ffffff;
-            border-radius: 20px; /* Rounded corners for news section */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Box shadow for the floating effect */
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        /* News Title Box */
         .news-title {
             text-align: center;
             font-size: 28px;
             margin-bottom: 20px;
             color: #000;
-            background: linear-gradient(to right, #1b1b5c, #ffffff); /* Blue to white gradient */
+            background: linear-gradient(to right, #1b1b5c, #ffffff);
             padding: 15px;
-            border-radius: 12px; /* Rounded corners for the title */
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the title */
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* News Grid */
         .news-grid {
             display: flex;
             justify-content: space-around;
             gap: 20px;
         }
 
-        /* News Card Styling */
         .news-card {
             background-color: #2c2c4b;
             width: 220px;
@@ -175,7 +167,6 @@
             color: #bbb;
         }
 
-        /* "See All News" Link Styling */
         .see-all-news {
             text-align: center;
             margin-top: 20px;
@@ -203,16 +194,11 @@
         }
 
     </style>
-
-    <!-- Load static tag -->
-    {% load static %}
 </head>
 <body>
     {% include 'header.html' %}
 
     <div class="main-container">
-
-        <!-- Title and Filter Section -->
         <div class="flex justify-between items-center mb-4">
             <h1>Available Cars</h1>
             <div class="filter-container">
@@ -228,16 +214,8 @@
                     </select>
                 </form>
             </div>
+        </div>
 
-            {% comment %} <!-- Admin-only: Add Car Button -->
-            {% if user.is_staff %}
-                <div>
-                    <a href="{% url 'admin:add_car' %}" class="btn btn-primary">Add New Car</a>
-                </div>
-            {% endif %}
-        </div> {% endcomment %}
-
-        <!-- Car Grid Section -->
         <div class="car-grid">
             {% for car in cars|slice:":40" %}
             <div class="car-card">
@@ -248,7 +226,6 @@
                 <p>Year: {{ car.year }}</p>
                 <p>Mileage: {{ car.mileage }} km</p>
                 <p>Price: Rp {{ car.price_cash|intcomma }}</p>
-
                 <div class="card-actions">
                     <a href="{% url 'main:car_detail' car.id %}">View Details</a>
                     <button>
@@ -259,37 +236,18 @@
             {% endfor %}
         </div>
 
-        <!-- News Section with Box -->
         <div class="news-section">
             <h2 class="news-title">NEWS</h2>
             <div class="news-grid">
                 {% include 'news_article_list.html' with news_limit=3 %}
             </div>
 
-            <!-- Admin-only: Manage News Options -->
-            {% if user.is_staff %}
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="{% url 'news:create_article' %}" class="btn btn-success">Add News Article</a>
-                </div>
-
-                <div style="text-align: center; margin-top: 20px;">
-                    {% for article in other_articles %}
-                        <div>
-                            <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-
-            <!-- Fallback message if no news exists -->
             {% if news|length == 0 %}
             <div class="no-news">
                 <img src="{% static 'images/Sorry-icon.png' %}" alt="Sorry">
                 <p style="color:#000;">Sorry, we don't have any news yet.</p>
             </div>
 
-            <!-- "See all News" link -->
             <div class="see-all-news">
                 <a href="{% url 'news:news_article_list' %}">See all News</a>
             </div>

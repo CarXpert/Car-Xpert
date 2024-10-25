@@ -1,7 +1,13 @@
+# forms.py
 from django import forms
-from .models import Car  
+from .models import Car
 
-class CarForm(forms.ModelForm):
+class CarEditForm(forms.ModelForm):
     class Meta:
         model = Car
-        fields = ['brand', 'model', 'year', 'price_cash']  # Add other fields as needed
+        fields = ['model', 'color', 'year', 'fuel_type', 'cylinder_size', 'mileage', 'stnk_date', 'levy_date', 'license_plate', 'price_cash', 'price_credit']
+
+        widgets = {
+            'stnk_date': forms.DateInput(attrs={'type': 'date'}),
+            'levy_date': forms.DateInput(attrs={'type': 'date'}),
+        }
