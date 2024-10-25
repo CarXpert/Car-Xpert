@@ -1,453 +1,189 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    {% include 'header.html' %}
-    <title>Compare Cars</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
-            color: white;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            min-height: 100vh;
-        }
-
-        .car-comparison {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-        .car-cards {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-
-        .car-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            width: 300px;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .car-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        select {
-            padding: 12px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            width: 100%;
-            margin-top: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #333;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        select:hover {
-            background-color: white;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-        }
-
-        .comparison-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 40px;
-            margin-bottom: 60px;
-        }
-
-        .comparison-table {
-            width: 90%;
-            margin: 20px auto;
-            border-collapse: separate;
-            border-spacing: 0;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .comparison-table th, 
-        .comparison-table td {
-            padding: 18px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        .comparison-table th {
-            background: linear-gradient(45deg, #1a1a3a, #2a2a5a);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .comparison-table tr:hover td {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Button Container and Buttons */
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 40px;
-            padding: 20px;
-            width: 100%;
-            flex-wrap: wrap;
-        }
-
-        .action-button {
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            min-width: 200px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .compare-button {
-            background: linear-gradient(45deg, #2196F3, #1976D2);
-            color: white;
-        }
-
-        .compare-button:hover {
-            background: linear-gradient(45deg, #2196F3, #1976D2);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
-        }
-
-        .save-button {
-            background: linear-gradient(45deg, #2196F3, #1976D2);
-            color: white;
-        }
-
-        .save-button:hover {
-            background: linear-gradient(45deg, #1976D2, #2196F3);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
-        }
-
-        .compare-list {
-            background: linear-gradient(45deg, #2196F3, #1976D2);
-            color: white;
-        }
-
-        .compare-list:hover {
-            background: linear-gradient(45deg, #2196F3, #1976D2);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(156, 39, 176, 0.3);
-        }
-
-        .action-button::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s ease-out, height 0.3s ease-out;
-        }
-
-        .action-button:active::after {
-            width: 200px;
-            height: 200px;
-        }
-
-        /* Car Image Styling */
-        .car-image {
-            width: 100%;
-            height: 200px;
-            object-fit: contain;
-            margin-top: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .car-image:hover {
-            transform: scale(1.05);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .car-cards {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .car-card {
-                width: 90%;
-                max-width: 400px;
-            }
-
-            .button-container {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .action-button {
-                width: 90%;
-                max-width: 300px;
-            }
-
-            .comparison-table {
-                font-size: 14px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <section class="car-comparison">
-        <div class="car-cards">
-            <div class="car-card">
-                <h3>Car 1</h3>
-                <select id="car1">
-                    <option value="">Choose</option>
-                    {% for car in cars %}
-                        <option value="{{ car.id }}">{{ car.brand }} - {{ car.model }}</option>
-                    {% endfor %}
-                </select>
-                <img id="car1-img" src="" alt="Mobil 1" class="car-image" style="display: none;" data-img-path="{% static 'images/' %}">
-            </div>
-
-            <div class="car-card">
-                <h3>Car 2</h3>
-                <select id="car2">
-                    <option value="">Choose</option>
-                    {% for car in cars %}
-                        <option value="{{ car.id }}">{{ car.brand }} - {{ car.model }}</option>
-                    {% endfor %}
-                </select>
-                <img id="car2-img" src="" alt="Mobil 2" class="car-image" style="display: none;" data-img-path="{% static 'images/' %}">
-            </div>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="car-comparison w-full py-12 px-4 bg-gradient-to-b from-black via-indigo-900 to-indigo-700 text-white min-h-screen">
+    <!-- Car Cards -->
+    <div class="car-cards grid grid-cols-1 md:grid-cols-2 gap-8 justify-center mx-auto max-w-7xl">
+        <!-- Car 1 Card -->
+        <div class="car-card bg-white bg-opacity-10 rounded-xl p-6 shadow-lg hover:shadow-2xl transform transition hover:-translate-y-1">
+            <h3 class="text-lg font-semibold mb-4">Car 1</h3>
+            <select id="car1" class="w-full px-4 py-2 rounded-md bg-gray-200 text-gray-900 focus:outline-none">
+                <option value="">Choose</option>
+                {% for car in cars %}
+                    <option value="{{ car.id }}">{{ car.brand }} - {{ car.model }}</option>
+                {% endfor %}
+            </select>
+            <img id="car1-img" src="" alt="Car 1" class="car-image w-full mt-4 hidden" data-img-path="{% static 'images/' %}">
         </div>
 
-        <div class="comparison-section">
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Spesifikasi</th>
-                        <th id="car1-name">Mobil 1</th>
-                        <th id="car2-name">Mobil 2</th>
-                    </tr>
-                </thead>
-                <div class="button-container">
-                    <button class="action-button compare-button" onclick="compareCars()">
-                        Compare Cars
-                    </button>
-                    <button class="action-button save-button" onclick="saveComparison()">
-                        Save Comparison
-                    </button>
-                    <button class="action-button compare-list" onclick="goToComparisonList()">
-                        View All Comparisons
-                    </button>
-                </div>
-            </div>
-                <tbody>
-                    <tr>
-                        <td>Brand</td>
-                        <td id="car1-brand">-</td>
-                        <td id="car2-brand">-</td>
-                    </tr>
-                    <tr>
-                        <td>Model</td>
-                        <td id="car1-model">-</td>
-                        <td id="car2-model">-</td>
-                    </tr>
-                    <tr>
-                        <td>Tahun</td>
-                        <td id="car1-year">-</td>
-                        <td id="car2-year">-</td>
-                    </tr>
-                    <tr>
-                        <td>Jenis Bahan Bakar</td>
-                        <td id="car1-fuel">-</td>
-                        <td id="car2-fuel">-</td>
-                    </tr>
-                    <tr>
-                        <td>Warna</td>
-                        <td id="car1-color">-</td>
-                        <td id="car2-color">-</td>
-                    </tr>
-                    <tr>
-                        <td>Harga</td>
-                        <td id="car1-price_cash">-</td>
-                        <td id="car2-price_cash">-</td>
-                    </tr>
-                </tbody>
-            </table>
-    </section>
+        <!-- Car 2 Card -->
+        <div class="car-card bg-white bg-opacity-10 rounded-xl p-6 shadow-lg hover:shadow-2xl transform transition hover:-translate-y-1">
+            <h3 class="text-lg font-semibold mb-4">Car 2</h3>
+            <select id="car2" class="w-full px-4 py-2 rounded-md bg-gray-200 text-gray-900 focus:outline-none">
+                <option value="">Choose</option>
+                {% for car in cars %}
+                    <option value="{{ car.id }}">{{ car.brand }} - {{ car.model }}</option>
+                {% endfor %}
+            </select>
+            <img id="car2-img" src="" alt="Car 2" class="car-image w-full mt-4 hidden" data-img-path="{% static 'images/' %}">
+        </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="comparison-section mt-12 mx-auto max-w-7xl">
+        <table class="comparison-table w-full bg-white bg-opacity-10 text-white rounded-lg shadow-lg">
+            <thead class="bg-indigo-800 text-white">
+                <tr>
+                    <th class="p-4">Spesifikasi</th>
+                    <th id="car1-name" class="p-4">Mobil 1</th>
+                    <th id="car2-name" class="p-4">Mobil 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="p-4">Brand</td>
+                    <td id="car1-brand" class="p-4">-</td>
+                    <td id="car2-brand" class="p-4">-</td>
+                </tr>
+                <tr>
+                    <td class="p-4">Model</td>
+                    <td id="car1-model" class="p-4">-</td>
+                    <td id="car2-model" class="p-4">-</td>
+                </tr>
+                <tr>
+                    <td class="p-4">Tahun</td>
+                    <td id="car1-year" class="p-4">-</td>
+                    <td id="car2-year" class="p-4">-</td>
+                </tr>
+                <tr>
+                    <td class="p-4">Jenis Bahan Bakar</td>
+                    <td id="car1-fuel" class="p-4">-</td>
+                    <td id="car2-fuel" class="p-4">-</td>
+                </tr>
+                <tr>
+                    <td class="p-4">Warna</td>
+                    <td id="car1-color" class="p-4">-</td>
+                    <td id="car2-color" class="p-4">-</td>
+                </tr>
+                <tr>
+                    <td class="p-4">Harga</td>
+                    <td id="car1-price_cash" class="p-4">-</td>
+                    <td id="car2-price_cash" class="p-4">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-container flex justify-center gap-6 mt-10 flex-wrap">
+        <button class="action-button compare-button bg-blue-600 text-white font-semibold py-3 px-8 rounded-full hover:bg-blue-700" onclick="compareCars()">
+            Compare Cars
+        </button>
+        <button class="action-button save-button bg-green-600 text-white font-semibold py-3 px-8 rounded-full hover:bg-green-700" onclick="saveComparison()">
+            Save Comparison
+        </button>
+        <button class="action-button compare-list bg-indigo-600 text-white font-semibold py-3 px-8 rounded-full hover:bg-indigo-700" onclick="goToComparisonList()">
+            View All Comparisons
+        </button>
+    </div>
+</section>
 
 <script>
-    let carData = {};  // Menyimpan data mobil yang diambil dari server
+    // The JavaScript part here remains the same
+    let carData = {};  // Stores fetched car data
 
-    // Fetch data mobil dari server
+    // Fetch cars from the server
     function loadCars() {
         fetch('/comparecars/get-cars/')
             .then(response => response.json())
             .then(data => {
-                console.log('Fetched car data:', data);  // Debug log
-
-                // Menyimpan data mobil ke carData tanpa menggunakan reduce
-                carData = {};  // Reset carData sebelum menyimpan
-                for (let i = 0; i < data.length; i++) {
-                    const car = data[i];
-                    carData[car.id] = car;  // Menyimpan setiap mobil berdasarkan ID
-                }
-
-                // Memasukkan data ke dropdown
+                carData = {};  // Reset before saving
+                data.forEach(car => carData[car.id] = car);  // Save cars by ID
                 populateDropdowns(data);
             })
-            .catch(error => {
-                console.error('Error fetching cars:', error);
-                alert('Gagal mengambil data mobil');
-            });
+            .catch(error => console.error('Error fetching cars:', error));
     }
 
-    // Memasukkan mobil ke dropdown
+    // Populate dropdowns with fetched cars
     function populateDropdowns(cars) {
         const car1Dropdown = document.getElementById('car1');
         const car2Dropdown = document.getElementById('car2');
-        // Iterasi mobil dan tambahkan ke dropdown
         cars.forEach(car => {
-            const option1 = new Option(`${car.brand} ${car.model}`, car.id);
-            const option2 = new Option(`${car.brand} ${car.model}`, car.id);
-            car1Dropdown.add(option1);
-            car2Dropdown.add(option2);
+            car1Dropdown.add(new Option(`${car.brand} ${car.model}`, car.id));
+            car2Dropdown.add(new Option(`${car.brand} ${car.model}`, car.id));
         });
     }
 
-    // Fungsi untuk memicu perbandingan setelah tombol "Bandingkan" diklik
+    // Compare selected cars
     function compareCars() {
         const car1Id = document.getElementById('car1').value;
         const car2Id = document.getElementById('car2').value;
-    
-        if (!car1Id || !car2Id) {
-            alert('Pilih dua mobil untuk dibandingkan.');
-            return;
-        }
-    
+        if (!car1Id || !car2Id) return alert('Select two cars to compare.');
+
         const car1 = carData[car1Id];
         const car2 = carData[car2Id];
-    
-        if (!car1 || !car2) {
-            alert('Data mobil tidak lengkap. ID Mobil 1: ' + car1Id + ', ID Mobil 2: ' + car2Id);
-            return;
-        }
-    
+        if (!car1 || !car2) return alert('Invalid car selection.');
+
         updateTable(1, car1);
         updateTable(2, car2);
-    
-        // Ambil data-img-path untuk jalur gambar
-        const car1Img = document.getElementById('car1-img');
-        const car1ImgPath = car1Img.getAttribute('data-img-path') + car1.brand + ".png";
-        car1Img.src = car1ImgPath;
-        car1Img.style.display = 'block';  // Tampilkan gambar mobil 1
-    
-        const car2Img = document.getElementById('car2-img');
-        const car2ImgPath = car2Img.getAttribute('data-img-path') + car2.brand + ".png";
-        car2Img.src = car2ImgPath;
-        car2Img.style.display = 'block';  // Tampilkan gambar mobil 2
-    }
-    
-    
 
-    // Update tabel dengan detail mobil
+        document.getElementById('car1-img').src = `${document.getElementById('car1-img').dataset.imgPath}${car1.brand}.png`;
+        document.getElementById('car1-img').style.display = 'block';
+
+        document.getElementById('car2-img').src = `${document.getElementById('car2-img').dataset.imgPath}${car2.brand}.png`;
+        document.getElementById('car2-img').style.display = 'block';
+    }
+
+    // Update the comparison table
     function updateTable(carNumber, car) {
-        document.getElementById(`car${carNumber}-brand`).textContent = car.brand || '-';
-        document.getElementById(`car${carNumber}-model`).textContent = car.model || '-';
-        document.getElementById(`car${carNumber}-year`).textContent = car.year || '-';
-        document.getElementById(`car${carNumber}-fuel`).textContent = car.fuel_type || '-';
-        document.getElementById(`car${carNumber}-color`).textContent = car.color || '-';
-        document.getElementById(`car${carNumber}-price_cash`).textContent = car.price_cash ? `${car.price_cash} IDR` : '-';
+        document.getElementById(`car${carNumber}-brand`).textContent = car.brand;
+        document.getElementById(`car${carNumber}-model`).textContent = car.model;
+        document.getElementById(`car${carNumber}-year`).textContent = car.year;
+        document.getElementById(`car${carNumber}-fuel`).textContent = car.fuel_type;
+        document.getElementById(`car${carNumber}-color`).textContent = car.color;
+        document.getElementById(`car${carNumber}-price_cash`).textContent = `${car.price_cash} IDR`;
     }
 
-    // Load data mobil ketika halaman di-load
-    document.addEventListener('DOMContentLoaded', loadCars);
-
+    // Save comparison
     function saveComparison() {
         const car1Id = document.getElementById('car1').value;
         const car2Id = document.getElementById('car2').value;
-
-        if (!car1Id || !car2Id) {
-            alert('Pilih dua mobil untuk dibandingkan.');
-            return;
-        }
+        if (!car1Id || !car2Id) return alert('Select two cars to save comparison.');
 
         fetch('/comparecars/compare/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({
-                car_one_id: car1Id,
-                car_two_id: car2Id,
-                // user_id: 1  // Ganti dengan ID pengguna yang benar
-            })
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+            body: JSON.stringify({ car_one_id: car1Id, car_two_id: car2Id })
         })
         .then(response => response.json())
         .then(data => {
-            if (data.message) {
-                window.location.href = '/comparecars/list-comparisons/';
-            } else {
-                alert('Gagal menyimpan perbandingan. ' + data.error);
-            }
+            if (data.message) window.location.href = '/comparecars/list-comparisons/';
+            else alert('Failed to save comparison.');
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan saat menyimpan perbandingan.');
-        });
+        .catch(error => console.error('Error:', error));
     }
 
-    // Fungsi untuk mendapatkan CSRF token dari cookie
+    // Get CSRF token
     function getCookie(name) {
         let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
+        if (document.cookie) {
             const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+            cookies.forEach(cookie => {
+                const trimmed = cookie.trim();
+                if (trimmed.startsWith(`${name}=`)) {
+                    cookieValue = decodeURIComponent(trimmed.substring(name.length + 1));
                 }
-            }
+            });
         }
         return cookieValue;
     }
 
+    // Navigate to comparison list
     function goToComparisonList() {
         window.location.href = '/comparecars/list-comparisons/';
     }
-</script>
 
-</body>
-</html>
+    // Load cars when the page is loaded
+    document.addEventListener('DOMContentLoaded', loadCars);
+</script>
+{% endblock content %}
