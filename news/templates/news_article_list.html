@@ -67,6 +67,38 @@
             color: #bdbdbd;
         }
 
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            color: #fff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
     </style>
 </head>
 <body>
@@ -85,7 +117,7 @@
                     {% if article.image %}
                         <img src="{{ article.image.url }}" alt="{{ article.title }}">
                     {% else %}
-                        <img src="{% static 'images/default-placeholder.png' %}" alt="No image available">
+                        <img src="{% static 'images/news-placeholder.jpg' %}" alt="No image available">
                     {% endif %}
                     <div class="content">
                         <h3>{{ article.title }}</h3>
@@ -93,10 +125,14 @@
                         <p>{{ article.content|truncatewords:20 }}</p>
 
                         {% if user.is_staff %}
-                            <form method="POST" action="{% url 'news:delete_article_direct' article.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
+                            <!-- Tombol Edit dan Delete untuk Admin -->
+                            <div style="margin-top: 10px;">
+                                <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
+                                <form method="POST" action="{% url 'news:delete_article_direct' article.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
                         {% endif %}
                     </div>
                 </div>

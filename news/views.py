@@ -8,7 +8,7 @@ def is_admin(user):
     return user.is_staff
 
 # View untuk menampilkan semua artikel berita
-
+@login_required(login_url='/auth/login/')
 def news_article_list(request):
     articles = NewsArticle.objects.all()  # Tampilkan semua artikel tanpa urutan
     return render(request, 'news_article_list.html', {

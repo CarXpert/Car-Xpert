@@ -175,6 +175,44 @@
             color: #bbb;
         }
 
+        /* Button Styles for Add, Edit, and Delete */
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .btn-success {
+            background-color: #28a745; /* Green for Add */
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-warning {
+            background-color: #ffc107; /* Yellow for Edit */
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-danger {
+            background-color: #dc3545; /* Red for Delete */
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
         /* "See All News" Link Styling */
         .see-all-news {
             text-align: center;
@@ -260,10 +298,21 @@
                     {% if article.image %}
                         <img src="{{ article.image.url }}" alt="{{ article.title }}">
                     {% else %}
-                        <img src="{% static 'images/default-placeholder.png' %}" alt="No image available">
+                        <img src="{% static 'images/news-placeholder.jpg' %}" alt="No image available">
                     {% endif %}
                     <h4>{{ article.title }}</h4>
                     <p>{{ article.content|truncatewords:20 }}</p>
+                    
+                    <!-- Tombol Edit dan Delete untuk Admin -->
+                    {% if user.is_staff %}
+                        <div>
+                            <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
+                            <form method="POST" action="{% url 'news:delete_article_direct' article.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
@@ -273,15 +322,8 @@
                 <div style="text-align: center; margin-top: 20px;">
                     <a href="{% url 'news:create_article' %}" class="btn btn-success">Add News Article</a>
                 </div>
-                <div style="text-align: center; margin-top: 20px;">
-                    {% for article in other_articles %}
-                        <div>
-                            <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
-                        </div>
-                    {% endfor %}
-                </div>
             {% endif %}
-        
+
             <!-- Fallback message if no news exists -->
             {% if news|length == 0 %}
             <div class="no-news">
