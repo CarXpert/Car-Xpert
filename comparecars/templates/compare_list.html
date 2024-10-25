@@ -1,146 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    {% include 'header.html' %}
-    <title>Comparison List</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
-            color: white;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            min-height: 100vh;
-        }
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="bg-gradient-to-b from-black via-indigo-900 to-indigo-700 text-white min-h-screen py-12">
+    <h1 class="container mx-auto p-6 text-3xl font-bold text-center">Comparison List</h1>
 
-        .comparison-list {
-            max-width: 1200px;
-            margin: 40px auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
+    <!-- Button to Add a New Comparison -->
+    <div class="text-center mb-8">
+        <button class="add-comparison-button bg-blue-600 hover:bg-green-600 text-white py-3 px-6 rounded-full font-semibold text-lg transition" 
+                onclick="window.location.href='{% url 'compare_cars' %}'">
+            Add New Comparison
+        </button>
+    </div>
 
-        .comparison-card {
-            background-color: white;
-            color: black;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: inline-block;
-            width: 260px;
-            text-align: left;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+    <!-- Comparison List -->
+    <div class="comparison-list grid gap-8 max-w-6xl mx-auto grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {% if comparisons %}
+            {% for comparison in comparisons %}
+            <!-- Link to comparison details -->
+            <a href="{% url 'compare_cars_with_id' comparison.id %}" class="comparison-card bg-white text-black rounded-xl p-4 shadow-lg hover:shadow-2xl transform transition hover:-translate-y-2 relative">
+                <button class="absolute top-2 right-2 text-red-600 hover:text-red-800 text-lg" onclick="event.preventDefault(); deleteComparison({{ comparison.id }})">X</button>
+                
+                <!-- Car Images -->
+                <div class="flex gap-2 mb-4">
+                    <img class="w-1/2 rounded-md" src="{% static 'images/' %}{{ comparison.comparecar.car1.brand }}.png" alt="{{ comparison.comparecar.car1.brand }}">
+                    <img class="w-1/2 rounded-md" src="{% static 'images/' %}{{ comparison.comparecar.car2.brand }}.png" alt="{{ comparison.comparecar.car2.brand }}">
+                </div>
 
-        .comparison-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .comparison-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .comparison-card h3 {
-            font-size: 18px;
-            margin: 10px 0;
-            font-weight: bold;
-        }
-
-        .comparison-card p {
-            font-size: 14px;
-            color: #555;
-            margin: 0;
-        }
-
-        .comparison-card button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: red;
-            font-size: 18px;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .comparison-card button:hover {
-            color: darkred;
-        }
-
-        /* Button for Adding New Comparison */
-        .add-comparison-button {
-            padding: 15px 30px;
-            background-color: #007BFF;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin: 20px 0;
-        }
-
-        .add-comparison-button:hover {
-            background-color: #45a049;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .comparison-card {
-                width: 90%;
-            }
-
-            .add-comparison-button {
-                width: 90%;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<header>
-    <h1>Comparison List</h1>
-</header>
-
-<!-- Button to Add a New Comparison -->
-<div>
-    <button class="add-comparison-button" onclick="window.location.href='{% url 'compare_cars' %}'">
-        Add New Comparison
-    </button>
-</div>
-
-<div class="comparison-list">
-    {% if comparisons %}
-        {% for comparison in comparisons %}
-        <!-- Link to comparison details -->
-        <a href="{% url 'compare_cars_with_id' comparison.id %}" class="comparison-card">
-            <button onclick="event.preventDefault(); deleteComparison({{ comparison.id }})">X</button>
-            <img src="{% static 'images/' %}{{ comparison.comparecar.car1.brand }}.png" alt="{{ comparison.comparecar.car1.brand }}" />
-            <img src="{% static 'images/' %}{{ comparison.comparecar.car2.brand }}.png" alt="{{ comparison.comparecar.car2.brand }}" />
-            <h3>Comparison {{ forloop.counter }}</h3>
-            <p>{{ comparison.comparecar.car1.brand }} vs {{ comparison.comparecar.car2.brand }}</p>
-        </a>
-        {% endfor %}
-    {% else %}
-        <p>No saved comparisons yet.</p>
-    {% endif %}
-</div>
+                <!-- Comparison Details -->
+                <h3 class="text-lg font-semibold mb-2">Comparison {{ forloop.counter }}</h3>
+                <p class="text-sm text-gray-700">{{ comparison.comparecar.car1.brand }} vs {{ comparison.comparecar.car2.brand }}</p>
+            </a>
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-lg">No saved comparisons yet.</p>
+        {% endif %}
+    </div>
+</section>
 
 <script>
     function deleteComparison(id) {
@@ -174,6 +69,4 @@
         return cookieValue;
     }
 </script>
-
-</body>
-</html>
+{% endblock content %}
