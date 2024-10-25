@@ -39,6 +39,9 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .article-card:hover {
@@ -51,9 +54,10 @@
             object-fit: cover;
         }
 
-        .article-card .content {
+        .content {
             padding: 15px;
             color: #fff;
+            flex-grow: 1;
         }
 
         .article-card h3 {
@@ -67,6 +71,12 @@
             color: #bdbdbd;
         }
 
+        .admin-actions {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
         .btn {
             display: inline-block;
             padding: 10px 15px;
@@ -76,6 +86,7 @@
             border-radius: 5px;
             margin-top: 10px;
             transition: background-color 0.3s ease;
+            font-size: 14px;
         }
 
         .btn:hover {
@@ -98,7 +109,6 @@
         .btn-warning:hover {
             background-color: #e0a800;
         }
-
     </style>
 </head>
 <body>
@@ -114,27 +124,29 @@
             {% if articles %}
                 {% for article in articles %}
                 <div class="article-card">
-                    {% if article.image %}
-                        <img src="{{ article.image.url }}" alt="{{ article.title }}">
-                    {% else %}
-                        <img src="{% static 'images/news-placeholder.jpg' %}" alt="No image available">
-                    {% endif %}
-                    <div class="content">
-                        <h3>{{ article.title }}</h3>
-                        <p>Published by {{ article.author }} on {{ article.published_date|date:"F j, Y" }}</p>
-                        <p>{{ article.content|truncatewords:20 }}</p>
-
-                        {% if user.is_staff %}
-                            <!-- Tombol Edit dan Delete untuk Admin -->
-                            <div style="margin-top: 10px;">
-                                <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
-                                <form method="POST" action="{% url 'news:delete_article_direct' article.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
-                            </div>
+                    <a href="{% url 'news:news_detail' article.id %}" style="text-decoration: none; color: inherit;">
+                        {% if article.image %}
+                            <img src="{{ article.image.url }}" alt="{{ article.title }}">
+                        {% else %}
+                            <img src="{% static 'images/news-placeholder.jpg' %}" alt="No image available">
                         {% endif %}
-                    </div>
+                        <div class="content">
+                            <h3>{{ article.title }}</h3>
+                            <p>Published by {{ article.author }} on {{ article.published_date|date:"F j, Y" }}</p>
+                            <p>{{ article.content|truncatewords:20 }}</p>
+                        </div>
+                    </a>
+
+                    <!-- Tombol Edit dan Delete untuk Admin -->
+                    {% if user.is_staff %}
+                        <div class="admin-actions">
+                            <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
+                            <form method="POST" action="{% url 'news:delete_article_direct' article.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    {% endif %}
                 </div>
                 {% endfor %}
             {% else %}

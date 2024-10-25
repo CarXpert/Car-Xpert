@@ -50,3 +50,7 @@ def delete_article_direct(request, id):
         article.delete()
         return redirect('news:news_article_list')  # Redirect back to the news list
 
+def news_detail(request, id):
+    article = get_object_or_404(NewsArticle, id=id)
+    return render(request, 'news_detail.html', {'article': article})
+

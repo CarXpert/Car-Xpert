@@ -294,26 +294,27 @@
             <h2 class="news-title">NEWS</h2>
             <div class="news-grid">
                 {% for article in news %}
-                <div class="news-card">
-                    {% if article.image %}
-                        <img src="{{ article.image.url }}" alt="{{ article.title }}">
-                    {% else %}
-                        <img src="{% static 'images/news-placeholder.jpg' %}" alt="No image available">
-                    {% endif %}
-                    <h4>{{ article.title }}</h4>
-                    <p>{{ article.content|truncatewords:20 }}</p>
-                    
-                    <!-- Tombol Edit dan Delete untuk Admin -->
-                    {% if user.is_staff %}
-                        <div>
-                            <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
-                            <form method="POST" action="{% url 'news:delete_article_direct' article.id %}" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
-                        </div>
-                    {% endif %}
-                </div>
+                <a href="{% url 'news:news_detail' article.id %}">
+                    <div class="news-card">
+                        {% if article.image %}
+                            <img src="{{ article.image.url }}" alt="{{ article.title }}">
+                        {% else %}
+                            <img src="{% static 'images/news-placeholder.jpg' %}" alt="No image available">
+                        {% endif %}
+                        <h4>{{ article.title }}</h4>
+                        <p>{{ article.content|truncatewords:20 }}</p>
+                        
+                        {% if user.is_staff %}
+                            <div>
+                                <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
+                                <form method="POST" action="{% url 'news:delete_article_direct' article.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </a>
                 {% endfor %}
             </div>
 
