@@ -85,7 +85,7 @@ def get_cars(request):
         car_list = []
         for car in cars:
             car_list.append({
-                'id': str(car.id),  # Pastikan UUID dikonversi ke string
+                'id': str(car.id),  
                 'brand': car.brand,
                 'model': car.model,
                 'year': car.year,
