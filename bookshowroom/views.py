@@ -17,15 +17,16 @@ from django.core import serializers
 from django.http import JsonResponse
 import uuid
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 
-
-# @login_required(login_url='/login')
+@login_required(login_url='/login')
 def show_booking(request):
     context = {
         'user': request.user,
     }
 
-    return render(request, "test2.html", context)
+    return render(request, "booking.html", context)
+
 
 def get_showrooms(request):
     # Get all showrooms, and then filter by unique names
@@ -76,16 +77,13 @@ def get_cars(request, showroom_id_str):
     return JsonResponse(car_list, safe=False)
 
 
-def show_xml(request):
-    data = Booking.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
-
 import json
 from django.http import JsonResponse
 from .models import Booking
 
+@login_required(login_url='/login')
 def get_bookings(request):
-    data = Booking.objects.select_related('user', 'showroom', 'car').all()
+    data = Booking.objects.select_related('user', 'showroom', 'car').filter(user=request.user)
     bookings = []
     for booking in data:
         bookings.append({
@@ -131,9 +129,10 @@ def get_bookings(request):
         })
     return JsonResponse(bookings, safe=False)
 
+@login_required(login_url='/login')
 def get_bookings_by_date(request, visit_date):
     visit_date_obj = datetime.strptime(visit_date, '%b %d %Y').date()
-    data = Booking.objects.select_related('user', 'showroom', 'car').filter(visit_date=visit_date_obj)
+    data = Booking.objects.select_related('user', 'showroom', 'car').filter(visit_date=visit_date_obj, user=request.user)
     bookings = []
     for booking in data:
         bookings.append({
@@ -179,6 +178,7 @@ def get_bookings_by_date(request, visit_date):
         })
     return JsonResponse(bookings, safe=False)
 
+@login_required(login_url='/login')
 def get_booking_by_id(request, booking_id_str):
 
     try:
@@ -247,13 +247,14 @@ def show_json_by_id(request, id):
 
 @csrf_exempt
 @require_POST
+@login_required(login_url='/login')
 def create_booking_ajax(request):
     showroom_id = request.POST.get("showroom_id")
     car_id = request.POST.get("car_id")
     visit_date = request.POST.get("visit_date")
     visit_time = request.POST.get("visit_time")
     notes = strip_tags(request.POST.get("notes", ""))  # Strip HTML tags
-    user = User.objects.get(username='farel')
+    user = request.user
 
     # Get the related showroom and car objects
     try:
@@ -290,6 +291,7 @@ def create_booking_ajax(request):
 
 
 from django.shortcuts import get_object_or_404
+@login_required(login_url='/login')
 def delete_booking(request, booking_id_str):
 
     try:
@@ -303,7 +305,7 @@ def delete_booking(request, booking_id_str):
         return JsonResponse({'success': True, 'message': 'Booking deleted successfully.'})
 
     return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
-
+@login_required(login_url='/login')
 def edit_booking(request):
 
     booking_id_str = request.POST.get('booking_id')
