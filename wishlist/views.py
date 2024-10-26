@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .models import Wishlist, Car
+from wishlist.forms import WishlistNoteForm
 
 @login_required(login_url='/auth/login/')
 def show_wishlist(request):
@@ -19,19 +20,7 @@ def show_wishlist(request):
     }
     return render(request, 'wishlist/wishlist_page.html', context)
 
-@csrf_exempt
-@require_POST
-def add_note_to_wishlist_ajax(request):
-    car_id = request.POST.get("car_id")
-    note = request.POST.get("note")
-    user = request.user
-    car = get_object_or_404(Car, id=car_id)
-    wishlist_item, created = Wishlist.objects.get_or_create(user=user, car=car)
-    wishlist_item.notes = note  
-    wishlist_item.save()
-    return JsonResponse({'message': 'Note updated successfully!'}, status=200)
-
-@login_required
+@login_required(login_url='/auth/login/')
 def add_remove_wishlist(request):
     if request.method == 'POST':
         car_id = request.POST.get('car_id')
@@ -49,7 +38,7 @@ def add_remove_wishlist(request):
             return JsonResponse({'error': 'Car not found'}, status=404)
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-@login_required
+@login_required(login_url='/auth/login/')
 def remove_from_wishlist(request):
     if request.method == 'POST':
         car_id = request.POST.get('car_id')
@@ -71,20 +60,6 @@ def get_wishlist(request):
 
 from wishlist.forms import WishlistNoteForm
 
-@csrf_exempt
-def add_or_edit_note(request):
-    if request.method == 'POST':
-        car_id = request.POST.get('car_id')
-        note = request.POST.get('note')
-        try:
-            wishlist_item = Wishlist.objects.get(car_id=car_id, user=request.user)
-            wishlist_item.note = note
-            wishlist_item.save()
-            return JsonResponse({'success': True})
-        except Wishlist.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Item not found'})
-    return JsonResponse({'success': False, 'error': 'Invalid request'})
-
 def check_wishlist(request):
     car_id = request.GET.get('car_id')
     car = get_object_or_404(Car, id=car_id)
@@ -101,3 +76,17 @@ def check_wishlist(request):
         'in_wishlist': in_wishlist,
         'note': note  
     })
+
+@login_required(login_url='/auth/login/')
+def edit_note(request, pk):
+    wishlist_item = get_object_or_404(Wishlist, pk=pk, user=request.user)
+    
+    if request.method == 'POST':
+        form = WishlistNoteForm(request.POST, instance=wishlist_item)
+        if form.is_valid():
+            form.save()  # Update the notes
+            return redirect('wishlist:wishlist_view')  # Redirect to the wishlist view after saving
+    else:
+        form = WishlistNoteForm(instance=wishlist_item)  # Show the current notes in the form
+    
+    return render(request, 'wishlist/edit_note.html', {'form': form, 'wishlist_item': wishlist_item})
