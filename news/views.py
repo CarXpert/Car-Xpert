@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import NewsArticleForm
 from django.http import HttpResponse
 from django.core import serializers
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 # Cek apakah user adalah admin
 def is_admin(user):
@@ -51,17 +54,27 @@ def news_article_list(request):
     }
     return render(request, 'news_article_list.html', context)
 
-# View untuk membuat artikel (hanya admin)
+# View untuk membuat artikel (hanya admin) 
+@csrf_exempt
 @user_passes_test(is_admin)
 def create_article(request):
     if request.method == "POST":
         form = NewsArticleForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('news:news_article_list')
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({"success": True})
+            else:
+                return redirect("news:news_article_list")
+        else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({"success": False, "error": form.errors})
+            else:
+                return render(request, "create_article.html", {"form": form})
     else:
         form = NewsArticleForm()
-    return render(request, 'create_article.html', {'form': form})
+    return render(request, "create_article.html", {"form": form})
+
 
 # View untuk mengedit artikel (hanya admin)
 @user_passes_test(is_admin)
@@ -85,4 +98,3 @@ def delete_article_direct(request, id):
 def news_detail(request, id):
     article = get_object_or_404(NewsArticle, id=id)
     return render(request, 'news_detail.html', {'article': article})
-
