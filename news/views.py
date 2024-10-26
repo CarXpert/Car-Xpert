@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import NewsArticleForm
 from django.http import HttpResponse
 from django.core import serializers
-from django.utils.html import strip_tags
 
 # Cek apakah user adalah admin
 def is_admin(user):
@@ -34,7 +33,23 @@ def show_json_by_id(request, id):
 @login_required(login_url='/auth/login/')
 def news_article_list(request):
     articles = NewsArticle.objects.all()
-    return render(request, 'news_article_list.html', {'articles': articles})
+    author = request.GET.get('author')
+    category = request.GET.get('category')
+    
+    if author:
+        articles = articles.filter(author=author)
+    if category and category != 'Semua':
+        articles = articles.filter(category=category)
+
+    authors = NewsArticle.objects.values_list('author', flat=True).distinct()
+    categories = [choice[0] for choice in NewsArticle.CATEGORY_CHOICES]
+
+    context = {
+        'articles': articles,
+        'authors': authors,
+        'categories': categories,
+    }
+    return render(request, 'news_article_list.html', context)
 
 # View untuk membuat artikel (hanya admin)
 @user_passes_test(is_admin)

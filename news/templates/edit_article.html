@@ -24,6 +24,18 @@
                     <label for="id_author" class="mb-2 text-sm font-bold">Author:</label>
                     <input type="text" name="author" id="id_author" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.author.value|default_if_none:'' }}">
                 </div>
+
+                <!-- Kategori Field -->
+                <div class="flex flex-col">
+                    <label for="id_category" class="mb-2 text-sm font-bold">Category:</label>
+                    <select name="category" id="id_category" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Select Category</option>
+                        <option value="Mobil" {% if form.category.value == 'Mobil' %}selected{% endif %}>Mobil</option>
+                        <option value="Mobil Bekas" {% if form.category.value == 'Mobil Bekas' %}selected{% endif %}>Mobil Bekas</option>
+                        <option value="Tips and Trick Otomotif" {% if form.category.value == 'Tips and Trick Otomotif' %}selected{% endif %}>Tips and Trick Otomotif</option>
+                        <option value="Others" {% if form.category.value == 'Others' %}selected{% endif %}>Others</option>
+                    </select>
+                </div>
                 
                 <!-- Image Upload Field -->
                 <div class="flex flex-col">
