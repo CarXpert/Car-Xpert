@@ -1,0 +1,83 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page - CarXpert</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+        /* Landing Page Styling */
+        body {
+            margin: 0; 
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            overflow: hidden; /* Disable scrolling */
+            background: url("{% static 'images/Landing_page.png' %}") no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center; 
+        }
+
+        .landing-container {
+            max-width: 600px;
+            padding-left: 50px;
+            text-align: center; 
+        }
+
+        .landing-title {
+            font-size: 72px;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: 900;
+        }
+
+        .landing-subtitle {
+            font-size: 20px;
+            margin: 10px 0 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .cta-button {
+            display: inline-block;
+            font-weight: 600;
+            padding: 15px 30px;
+            background-color: #0C0D28;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustment */
+        @media (max-width: 768px) {
+            .landing-title {
+                font-size: 48px;
+            }
+            .landing-subtitle {
+                font-size: 16px;
+            }
+            .cta-button {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="landing-container">
+    <h1 class="landing-title">CARXPERT</h1>
+    <p class="landing-subtitle">Find Your Next Ride with Ease – Discover the Best Used Car Showrooms Near You.</p>
+    <a href="{% url 'main:show_main' %}" class="cta-button">Get Started</a>
+</div>
+
+</body>
+</html>

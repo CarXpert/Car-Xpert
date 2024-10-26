@@ -9,4 +9,9 @@ urlpatterns = [
     path('add/', views.create_article, name='create_article'),     # /news/add/
     path('<int:id>/edit/', views.edit_article, name='edit_article'),  # /news/<id>/edit/
     path('<int:id>/delete-direct/', views.delete_article_direct, name='delete_article_direct'),
+    path('<int:id>/', views.news_detail, name='news_detail'),
+    path('json/', views.show_json, name='show_json'),  # Semua artikel dalam JSON
+    path('xml/', views.show_xml, name='show_xml'),  # Semua artikel dalam XML
+    path('<int:id>/json/', views.show_json_by_id, name='show_json_by_id'),  # Artikel berdasarkan ID dalam JSON
+    path('<int:id>/xml/', views.show_xml_by_id, name='show_xml_by_id'),  # Artikel berdasarkan ID dalam XML
 ]

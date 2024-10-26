@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.utils import timezone
 from .forms import CarEditForm
 from .forms import AddCarForm
+from news.models import NewsArticle 
 from django.http import JsonResponse
 import json
 import os
@@ -32,23 +33,28 @@ def main_view(request):
     # Kirim data showroom ke template main.html
     return render(request, 'main.html', {'showrooms': showrooms_data})
 
+
 def show_main(request):
     cars = Car.objects.all()
-    print (cars)
+    news = NewsArticle.objects.all().order_by('-published_date')[:3]  # Get the latest 3 news articles
     context = {
         'cars': cars,
-        "user": request.user
+        'news': news,  
+        'user': request.user
     }
-    return render(request, 'main.html', context)  # Render ke 'main/main.html'
+    return render(request, 'main.html', context)  
+
+def landing_page(request):
+    return render(request, 'landing_page.html')
 
 def car_detail(request, car_id):
-    car = Car.objects.get(pk=car_id)
+    car = get_object_or_404(Car, pk=car_id)  # Use get_object_or_404 for better error handling
     is_in_wishlist = Wishlist.objects.filter(user=request.user, car=car).exists() if request.user.is_authenticated else False
-    print(is_in_wishlist)
     context = { 
         'car': car,
         'showroom': car.showroom,  # The related showroom
         'is_in_wishlist': is_in_wishlist,
+        'user': request.user  # Pass user to the template
     }
     return render(request, 'car_detail.html', context)
 

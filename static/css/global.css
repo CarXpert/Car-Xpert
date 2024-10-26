@@ -205,3 +205,129 @@ footer {
     color: #fff;
     border-top: 2px solid #674ea7;
 }
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
+    color: white;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    min-height: 100vh;
+}
+.wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+.wishlist-card {
+    display: flex;
+    max-width: 600px;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+.wishlist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+.wishlist-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+.card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+.wishlist-card h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+}
+.showroom-name {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+.wishlist-note {
+    font-size: 13px;
+    color: #444;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+.action-buttons {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+.remove-icon, .edit-note-icon {
+    font-size: 25px;
+    color: rgb(0, 30, 70);
+    cursor: pointer;
+    background: none;
+    border: none;
+    margin: 0 10px;
+}
+.remove-icon:hover {
+    color: #cb4141;
+    transform: translateY(-3px);
+}
+.edit-note-icon:hover {
+    color: #41cb41;
+    transform: translateY(-3px);
+}
+.edit-note-button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #0056b3;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.edit-note-button:hover {
+    background-color: #6998e3;
+    transform: translateY(-3px);
+}
+
+/* Tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

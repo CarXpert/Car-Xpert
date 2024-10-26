@@ -9,6 +9,17 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
   </head>
   <body>
-    {% block content %} {% endblock content %}
+    {% block header %}
+    {% include 'header.html' %}
+    {% endblock header %}
+    
+    <div class="content">
+        {% block content %}
+        {% endblock content %}
+    </div>
+    {% block footer %}
+    {% include 'footer.html' %}
+    {% endblock footer %}
+    
   </body>
 </html>

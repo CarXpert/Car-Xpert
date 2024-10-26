@@ -118,9 +118,9 @@
 
         .right img {
             width: 300px;
-            border-radius: 15px;
-            margin-left: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 15px; 
+            margin-left: 20px;   
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
         }
 
         @media (max-width: 768px) {
@@ -137,6 +137,54 @@
                 width: 100%;
             }
         }
+
+        @media (max-width: 480px) {
+            .car-info h1 {
+                font-size: 24px;
+            }
+
+            .car-info .price {
+                font-size: 20px;
+            }
+
+            .btn-back, .btn-edit {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+        }
+
+        /* Wishlist Icon Styling */
+        .wishlist-icon {
+            font-size: 50px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            background: none; 
+            border: none; 
+            display: inline-block;
+            position: relative;
+        }
+
+        .wishlist-icon.in-wishlist {
+            color: red; 
+        }
+
+        .wishlist-icon i {
+            color: white; 
+            transition: color 0.3s;
+        }
+
+        .wishlist-icon i.active {
+            color: red;
+        }
+
+        .wishlist-icon .fas {
+            color: white; 
+        }
+
+        .wishlist-icon .fas.active {
+            color: red; 
+        }
+
     </style>
 </head>
 <body>
@@ -146,8 +194,16 @@
         <div class="car-details">
             <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} logo">
             <div class="car-info-container">
-                <h1>{{ car.brand }} {{ car.model }}</h1>
-                <p class="price">Rp {{ car.price_cash|intcomma }}</p>
+                <!-- Car Name and Price -->
+                <div class="car-info">
+                    <h1>{{ car.brand }} {{ car.car_type }}</h1>
+                    <p class="price">Rp {{ car.price_cash|intcomma }}</p>
+                </div>
+
+            <!-- Wishlist Icon -->
+            <button id="wishlist-btn" class="wishlist-icon {% if in_wishlist %}in-wishlist{% endif %}" data-car-id="{{ car.id }}">
+                <i class="fas fa-heart"></i>
+            </button>
             </div>
         </div>
 
@@ -202,4 +258,62 @@
         </div>
     </div>
 </body>
+
+<!-- Wishlist Script -->
+<script>
+$(document).ready(function() {
+    var carId = $('#wishlist-btn').data('car-id');
+    var isAuthenticated = {{ user.is_authenticated|lower }}; 
+
+    $('#wishlist-btn').click(function() {
+        if (!isAuthenticated) {
+            window.location.href = "{% url 'authentication:login' %}";  
+            return;  
+        }
+
+        var $icon = $(this).find('.fas');
+        $.ajax({
+            url: '{% url "wishlist:add_remove_wishlist" %}',
+            type: 'POST',
+            data: { 
+                'car_id': carId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.in_wishlist) {
+                    $icon.addClass('active');  
+                    $('#wishlist-btn').addClass('in-wishlist'); 
+                } else {
+                    $icon.removeClass('active');  
+                    $('#wishlist-btn').removeClass('in-wishlist'); 
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+    $.ajax({
+        url: '{% url "wishlist:check_wishlist" %}',  
+        type: 'GET',
+        data: { 'car_id': carId },
+        success: function(response) {
+            if (response.in_wishlist) {
+                $('#wishlist-btn .fas').addClass('active'); 
+                $('#wishlist-btn').addClass('in-wishlist'); 
+            } else {
+                $('#wishlist-btn .fas').removeClass('active'); 
+                $('#wishlist-btn').removeClass('in-wishlist'); 
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+
+
+    });
+
+</script>
+
 </html>

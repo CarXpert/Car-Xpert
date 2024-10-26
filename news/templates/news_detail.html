@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+    <div class="flex flex-col items-center min-h-screen bg-gradient-to-b from-black to-[#0f0f3d] text-white py-10">
+        <div class="w-full max-w-4xl bg-white/10 rounded-lg shadow-lg overflow-hidden">
+            <!-- Image Section -->
+            <div class="w-full">
+                {% if article.image %}
+                    <img src="{{ article.image.url }}" alt="{{ article.title }}" class="w-full h-64 object-cover">
+                {% else %}
+                    <img src="{% static 'images/news-placeholder.jpg' %}" alt="No image available" class="w-full h-64 object-cover">
+                {% endif %}
+            </div>
+
+            <!-- Title Section -->
+            <div class="px-6 py-4 text-center">
+                <h1 class="text-3xl font-bold mb-4">{{ article.title }}</h1>
+            </div>
+
+            <!-- Content Section -->
+            <div class="px-6 pb-6 text-white">
+                <div class="text-gray-400 text-sm mb-4 text-center">
+                    <p>Published by <span class="font-bold">{{ article.author }}</span> on {{ article.published_date|date:"F j, Y" }}</p>
+                </div>
+                <div class="text-lg leading-relaxed text-left">
+                    {{ article.content|linebreaks }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

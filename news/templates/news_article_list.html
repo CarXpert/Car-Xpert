@@ -1,111 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Articles</title>
-    {% load static %}
-    <style>
-        /* Body background with gradient */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(to bottom, #000000, #0f0f3d); /* Black to dark blue gradient */
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+{% extends 'base.html' %}
 
-        .container {
-            flex: 1;
-            width: 85%;
-            margin: 20px auto;
-            background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
-            padding: 20px;
-            border-radius: 10px; /* Rounded corners */
-        }
+{% block content %}
+{% load static %}
+<div class="flex flex-col items-center min-h-screen bg-gradient-to-b from-black to-[#0f0f3d] text-white py-10">
 
-        .article-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
+    <!-- Title Section -->
+    <h1 class="text-3xl font-bold mb-8 text-white text-center">Automotive News</h1>
+    
+    <!-- Filter Section -->
+    <div class="w-full max-w-7xl p-4 bg-white/10 rounded-lg shadow-lg mb-6">
+        <form method="GET" action="{% url 'news:news_article_list' %}">
+            <div class="flex justify-between items-center">
+                <!-- Author Filter -->
+                <select name="author" class="filter-dropdown bg-gray-800 text-white px-3 py-2 rounded-md">
+                    <option value="">All Authors</option>
+                    {% for author in authors %}
+                        <option value="{{ author }}" {% if request.GET.author == author %}selected{% endif %}>
+                            {{ author }}
+                        </option>
+                    {% endfor %}
+                </select>
 
-        .article-card {
-            background-color: #1c1c3b;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
+                <!-- Category Filter -->
+                <select name="category" class="filter-dropdown bg-gray-800 text-white px-3 py-2 rounded-md">
+                    <option value="Semua">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category }}" {% if request.GET.category == category %}selected{% endif %}>
+                            {{ category }}
+                        </option>
+                    {% endfor %}
+                </select>
 
-        .article-card:hover {
-            transform: translateY(-10px);
-        }
+                <div class="flex space-x-4">
+                    <!-- Filter Button -->
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                        Filter
+                    </button>
 
-        .article-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .article-card .content {
-            padding: 15px;
-            color: #fff;
-        }
-
-        .article-card h3 {
-            margin: 0;
-            font-size: 18px;
-            color: #ffffff;
-        }
-
-        .article-card p {
-            margin: 5px 0;
-            color: #bdbdbd;
-        }
-
-    </style>
-</head>
-<body>
-
-    <!-- Only include the header if this template is accessed directly -->
-    {% if not request.resolver_match.view_name == "main:show_main" %}
-        {% include 'header.html' %}
-    {% endif %}
-
-    <div class="container">
-        <!-- Grid of articles -->
-        <div class="article-grid">
-            {% if other_articles %}
-                {% for article in other_articles|slice:":news_limit" %}
-                <div class="article-card">
-                    {% if article.image %}
-                        <img src="{{ article.image.url }}" alt="{{ article.title }}">
-                    {% else %}
-                        <img src="{% static 'images/default-placeholder.png' %}" alt="No image available">
+                    <!-- Add Product Button (Visible only to admins) -->
+                    {% if user.is_staff %}
+                    <a href="{% url 'news:create_article' %}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors">
+                        Add Product
+                    </a>
                     {% endif %}
-                    <div class="content">
-                        <h3>{{ article.title }}</h3>
-                        <p>Published by {{ article.author }} on {{ article.published_date|date:"F j, Y" }}</p>
-                        <p>{{ article.content|truncatewords:20 }}</p>
+                </div>
+            </div>
+        </form>
+    </div>
 
-                        {% if user.is_staff %}
-                            <form method="POST" action="{% url 'news:delete_article_direct' article.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
+    <div class="w-full max-w-7xl p-8 bg-white/10 rounded-lg shadow-lg">
+        <!-- Grid of articles -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {% if articles %}
+                {% for article in articles %}
+                <div class="bg-gray-800 rounded-lg shadow-md hover:shadow-lg overflow-hidden transition-all flex flex-col justify-between">
+                    <a href="{% url 'news:news_detail' article.id %}" class="text-white no-underline">
+                        {% if article.image %}
+                            <img src="{{ article.image.url }}" alt="{{ article.title }}" class="w-full h-48 object-cover">
+                        {% else %}
+                            <img src="{% static 'images/news-placeholder.jpg' %}" alt="No image available" class="w-full h-48 object-cover">
                         {% endif %}
+                        <div class="p-5 flex-grow">
+                            <h3 class="text-lg font-bold mb-2 text-center">{{ article.title }}</h3>
+                            <p class="text-sm text-gray-400 mb-4 text-center">Published by {{ article.author }} | {{ article.category }}</p>
+                            <p class="text-gray-300 text-sm">{{ article.content|truncatewords:20 }}</p>
+                        </div>
+                    </a>
+
+                    {% if user.is_staff %}
+                    <div class="px-5 pb-5 mt-auto flex justify-between items-center">
+                        <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning bg-yellow-500 text-gray-900 px-4 py-2 rounded-md hover:bg-yellow-600">Edit</a>
+                        <form method="POST" action="{% url 'news:delete_article_direct' article.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete</button>
+                        </form>
                     </div>
+                    {% endif %}
                 </div>
                 {% endfor %}
             {% else %}
-                <p>Sorry we don't have any news yet.</p>
+                <p class="text-center text-gray-400">Sorry, we don't have any news yet.</p>
             {% endif %}
         </div>
     </div>
-
-</body>
-</html>
+</div>   
+{% endblock content %}

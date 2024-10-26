@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
 {% load humanize %}
 {% load static %}
-<html>
-<head>
-    <title>Car List</title>
+
+{% block content %}
+<div class="main-container">
+
     <style>
         /* Gradient Background */
         body {
@@ -22,6 +23,16 @@
             font-family: 'Arial', sans-serif;
         }
 
+        /* Title and Filter Section Styling */
+        .title-filter-container h1 {
+            font-size: 32px; /* Larger size */
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        /* Filter Styling */
         .filter-container {
             display: flex;
             justify-content: flex-end;
@@ -58,9 +69,10 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
             transition: transform 0.3s ease;
-            color: #000;
+            color: #000; /* Ensure text color contrasts with white background */
+            display: flex;
+            flex-direction: column;
         }
-
         .car-card:hover {
             transform: translateY(-10px);
         }
@@ -163,14 +175,150 @@
             margin-top: 15px;
         }
         
+        /* Icon buttons in the card */
+        .card-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: auto;
+        }
+        
         .modal form button:hover {
             background-color: #218838;
         }
+
+        .card-actions button i {
+            color: #000; /* Change icon color for better visibility */
+            font-size: 20px;
+        }
+
+        /* News Section */
+        .news-section {
+            margin-top: 40px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 20px; /* Rounded corners for news section */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Box shadow for the floating effect */
+        }
+
+        /* News Title Box */
+        .news-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #FFF;
+            background: linear-gradient(to right, #1b1b5c, #ffffff); /* Blue to white gradient */
+            padding: 15px;
+            border-radius: 12px; /* Rounded corners for the title */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the title */
+        }
+
+        /* News Grid */
+        .news-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        /* News Card Styling */
+        .news-card {
+            background-color: #2c2c4b;
+            width: 220px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .news-card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .news-card h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .news-card p {
+            font-size: 12px;
+            color: #bbb;
+        }
+
+        /* Button Styles for Add, Edit, and Delete */
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .btn-success {
+            background-color: #28a745; /* Green for Add */
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-warning {
+            background-color: #ffc107; /* Yellow for Edit */
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-danger {
+            background-color: #dc3545; /* Red for Delete */
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* "See All News" Link Styling */
+        .see-all-news {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .see-all-news a {
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .see-all-news a:hover {
+            text-decoration: underline;
+        }
+
+        .no-news {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 20px;
+            color: #000;
+        }
+
+        .no-news img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        
     </style>
 </head>
-<body>
-    {% include 'header.html' %}
 
+<body>
     <div class="main-container">
         <div class="flex justify-between items-center mb-4">
             <h1>Available Cars</h1>
@@ -194,68 +342,116 @@
                 </form>
             </div>
         </div>
+        
+    <!-- Car Grid Section -->
+    <div class="car-grid">
+        {% for car in cars|slice:":40" %}
+        <div class="car-card">
+            <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} {{ car.model }}">
+            <h3>{{ car.brand }} {{ car.car_type }}</h3>
+            <p>Type: {{ car.model }}</p>
+            <p>Color: {{ car.color }}</p>
+            <p>Year: {{ car.year }}</p>
+            <p>Mileage: {{ car.mileage }} km</p>
+            <p>Price: Rp {{ car.price_cash|intcomma }}</p>
 
-        <div class="car-grid">
-            {% for car in cars|slice:":40" %}
-            <div class="car-card">
-                <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} {{ car.model }}">
-                <h3>{{ car.brand }} {{ car.car_type }}</h3>
-                <p>Type: {{ car.model }}</p>
-                <p>Color: {{ car.color }}</p>
-                <p>Year: {{ car.year }}</p>
-                <p>Mileage: {{ car.mileage }} km</p>
-                <p>Price: Rp {{ car.price_cash|intcomma }}</p>
-                <div class="card-actions">
-                    <a href="{% url 'main:car_detail' car.id %}">View Details</a>
-                </div>
+            <div class="card-actions">
+                <a href="{% url 'main:car_detail' car.id %}">View Details</a>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
+    </div>
 
-        <!-- Modal Pop-up for Add Car Form -->
-        <div id="add-car-modal" class="modal">
-            <div class="modal-content">
-                <span id="close-modal" class="close">&times;</span>
-                <h2>Add New Car</h2>
-                <form id="add-car-form">
-                    {% csrf_token %}
-                    <div><label>Brand:</label><input type="text" name="brand" required></div>
-                    <div><label>Car Type:</label><input type="text" name="car_type" required></div>
-                    <div><label>Model:</label><input type="text" name="model" required></div>
-                    <div><label>Color:</label><input type="text" name="color" required></div>
-                    <div><label>Year:</label><input type="number" name="year" required></div>
-                    <div><label>Transmission:</label><input type="text" name="transmission" required></div>
-                    <div><label>Fuel Type:</label><input type="text" name="fuel_type" required></div>
-                    <div><label>Doors:</label><input type="number" name="doors" required></div>
-                    <div><label>Cylinder Size (cc):</label><input type="number" name="cylinder_size" required></div>
-                    <div><label>Cylinder Total:</label><input type="number" name="cylinder_total" required></div>
-                    <div><label>Turbo:</label><input type="checkbox" name="turbo"></div>
-                    <div><label>Mileage (km):</label><input type="number" name="mileage" required></div>
-                    <div><label>License Plate:</label><input type="text" name="license_plate" required></div>
-                    <div><label>Price (Cash):</label><input type="number" name="price_cash" required></div>
-                    <div><label>Price (Credit):</label><input type="number" name="price_credit" required></div>
-                    <div><label>PKB Value:</label><input type="number" name="pkb_value" required></div>
-                    <div><label>PKB Base:</label><input type="number" name="pkb_base" required></div>
-                    <div><label>STNK Expiry Date:</label><input type="date" name="stnk_date" required></div>
-                    <div><label>Levy Expiry Date:</label><input type="date" name="levy_date" required></div>
-                    <div><label>SWDKLLJ:</label><input type="number" name="swdkllj" required></div>
-                    <div><label>Total Levy:</label><input type="number" name="total_levy" required></div>
-                    <!-- Additional input fields here -->
-                    <div>
-                        <label>Showroom:</label>
-                        <select name="showroom_id" required>
-                            {% for showroom in showrooms %}
-                                <option value="{{ showroom.pk }}">{{ showroom.fields.showroom_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <button type="submit">Add Car</button>
-                </form>
-            </div>
+    <!-- Modal Pop-up for Add Car Form -->
+    <div id="add-car-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <h2>Add New Car</h2>
+            <form id="add-car-form">
+                {% csrf_token %}
+                <div><label>Brand:</label><input type="text" name="brand" required></div>
+                <div><label>Car Type:</label><input type="text" name="car_type" required></div>
+                <div><label>Model:</label><input type="text" name="model" required></div>
+                <div><label>Color:</label><input type="text" name="color" required></div>
+                <div><label>Year:</label><input type="number" name="year" required></div>
+                <div><label>Transmission:</label><input type="text" name="transmission" required></div>
+                <div><label>Fuel Type:</label><input type="text" name="fuel_type" required></div>
+                <div><label>Doors:</label><input type="number" name="doors" required></div>
+                <div><label>Cylinder Size (cc):</label><input type="number" name="cylinder_size" required></div>
+                <div><label>Cylinder Total:</label><input type="number" name="cylinder_total" required></div>
+                <div><label>Turbo:</label><input type="checkbox" name="turbo"></div>
+                <div><label>Mileage (km):</label><input type="number" name="mileage" required></div>
+                <div><label>License Plate:</label><input type="text" name="license_plate" required></div>
+                <div><label>Price (Cash):</label><input type="number" name="price_cash" required></div>
+                <div><label>Price (Credit):</label><input type="number" name="price_credit" required></div>
+                <div><label>PKB Value:</label><input type="number" name="pkb_value" required></div>
+                <div><label>PKB Base:</label><input type="number" name="pkb_base" required></div>
+                <div><label>STNK Expiry Date:</label><input type="date" name="stnk_date" required></div>
+                <div><label>Levy Expiry Date:</label><input type="date" name="levy_date" required></div>
+                <div><label>SWDKLLJ:</label><input type="number" name="swdkllj" required></div>
+                <div><label>Total Levy:</label><input type="number" name="total_levy" required></div>
+                <!-- Additional input fields here -->
+                <div>
+                    <label>Showroom:</label>
+                    <select name="showroom_id" required>
+                        {% for showroom in showrooms %}
+                            <option value="{{ showroom.pk }}">{{ showroom.fields.showroom_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit">Add Car</button>
+            </form>
         </div>
     </div>
 
     <!-- JavaScript for Modal and AJAX -->
     <script src="{% static 'scripts/promo.js' %}"></script>
-</body>
-</html>
+
+    <!-- News Section -->
+    <div class="news-section">
+        <h2 class="news-title">NEWS</h2>
+        <div class="news-grid">
+            {% for article in news %}
+            <a href="{% url 'news:news_detail' article.id %}">
+                <div class="news-card">
+                    {% if article.image %}
+                        <img src="{{ article.image.url }}" alt="{{ article.title }}">
+                    {% else %}
+                        <img src="{% static 'images/news-placeholder.jpg' %}" alt="No image available">
+                    {% endif %}
+                    <h4>{{ article.title }}</h4>
+                    <p>{{ article.content|truncatewords:20 }}</p>
+                    
+                    {% if user.is_staff %}
+                        <div>
+                            <a href="{% url 'news:edit_article' article.id %}" class="btn btn-warning">Edit</a>
+                            <form method="POST" action="{% url 'news:delete_article_direct' article.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if user.is_staff %}
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="{% url 'news:create_article' %}" class="btn btn-success">Add News Article</a>
+            </div>
+        {% endif %}
+
+        {% if news|length == 0 %}
+        <div class="no-news">
+            <img src="{% static 'images/Sorry-icon.png' %}" alt="Sorry">
+            <p style="color:#000;">Sorry, we don't have any news yet.</p>
+        </div>
+        {% endif %}
+
+        <div class="see-all-news">
+            <a href="{% url 'news:news_article_list' %}">See all News</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

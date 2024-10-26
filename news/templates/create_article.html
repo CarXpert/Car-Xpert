@@ -1,16 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Article</title>
-</head>
-<body>
-    <h1>Create New Article</h1>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save Article</button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex flex-col items-center min-h-screen bg-gradient-to-b from-black to-[#0f0f3d] text-white py-10">
+    <div class="w-full max-w-lg p-8 bg-white/10 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-center mb-6 text-white">Create New Article</h1>
+        <form id="articleForm" method="POST" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            
+            <!-- Title Field -->
+            <div class="flex flex-col">
+                <label for="id_title" class="mb-2 text-sm font-bold">Title:</label>
+                <input type="text" name="title" id="id_title" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.title.value|default_if_none:'' }}">
+            </div>
+            
+            <!-- Content Field -->
+            <div class="flex flex-col">
+                <label for="id_content" class="mb-2 text-sm font-bold">Content:</label>
+                <textarea name="content" id="id_content" class="p-3 rounded-md bg-gray-800 text-white h-40 focus:outline-none focus:ring-2 focus:ring-blue-500">{{ form.content.value|default_if_none:'' }}</textarea>
+            </div>
+            
+            <!-- Author Field -->
+            <div class="flex flex-col">
+                <label for="id_author" class="mb-2 text-sm font-bold">Author:</label>
+                <input type="text" name="author" id="id_author" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ form.author.value|default_if_none:'' }}">
+            </div>
+
+            <!-- Category Field -->
+            <div class="flex flex-col">
+                <label for="id_category" class="mb-2 text-sm font-bold">Category:</label>
+                <select name="category" id="id_category" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select Category</option>
+                    <option value="Mobil" {% if form.category.value == 'Mobil' %}selected{% endif %}>Mobil</option>
+                    <option value="Mobil Bekas" {% if form.category.value == 'Mobil Bekas' %}selected{% endif %}>Mobil Bekas</option>
+                    <option value="Tips and Trick Otomotif" {% if form.category.value == 'Tips and Trick Otomotif' %}selected{% endif %}>Tips and Trick Otomotif</option>
+                    <option value="Others" {% if form.category.value == 'Others' %}selected{% endif %}>Others</option>
+                </select>
+            </div>
+            
+            <!-- Image Upload Field -->
+            <div class="flex flex-col">
+                <label for="id_image" class="mb-2 text-sm font-bold">Image:</label>
+                <input type="file" name="image" id="id_image" class="block w-full text-sm text-gray-300 file:bg-blue-600 file:text-white file:py-2 file:px-4 file:rounded-md file:border-0 hover:file:bg-blue-700 cursor-pointer">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full py-3 font-bold bg-blue-600 hover:bg-blue-700 rounded-md transition-colors">
+                Save Article
+            </button>
+        </form>
+
+        <!-- Success Message -->
+        <p id="successMessage" class="text-center text-green-500 mt-4 hidden">Article successfully created!</p>
+    </div>
+</div>
+
+<!-- AJAX Script -->
+<script>
+document.getElementById("articleForm").addEventListener("submit", function(event) {
+    event.preventDefault();  // Mencegah pengiriman form default
+
+    let formData = new FormData(this);  // Mengambil semua data dari form
+    let csrfToken = '{{ csrf_token }}'; 
+
+    fetch("{% url 'news:create_article' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": csrfToken,           // Set token CSRF untuk header
+            "X-Requested-With": "XMLHttpRequest",// Menandakan bahwa permintaan ini adalah AJAX
+            "Accept": "application/json"         // Meminta respons dalam format JSON
+        },
+        body: formData, 
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not OK");
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            document.getElementById("successMessage").classList.remove("hidden"); 
+            setTimeout(() => {
+                window.location.href = "{% url 'news:news_article_list' %}"; 
+            }, 2000);
+        } else {
+            console.error("Error creating article:", data.error);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+});
+</script>
+{% endblock content %}
