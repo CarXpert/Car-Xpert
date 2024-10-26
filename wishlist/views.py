@@ -105,11 +105,11 @@ def add_or_edit_note(request):
         car_id = request.POST.get('car_id')
         note = request.POST.get('note')
         try:
-            wishlist_item = WishlistItem.objects.get(car_id=car_id, user=request.user)
+            wishlist_item = Wishlist.objects.get(car_id=car_id, user=request.user)
             wishlist_item.note = note
             wishlist_item.save()
             return JsonResponse({'success': True})
-        except WishlistItem.DoesNotExist:
+        except Wishlist.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Item not found'})
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
