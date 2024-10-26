@@ -1,19 +1,40 @@
 {% extends "base.html" %}
-{% load static %}
+<!-- {% load static %} -->
 {% block content %}
 <style>
-    .outer-container {
+    
+    
+    body {
+        width:100vw;
+        height:100vh;
+        margin: 0;
+        background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
+    }
+
+    .content{
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    margin-top:50px;
+  
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 91.4vh;
-    background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
+
+    width:100%;
     color: white;
     flex-wrap: wrap;
     flex-direction: column;
+    }
+
+    .outer-container {
+    font-family: Arial, sans-serif;
+    margin:auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    flex-wrap: wrap;
+    /* flex-direction: column; */
 }
 
 /* Calendar and Bookings Container */
@@ -102,7 +123,7 @@
 }
 
 .days button.past {
-    opacity: 0.5;
+    opacity: 0.25;
     pointer-events: auto;
 }
 
@@ -225,36 +246,6 @@
     opacity: 0.8;
 }
 
-/* Responsive design */
-@media (max-width: 600px) {
-    #booking_card_single {
-        padding: 15px;
-    }
-
-    .booking-header h3 {
-        font-size: 1.3em;
-    }
-
-    .month-name {
-        font-size: 3vw;
-    }
-
-    .weekdays {
-        font-size: 2.5vw;
-    }
-
-    .days button {
-        font-size: 3vw;
-    }
-
-    .booking-details p {
-        font-size: 1.2em;
-    }
-
-    .edit-button, .delete-button {
-        font-size: 14px;
-    }
-}
 
 #book_button {
     width: 50%;
@@ -264,20 +255,39 @@
 }
 
 /* Media Query for Mobile Devices */
-@media (max-width: 1100px) {
-    .container {
+@media (max-width: 1300px) {
+   
+    .outer-container {
         flex-direction: column;
         align-items: center;
+        gap:25px;
     }
     .calendar-container,
     #bookings {
         width: 90vw;
         margin: 10px 0;
     }
-    #bookings {
-        display: flex;
+
+    .days button {
+        font-size: 2vw;
     }
+
+    .month-name {
+        font-size: 3vw;
+        font-weight: bold;
+    }
+
+    .weekdays {
+        font-size: 2vw;
+    }
+
 }
+
+select, input, textarea{
+    color:#000000;
+}
+
+
 </style>
 
 <div class="outer-container">
@@ -374,15 +384,11 @@
     }
 
     function changeMonth(direction) {
-        currentDate.setMonth(currentDate.getMonth() + direction);
-
-        // Prevent navigating to past months
-        if (currentDate.getFullYear() < today.getFullYear() || 
-            (currentDate.getFullYear() === today.getFullYear() && currentDate.getMonth() < today.getMonth())) {
-            currentDate.setMonth(today.getMonth());
-            currentDate.setFullYear(today.getFullYear());
-        }
-        renderCalendar();
+       // Update the current date by the direction (1 for next month, -1 for previous month)
+       currentDate.setMonth(currentDate.getMonth() + direction);
+    
+        // No restrictions on navigating to past months
+        renderCalendar(); // Re-render the calendar
     }
 
     document.getElementById("prev-month").addEventListener("click", () => changeMonth(-1));
@@ -546,10 +552,18 @@ if (bookings.length === 0) {
             </div>`;
         }
 
-        htmlString += `<div class="booking-actions">
+        // Get today's date for comparison
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set time to the start of the day
+
+        const visit = new Date(booking.visit_date)
+        // Only show edit and delete buttons if visitDate is today or in the future
+        if (visit >= today) {
+            htmlString += `<div class="booking-actions">
                 <button id="edit" class="edit-button" style="background-color: orange; color: white;" onclick="editBooking('${booking.id}')">Edit</button>
                 <button id="delete" class="delete-button" style="background-color: red; color: white;" onclick="deleteBooking('${booking.id}')">Delete</button>
             </div>`;
+        }
 
         htmlString += `</div>`; // Close the booking card div
     });
