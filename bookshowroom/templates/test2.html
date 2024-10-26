@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-<!-- {% load static %} -->
+{% load static %}
 {% block content %}
 <style>
     
@@ -137,6 +137,7 @@
     align-items: center;
     color: #fff;
     border: 1px solid #674ea7;
+
 }
 
 #booking_cards {
@@ -148,23 +149,24 @@
     text-align: center;
     justify-content: center;
     flex-wrap: wrap;
+    border-top: 1px solid #674ea7;
+    border-bottom: 1px solid #674ea7;
 }
 
 /* Individual Booking Card */
-#booking_card_single {
+.booking-card {
     background-color: #2c2c4b;
     border: 1px solid #674ea7;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin: 15px;
-    height: 30vh;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin: 20px;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-#booking_card_single:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+.booking-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
 }
 
 .booking-header {
@@ -174,19 +176,21 @@
     border-bottom: 2px solid #4d4d6f;
     padding-bottom: 10px;
     gap: 10px;
-    flex-direction: column;
 }
 
 .booking-header h3 {
-    font-size: 1.5em;
-    color: #fff;
+    font-size: 1.6em;
+    color: #ffffff;
+    margin: 0;
 }
 
 .booking-status {
     font-weight: bold;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    text-transform: uppercase;
 }
 
 .status-pending {
@@ -203,35 +207,42 @@
 
 .booking-details {
     margin-top: 15px;
-    flex-grow: 1;
+    text-align: left; /* Ensure left alignment */
 }
 
-.booking-details p {
-    margin: 5px 0;
+.booking-detail {
+    display: flex;
+    justify-content: space-between; /* Distribute space evenly */
+    margin: 5px 0; /* Add margin for spacing */
     color: #ccc;
+}
+
+.booking-detail strong {
+    min-width: 120px; /* Adjust width as needed to align the colons */
 }
 
 .booking-notes {
     margin-top: 10px;
     padding: 10px;
     background-color: #2c2c4b;
-    border-left: 3px solid #674ea7;
+    border-left: 5px solid #674ea7;
     font-style: italic;
+    color: #f0f0f0;
 }
 
 .booking-actions {
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 .edit-button, .delete-button {
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
     color: white;
-    margin-top: auto;
-    transition: background 0.3s ease;
+    margin-top: 10px;
+    transition: background 0.3s ease, transform 0.2s;
 }
 
 .edit-button {
@@ -244,6 +255,7 @@
 
 .edit-button:hover, .delete-button:hover {
     opacity: 0.8;
+    transform: translateY(-2px);
 }
 
 
@@ -287,7 +299,119 @@ select, input, textarea{
     color:#000000;
 }
 
+#booking-title{
+    margin-top:20px;
+    font-size: 3em;
+}
 
+ /* Form container styling */
+ #bookingForm {
+        max-width: 600px; /* Adjust width as needed */
+        margin: auto;
+        margin-top:30px;
+    }
+
+    /* Label styling */
+    #bookingForm label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    /* Input, select, and textarea styling */
+    #bookingForm input[type="text"],
+    #bookingForm input[type="date"],
+    #bookingForm input[type="time"],
+    #bookingForm select,
+    #bookingForm textarea {
+        width: 100%; /* Span the full width */
+        padding: 10px; /* Add padding for a larger look */
+        margin-bottom: 20px; /* Space between fields */
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px; /* Make text larger */
+    }
+
+    /* Button styling */
+    #bookingForm button[type="submit"],
+    #bookingForm button[type="button"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        background-color: #4CAF50; /* Green color */
+        color: white;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    #bookingForm button[type="button"] {
+        background-color: #f44336; /* Red color for cancel button */
+    }
+
+    /* Form container styling */
+    #editForm {
+        max-width: 600px;
+        margin: auto;
+        margin-top:30px;
+    }
+
+    /* Label styling */
+    #editForm label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    /* Input, select, and textarea styling */
+    #editForm input[type="text"],
+    #editForm input[type="date"],
+    #editForm input[type="time"],
+    #editForm select,
+    #editForm textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    /* Button styling */
+    #editForm button[type="submit"],
+    #editForm button[type="button"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    #editForm button[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    #editForm button[type="button"] {
+        background-color: #f44336;
+        color: white;
+    }
+
+    #date_header{
+        margin-bottom:30px;
+    }
+
+    #book_button{
+        background-color: #674ea7;
+        height:10%;
+        border-radius: 10px;
+        font-size:2em;
+    }
 </style>
 
 <div class="outer-container">
@@ -314,6 +438,7 @@ select, input, textarea{
     
 </div>
 <div id="bookings">
+<div id="booking-title">Bookings</div>
 <div><h1 id="date_header"></h1>
 </div>
     <div id="booking_cards">Haha</div>
@@ -448,6 +573,7 @@ select, input, textarea{
         const dateHeader = document.getElementById("date_header").innerHTML;
         
         refreshBookings("   " + dateHeader);
+        document.getElementById('book_button').style.display = 'block';
 
     }
 
@@ -530,38 +656,49 @@ if (bookings.length === 0) {
         const showroom = booking.showroom; // Get showroom name
 
         // Build the HTML string for the booking card
-        htmlString += `<div id="booking_card_single">
+        htmlString += `<div class="booking-card">
             <div class="booking-header">
                 <h3>${showroom.name}</h3>
-
                 <div class="booking-status status-${status}">
                     ${status.charAt(0).toUpperCase() + status.slice(1)}
                 </div>
             </div>
             <div class="booking-details">
-                <p>Car: ${booking.car.brand}, ${booking.car.car_type}, ${booking.car.model}</p>
-                <p>Visit Date: ${visitDate}</p>
-                <p>Visit Time: ${visitTime}</p>
-               
-            </div>`;
+                <div class="booking-detail">
+                    <strong>Car:</strong>
+                    <span>${booking.car.brand}, ${booking.car.car_type}, ${booking.car.model}</span>
+                </div>
+                <div class="booking-detail">
+                    <strong>Visit Date:</strong>
+                    <span>${visitDate}</span>
+                </div>
+                <div class="booking-detail">
+                    <strong>Visit Time:</strong>
+                    <span>${visitTime}</span>
+                </div>
+           `;
 
-        // Check if notes exist and append them
-        if (notes) {
-            htmlString += `<div class="booking-notes">
-                <p>Notes: ${notes}</p>
-            </div>`;
-        }
-
-        // Get today's date for comparison
+            if (notes) {
+                htmlString += `<div class="booking-detail">
+                    <strong>Notes:</strong>
+                    
+                </div>
+                </div>
+                
+                <div class="booking-notes">
+                    <p>${notes}</p>
+                </div>`;
+            } else {
+                htmlString += '</div>'
+            }
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Set time to the start of the day
+        today.setHours(0, 0, 0, 0);
 
-        const visit = new Date(booking.visit_date)
-        // Only show edit and delete buttons if visitDate is today or in the future
+        const visit = new Date(booking.visit_date);
         if (visit >= today) {
             htmlString += `<div class="booking-actions">
-                <button id="edit" class="edit-button" style="background-color: orange; color: white;" onclick="editBooking('${booking.id}')">Edit</button>
-                <button id="delete" class="delete-button" style="background-color: red; color: white;" onclick="deleteBooking('${booking.id}')">Delete</button>
+                <button class="edit-button" onclick="editBooking('${booking.id}')">Edit</button>
+                <button class="delete-button" onclick="deleteBooking('${booking.id}')">Delete</button>
             </div>`;
         }
 
@@ -581,7 +718,7 @@ function addBooking() {
         <form id="bookingForm" onsubmit="return addBookingEntry()">
         {% csrf_token %}
         <!-- Showroom selection -->
-        <label for="showroom">Showroom:</label>
+        <label for="showroom">Showroom:</label><br>
         <select id="showroom" name="showroom" required onchange="fetchLocations()">
             <option value="">Select a showroom</option> <!-- Default option -->
         </select>
@@ -634,6 +771,7 @@ function addBooking() {
 // Set the inner HTML of the booking cards
 document.getElementById("booking_cards").innerHTML = htmlString;
 document.getElementById('visit_date').value = formattedDate;
+document.getElementById('book_button').style.display = 'none';
 
 // Fetch showrooms after the form is added to the DOM
 fetch("{% url 'bookshowroom:get_showrooms' %}")
@@ -763,8 +901,9 @@ fetch("{% url 'bookshowroom:create_booking_ajax' %}", {
   })
   .then(response => {
     if (response.ok) {
-
+      document.getElementById('book_button').style.display = 'block';
       showBookingsCancelButton(); // Assuming refreshBookings updates the bookings list
+
       renderCalendar()
     } else {
       throw new Error('Error creating booking');
@@ -884,6 +1023,7 @@ let htmlString = `
 // Set the inner HTML of the booking cards
 document.getElementById("booking_cards").innerHTML = htmlString;
 document.getElementById('visit_date').value = formattedDate;
+document.getElementById('book_button').style.display = 'none';
 
 // Fetch showrooms after the form is added to the DOM
 fetch("{% url 'bookshowroom:get_showrooms' %}")
@@ -912,7 +1052,7 @@ fetch("{% url 'bookshowroom:edit_booking' %}", {
   })
   .then(response => {
     if (response.ok) {
-
+      document.getElementById('book_button').style.display = 'block';
       showBookingsCancelButton(); // Assuming refreshBookings updates the bookings list
     } else {
       throw new Error('Error creating booking');
