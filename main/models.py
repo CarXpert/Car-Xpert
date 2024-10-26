@@ -33,7 +33,7 @@ class Car(models.Model):
     levy_date = models.DateField()
     swdkllj = models.FloatField()
     total_levy = models.FloatField()
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
  

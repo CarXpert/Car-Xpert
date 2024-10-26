@@ -12,4 +12,5 @@ urlpatterns = [
     path('', views.main_view, name='show_main'),
     path('car/<int:car_id>/', views.car_detail, name='car_detail'),
     path('car/edit/<int:car_id>/', views.edit_car_view, name='edit_car'),  # Add the edit car URL
+    path('add_car/', views.add_car, name='add_car'),
 ]
