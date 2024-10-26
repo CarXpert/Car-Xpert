@@ -27,6 +27,7 @@
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 20px;
         padding: 20px;
+        min-height: 310px; /* Set a minimum height for the grid */
     }
     .wishlist-card {
         display: flex;
@@ -150,13 +151,15 @@
     </h1>
 
     <!-- Sort Dropdown -->
+    {% if wishlist_items|length > 1 %}
     <div class="mb-4" style="display: flex; align-items: center; gap: 10px;">
         <label for="sort" style="color: white; font-size: 16px; margin-left: 20px; font-weight: bold;">Sort by:</label>
         <select id="sort" class="form-select" style="max-width: 200px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: #fff; color: #000; font-size: 16px;" onchange="sortWishlist()">
             <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest Added</option>
             <option value="oldest" {% if request.GET.sort == "oldest" %}selected{% endif %}>Oldest Added</option>        
         </select>
-    </div>   
+    </div>
+    {% endif %}   
 
     <div class="wishlist-grid">
         {% for item in wishlist_items %}
@@ -199,52 +202,53 @@ function sortWishlist() {
 }
 $(document).ready(function() {
     $('.remove-icon').click(function() {
-    const carId = $(this).data('car-id');
-    const $card = $(this).closest('.wishlist-card');
+        const carId = $(this).data('car-id');
+        const $card = $(this).closest('.wishlist-card');
 
-    // Display SweetAlert confirmation dialog
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, remove car!',
-        cancelButtonText: 'Cancel',
-        customClass: {
-            popup: 'swal2-custom' // Apply the custom class here
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: '{% url "wishlist:remove_from_wishlist" %}',
-                type: 'POST',
-                data: {
-                    'car_id': carId,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
-                },
-                success: function(response) {
-                    if (!response.in_wishlist) {
-                        $card.fadeOut(300, function() {
-                            $card.remove();
-                        });
-                        Swal.fire(
-                            'Removed!',
-                            'Your item has been removed from your wishlist.',
-                            'success'
-                        );
+        // Display SweetAlert confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, remove car!',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'swal2-custom' // Apply the custom class here
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '{% url "wishlist:remove_from_wishlist" %}',
+                    type: 'POST',
+                    data: {
+                        'car_id': carId,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (!response.in_wishlist) {
+                            $card.fadeOut(300, function() {
+                                $card.remove();
+
+                                // Check if no items left in the wishlist
+                                if ($('.wishlist-card').length < 2) {
+                                    // Hide the sort dropdown
+                                    $('#sort').closest('.mb-4').hide();
+                                }
+                                if ($('.wishlist-card').length === 0) {
+                                    // Hide the sort dropdown
+                                    $('#sort').closest('.mb-4').hide();
+                                    $('.wishlist-grid').html('<p>No items in your wishlist.</p>');
+                                }
+                            });
+                        }
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                }
-            });
-        } else {
-            console.log('Item removal canceled.');
-        }
-     });
+                });
+            }
+        });
     });
 });
 </script>
-{% endblock content %}
+{% endblock %}

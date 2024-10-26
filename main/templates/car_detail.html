@@ -307,25 +307,14 @@
 <script>
 $(document).ready(function() {
     var carId = $('#wishlist-btn').data('car-id');
-    $.ajax({
-        url: '{% url "wishlist:check_wishlist" %}',  
-        type: 'GET',
-        data: { 'car_id': carId },
-        success: function(response) {
-            if (response.in_wishlist) {
-                $('#wishlist-btn .fas').addClass('active'); 
-                $('#wishlist-btn').addClass('in-wishlist'); 
-            } else {
-                $('#wishlist-btn .fas').removeClass('active'); 
-                $('#wishlist-btn').removeClass('in-wishlist'); 
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error:', error);
-        }
-    });
+    var isAuthenticated = {{ user.is_authenticated|lower }};  // Convert to JavaScript boolean
 
     $('#wishlist-btn').click(function() {
+        if (!isAuthenticated) {
+            window.location.href = "{% url 'authentication:login' %}";  
+            return;  
+        }
+
         var $icon = $(this).find('.fas');
         $.ajax({
             url: '{% url "wishlist:add_remove_wishlist" %}',
@@ -348,7 +337,26 @@ $(document).ready(function() {
             }
         });
     });
-});
+    $.ajax({
+        url: '{% url "wishlist:check_wishlist" %}',  
+        type: 'GET',
+        data: { 'car_id': carId },
+        success: function(response) {
+            if (response.in_wishlist) {
+                $('#wishlist-btn .fas').addClass('active'); 
+                $('#wishlist-btn').addClass('in-wishlist'); 
+            } else {
+                $('#wishlist-btn .fas').removeClass('active'); 
+                $('#wishlist-btn').removeClass('in-wishlist'); 
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+
+
+    });
 
 </script>
 
