@@ -73,8 +73,9 @@
             text-align: center;
             transition: transform 0.3s ease;
             color: #000; /* Ensure text color contrasts with white background */
+            display: flex;
+            flex-direction: column;
         }
-
         .car-card:hover {
             transform: translateY(-10px);
         }
@@ -118,8 +119,8 @@
         /* Icon buttons in the card */
         .card-actions {
             display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
+            justify-content: center;
+            margin-top: auto;
         }
 
         .card-actions button {
@@ -146,8 +147,9 @@
         .news-title {
             text-align: center;
             font-size: 28px;
+            font-weight: bold;
             margin-bottom: 20px;
-            color: #000;
+            color: #FFF;
             background: linear-gradient(to right, #1b1b5c, #ffffff); /* Blue to white gradient */
             padding: 15px;
             border-radius: 12px; /* Rounded corners for the title */
