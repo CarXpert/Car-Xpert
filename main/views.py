@@ -14,6 +14,9 @@ def show_main(request):
     }
     return render(request, 'main.html', context)  
 
+def landing_page(request):
+    return render(request, 'landing_page.html')
+
 def car_detail(request, car_id):
     car = Car.objects.get(pk=car_id)
     is_in_wishlist = Wishlist.objects.filter(user=request.user, car=car).exists() if request.user.is_authenticated else False

@@ -12,5 +12,7 @@ urlpatterns = [
     path('remove/', remove_from_wishlist, name='remove_from_wishlist'),
     path('add_or_edit_note/', add_or_edit_note, name='add_or_edit_note'),
     path('check-wishlist/', check_wishlist, name='check_wishlist'),
+    # path('wishlist/add_or_edit_note/', add_or_edit_note, name='add_or_edit_note'),
+
 
 ]
