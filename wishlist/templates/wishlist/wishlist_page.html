@@ -165,7 +165,7 @@
                 <div class="card-content">
                     <h3>{{ item.car.brand }} - {{ item.car.model|title }}</h3>
                     <p class="showroom-name">{{ item.car.showroom.showroom_name|title }}</p>
-                    <p class="wishlist-note">{{ item.note}}</p>
+                    <p class="wishlist-note">{{ item.notes|default:"No notes yet" }}</p>
                 </div>
                 <div class="action-buttons">
                     <div class="tooltip">
@@ -175,11 +175,12 @@
                         <span class="tooltiptext">Remove from Wishlist</span>
                     </div>
                     <div class="tooltip">
-                        <button class="edit-note-icon" data-car-id="{{ item.car.id }}">
+                        <a href="{% url 'wishlist:edit_note' item.id %}" class="edit-note-icon">
                             <i class="fas fa-pencil-alt"></i>
-                        </button>
+                        </a>
                         <span class="tooltiptext">Add or Edit Note</span>
                     </div>
+                    
                     <a href="{% url 'main:car_detail' item.car.id %}" class="edit-note-button">Car Details</a>
                 </div>
             </div>
@@ -192,13 +193,10 @@
 <script>
 function sortWishlist() {
     const sortOrder = document.getElementById('sort').value;
-    console.log('Sort value changed to:', sortOrder); // Debugging log
     const url = new URL(window.location.href);
     url.searchParams.set('sort', sortOrder);
-    console.log('Updated URL:', url.toString()); // Debugging log
     window.location.href = url;
 }
-
 $(document).ready(function() {
     $('.remove-icon').click(function() {
     const carId = $(this).data('car-id');
@@ -243,54 +241,10 @@ $(document).ready(function() {
                 }
             });
         } else {
-            // If the user cancels, do nothing
             console.log('Item removal canceled.');
         }
      });
     });
-
-    $('.edit-note-icon').click(function() {
-        const carId = $(this).data('car-id');
-        const currentNote = $(this).closest('.wishlist-card').find('.wishlist-note').text();
-
-        Swal.fire({
-            title: 'Add or Edit Note',
-            input: 'text',
-            inputValue: currentNote !== "No notes yet" ? currentNote : "",
-            showCancelButton: true,
-            confirmButtonText: 'Save',
-            cancelButtonText: 'Cancel',
-            preConfirm: (newNote) => {
-                if (!newNote) {
-                    Swal.showValidationMessage('Please enter a note');
-                }
-                return newNote;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '{% url "wishlist:add_or_edit_note" %}',
-                    type: 'POST',
-                    data: {
-                        'car_id': carId,
-                        'note': result.value,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $(`[data-id="${carId}"] .wishlist-note`).text(result.value);
-                        } else {
-                            console.error('Error:', response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                    }
-                });
-            }
-        });
-    });
 });
 </script>
-
 {% endblock content %}

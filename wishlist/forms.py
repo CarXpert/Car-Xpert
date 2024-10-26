@@ -1,5 +1,7 @@
 from django import forms
+from .models import Wishlist
 
-class WishlistNoteForm(forms.Form):
-    car_id = forms.IntegerField(widget=forms.HiddenInput())
-    note = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'placeholder': 'Enter your note here...'}), required=False)
+class WishlistNoteForm(forms.ModelForm):
+    class Meta:
+        model = Wishlist
+        fields = ['notes']  
