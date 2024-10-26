@@ -12,7 +12,7 @@ class Booking(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     showroom = models.ForeignKey(ShowRoom, on_delete=models.CASCADE)
-    car = models.ForeignKey(Car, on_delete=models.SET_NULL, null=True, blank=True)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE )
     visit_date = models.DateField(default='2024-01-01')
     visit_time = models.TimeField(default='12:00:00')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
