@@ -19,10 +19,11 @@
         }
 
         .navbar {
-            width: 100vw;
+            width: 100%;
             background-color: #000000;
             padding: 1rem 2rem;
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -34,77 +35,79 @@
             font-weight: bold;
             letter-spacing: 2px;
             text-decoration: none;
+            margin-right: auto;
         }
 
         .nav-content {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: 1.5rem;
+            flex-grow: 1;
+            justify-content: flex-end;
         }
 
+        /* Search Container */
         .search-container {
             position: relative;
             display: flex;
             align-items: center;
-            width: 300px; /* Fixed width for stability */
+            width: 100%;
+            max-width: 400px;
+            background-color: #1a1f4d;
+            border-radius: 30px; /* Full round corners */
+            padding: 10px 15px;
+            color: #666;
         }
 
         .search-container i {
-            position: absolute;
-            left: 15px;
             color: #666;
             font-size: 16px;
+            margin-right: 10px;
         }
 
         .search-input {
-            background-color: #1a1f4d;
+            width: 100%;
             border: none;
-            padding: 12px 20px 12px 40px;
-            border-radius: 25px;
+            background: transparent;
             color: white;
-            width: 100%; /* 100% width to make it responsive */
             outline: none;
             font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            background-color: #242a5a;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+            letter-spacing: 1px;
         }
 
         .search-input::placeholder {
             color: #666;
         }
 
+        /* Navigation Icons */
         .nav-icons {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             align-items: center;
         }
 
+        .nav-icons a,
         .nav-icons button {
             background: none;
             border: none;
             color: white;
             cursor: pointer;
             font-size: 20px;
-            padding: 5px;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease;
         }
 
+        .nav-icons a:hover,
         .nav-icons button:hover {
             color: #a0a0a0;
-            transform: scale(1.1);
         }
 
         .btn-login {
-            background-color: #006400; /* Dark Green */
+            background-color: #006400;
             color: white;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 5px;
-            border: none;
             cursor: pointer;
+            border: none;
             transition: background-color 0.3s ease;
         }
 
@@ -113,12 +116,12 @@
         }
 
         .btn-logout {
-            background-color: #ff0000; /* Red */
+            background-color: #ff0000;
             color: white;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 5px;
-            border: none;
             cursor: pointer;
+            border: none;
             transition: background-color 0.3s ease;
         }
 
@@ -126,39 +129,39 @@
             background-color: #cc0000;
         }
 
+        /* Responsive Styles */
         @media (max-width: 768px) {
             .nav-content {
                 gap: 1rem;
             }
 
-            .search-input {
-                width: 100%; /* Ensures responsiveness on smaller screens */
+            .search-container {
+                max-width: 100%;
             }
         }
 
         @media (max-width: 576px) {
             .navbar {
                 flex-direction: column;
+                align-items: stretch;
                 padding: 1rem;
                 gap: 1rem;
             }
 
             .nav-content {
-                flex-direction: column;
                 width: 100%;
+                justify-content: space-between;
+                gap: 1rem;
             }
 
-            .search-container {
-                width: 100%; /* Adjusts to 100% on smaller screens */
-            }
-
+            .search-container,
             .search-input {
                 width: 100%;
             }
 
             .nav-icons {
-                justify-content: center;
                 width: 100%;
+                justify-content: space-around;
             }
         }
     </style>
@@ -171,6 +174,7 @@
         </a>
     
         <div class="nav-content">
+            <!-- Rounded Search Bar -->
             <div class="search-container">
                 <i class="fas fa-search"></i>
                 <input id="search-input" type="text" class="search-input" placeholder="SEARCH">
