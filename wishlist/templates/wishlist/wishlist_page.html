@@ -1,198 +1,277 @@
+{% extends 'base.html' %}
 {% block content %}
 {% load static %}
 {% load humanize %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Wishlist</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
-            color: white;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            min-height: 100vh;
-        }
-        .wishlist-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-        .wishlist-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background-color: white;
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-        }
-        .wishlist-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
-        .wishlist-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-        .card-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: start;
-        }
-        .wishlist-card h3 {
-            margin: 0;
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        .showroom-name {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-        .wishlist-note {
-            font-size: 13px;
-            color: #444;
-            font-style: italic;
-            margin-bottom: 15px;
-        }
-        .action-buttons {
-            display: flex;
-            width: 100%;
-            align-items: center;
-        }
-        .remove-icon, .edit-note-icon {
-            font-size: 25px;
-            color: rgb(0, 30, 70);
-            cursor: pointer;
-            background: none;
-            border: none;
-            margin: 0 10px;
-        }
-        .remove-icon:hover {
-            color: #cb4141;
-            transform: translateY(-3px);
-        }
-        .edit-note-icon:hover {
-            color: #41cb41;
-            transform: translateY(-3px);
-        }
-        .edit-note-button {
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #fff;
-            background-color: #0056b3;
-            border-radius: 20px;
-            text-decoration: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .edit-note-button:hover {
-            background-color: #6998e3;
-            transform: translateY(-3px);
-        }
-    </style>
-</head>
-<body>
-    {% include 'header.html' %}
-    <div class="container mx-auto mt-20 p-6">
-        <br> <h1>My Wishlist</h1> <br>
-        <div class="wishlist-grid">
-            {% for item in wishlist_items %}
-                <div class="wishlist-card" data-id="{{ item.car.id }}">
-                    <img src="{% static 'images/' %}{{ item.car.brand }}.png" alt="{{ item.car.brand }} logo">
-                    <div class="card-content">
-                        <h3>{{ item.car.brand }} - {{ item.car.model|title }}</h3>
-                        <p class="showroom-name">{{ item.car.showroom.showroom_name|title }}</p>
-                        <p class="wishlist-note">{{ item.note|default:"No notes yet" }}</p> <!-- Display notes -->
-                    </div>
-                    <div class="action-buttons">
+<title>My Wishlist</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<!-- Include SweetAlert2 CSS and JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
+        color: white;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        min-height: 100vh;
+    }
+    .wishlist-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+    .wishlist-card {
+        display: flex;
+        flex-direction: column;
+        max-width: 600px;
+        justify-content: space-between;
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+    }
+    .wishlist-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+    .wishlist-card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+    .card-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+    }
+    .wishlist-card h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    .showroom-name {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 5px;
+    }
+    .wishlist-note {
+        font-size: 13px;
+        color: #444;
+        font-style: italic;
+        margin-bottom: 15px;
+    }
+    .action-buttons {
+        display: flex;
+        width: 100%;
+        align-items: center;
+    }
+    .remove-icon, .edit-note-icon {
+        font-size: 25px;
+        color: rgb(0, 30, 70);
+        cursor: pointer;
+        background: none;
+        border: none;
+        margin: 0 10px;
+    }
+    .remove-icon:hover {
+        color: #cb4141;
+        transform: translateY(-3px);
+    }
+    .edit-note-icon:hover {
+        color: #41cb41;
+        transform: translateY(-3px);
+    }
+    .edit-note-button {
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #0056b3;
+        border-radius: 20px;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .edit-note-button:hover {
+        background-color: #4ba5ff;
+        transform: translateY(-3px);
+    }
+    /* Tooltip */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        font-size: small;
+        width: 150px;
+        background-color: #000000;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+    .swal2-custom {
+        max-width: 400px; 
+        width: 100%; 
+    }
+</style>
+
+<div class="container mx-auto mt-0 p-6">
+    <h1 style="font-size: 36px; font-weight: 600; color: #fff; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+        My Wishlist
+    </h1>
+    <div class="wishlist-grid">
+        {% for item in wishlist_items %}
+            <div class="wishlist-card" data-id="{{ item.car.id }}">
+                <img src="{% static 'images/' %}{{ item.car.brand }}.png" alt="{{ item.car.brand }} logo">
+                <div class="card-content">
+                    <h3>{{ item.car.brand }} - {{ item.car.model|title }}</h3>
+                    <p class="showroom-name">{{ item.car.showroom.showroom_name|title }}</p>
+                    <p class="wishlist-note">{{ item.note}}</p>
+                </div>
+                <div class="action-buttons">
+                    <div class="tooltip">
                         <button class="remove-icon" data-car-id="{{ item.car.id }}">
                             <i class="fas fa-trash"></i>
                         </button>
+                        <span class="tooltiptext">Remove from Wishlist</span>
+                    </div>
+                    <div class="tooltip">
                         <button class="edit-note-icon" data-car-id="{{ item.car.id }}">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
-                        <a href="{% url 'main:car_detail' item.car.id %}" class="edit-note-button">Details</a>
+                        <span class="tooltiptext">Add or Edit Note</span>
                     </div>
+                    <a href="{% url 'main:car_detail' item.car.id %}" class="edit-note-button">Car Details</a>
                 </div>
-            {% empty %}
-                <p>No items in your wishlist.</p>
-            {% endfor %}
-        </div>
+            </div>
+        {% empty %}
+            <p>No items in your wishlist.</p>
+        {% endfor %}
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.remove-icon').click(function() {
-                const carId = $(this).data('car-id');
-                const $card = $(this).closest('.wishlist-card');
+<script>
+$(document).ready(function() {
+    $('.remove-icon').click(function() {
+    const carId = $(this).data('car-id');
+    const $card = $(this).closest('.wishlist-card');
 
+    // Display SweetAlert confirmation dialog
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, remove car!',
+        cancelButtonText: 'Cancel',
+        customClass: {
+            popup: 'swal2-custom' // Apply the custom class here
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '{% url "wishlist:remove_from_wishlist" %}',
+                type: 'POST',
+                data: {
+                    'car_id': carId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (!response.in_wishlist) {
+                        $card.fadeOut(300, function() {
+                            $card.remove();
+                        });
+                        Swal.fire(
+                            'Removed!',
+                            'Your item has been removed from your wishlist.',
+                            'success'
+                        );
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        } else {
+            // If the user cancels, do nothing
+            console.log('Item removal canceled.');
+        }
+     });
+    });
+
+    $('.edit-note-icon').click(function() {
+        const carId = $(this).data('car-id');
+        const currentNote = $(this).closest('.wishlist-card').find('.wishlist-note').text();
+
+        Swal.fire({
+            title: 'Add or Edit Note',
+            input: 'text',
+            inputValue: currentNote !== "No notes yet" ? currentNote : "",
+            showCancelButton: true,
+            confirmButtonText: 'Save',
+            cancelButtonText: 'Cancel',
+            preConfirm: (newNote) => {
+                if (!newNote) {
+                    Swal.showValidationMessage('Please enter a note');
+                }
+                return newNote;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
                 $.ajax({
-                    url: '{% url "wishlist:remove_from_wishlist" %}',
+                    url: '{% url "wishlist:add_or_edit_note" %}',
                     type: 'POST',
                     data: {
                         'car_id': carId,
+                        'note': result.value,
                         'csrfmiddlewaretoken': '{{ csrf_token }}'
                     },
                     success: function(response) {
-                        if (!response.in_wishlist) {
-                            $card.fadeOut(300, function() {
-                                $card.remove();
-                            });
+                        if (response.success) {
+                            $(`[data-id="${carId}"] .wishlist-note`).text(result.value);
+                        } else {
+                            console.error('Error:', response.error);
                         }
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
                     }
                 });
-            });
-
-            // Add functionality for the edit note button
-            $('.edit-note-icon').click(function() {
-                const carId = $(this).data('car-id');
-                const currentNote = $(this).closest('.wishlist-card').find('.wishlist-note').text();
-
-                const newNote = prompt("Enter your note:", currentNote !== "No notes yet" ? currentNote : "");
-
-                if (newNote !== null) {
-                    $.ajax({
-                        url: '{% url "wishlist:add_or_edit_note" %}',
-                        type: 'POST',
-                        data: {
-                            'car_id': carId,
-                            'note': newNote,
-                            'csrfmiddlewaretoken': '{{ csrf_token }}'
-                        },
-                        success: function(response) {
-                            $(`[data-id="${carId}"] .wishlist-note`).text(newNote);
-                            $(`[data-id="${carId}"] .edit-note-icon i`).removeClass("fa-plus").addClass("fa-pencil-alt");
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error:', error);
-                        }
-                    });
-                }
-            });
+            }
         });
-    </script>
-</body>
-</html>
-{% endblock %}
+    });
+});
+</script>
+
+{% endblock content %}

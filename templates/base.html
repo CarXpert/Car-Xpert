@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
   </head>
   <body>
+    {% block header %}
     {% include 'header.html' %}
+    {% endblock header %}
     
     <div class="content">
         {% block content %}
