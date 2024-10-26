@@ -1,46 +1,53 @@
-{% extends 'base.html' %}
 {% load static %}
-{% block header %}
-{% endblock header %}
 
-{% block content %}
-<div class="landing-container">
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page - CarXpert</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
         /* Landing Page Styling */
-        .landing-container {
-            padding: 50px 20px;
-            background: url("{% static 'images/landing_page.png' %}") no-repeat center center;
-            background-size: cover;
-            color: #fff;
+        body {
+            margin: 0; 
             font-family: 'Inter', sans-serif;
+            color: #fff;
+        }
+
+        .landing-container {
+            padding: 50px;
+            background: url("{% static 'images/landing.png' %}") no-repeat center center;
+            background-size: cover;
             min-height: 100vh; /* Ensures the container takes at least the full viewport height */
             display: flex; /* Use flexbox to center content */
             flex-direction: column; /* Center elements vertically */
             justify-content: center; /* Center elements vertically */
             align-items: flex-start; /* Align items to the left */
+            text-align: left; /* Default text alignment */
         }
 
         .landing-title {
             font-size: 72px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
+            margin-left: 173px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             font-weight: 900; /* Bold */
             text-align: left; /* Align text to the left */
         }
 
         .landing-subtitle {
-            font-size: 24px;
+            font-size: 20px;
+            margin: 10px 0;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            text-align: left; /* Align text to the left */
+            text-align: center; /* Align text to the left */
         }
 
         .cta-button {
             display: inline-block;
             margin-top: 15px;
-            margin-left: 140px;
+            margin-left: 270px;
             font-weight: 600;
             padding: 15px 30px;
             background-color: #0C0D28;
@@ -48,7 +55,6 @@
             text-decoration: none;
             border-radius: 25px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            align-self: flex-start; /* Align button to the left */
         }
 
         .cta-button:hover {
@@ -57,12 +63,14 @@
         }
 
     </style>
+</head>
+<body>
 
+<div class="landing-container">
     <h1 class="landing-title">CARXPERT</h1>
-    <p class="landing-subtitle">Find Your Next Ride with Ease – Discover </p>
-    <p class="landing-subtitle">the Best Used Car Showrooms Near You. </p>
+    <p class="landing-subtitle">Find Your Next Ride with Ease – Discover the Best Used Car Showrooms Near You. </p>
     <a href="{% url 'main:show_main' %}" class="cta-button">Get Started</a>
-
-
 </div>
-{% endblock content %}
+
+</body>
+</html>
