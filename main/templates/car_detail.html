@@ -308,16 +308,16 @@
 $(document).ready(function() {
     var carId = $('#wishlist-btn').data('car-id');
     $.ajax({
-        url: '{% url "wishlist:check_wishlist" %}',  // Add a URL for fetching wishlist status
+        url: '{% url "wishlist:check_wishlist" %}',  
         type: 'GET',
         data: { 'car_id': carId },
         success: function(response) {
             if (response.in_wishlist) {
-                $('#wishlist-btn .fas').addClass('active'); // Change icon color if in wishlist
-                $('#wishlist-btn').addClass('in-wishlist'); // Add class if in wishlist
+                $('#wishlist-btn .fas').addClass('active'); 
+                $('#wishlist-btn').addClass('in-wishlist'); 
             } else {
-                $('#wishlist-btn .fas').removeClass('active'); // Ensure icon is not active if not in wishlist
-                $('#wishlist-btn').removeClass('in-wishlist'); // Remove class if not in wishlist
+                $('#wishlist-btn .fas').removeClass('active'); 
+                $('#wishlist-btn').removeClass('in-wishlist'); 
             }
         },
         error: function(xhr, status, error) {
@@ -336,11 +336,11 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.in_wishlist) {
-                    $icon.addClass('active');  // Change color to red if in wishlist
-                    $('#wishlist-btn').addClass('in-wishlist'); // Add class if in wishlist
+                    $icon.addClass('active');  
+                    $('#wishlist-btn').addClass('in-wishlist'); 
                 } else {
-                    $icon.removeClass('active');  // Change color back to white if not in wishlist
-                    $('#wishlist-btn').removeClass('in-wishlist'); // Remove class if not in wishlist
+                    $icon.removeClass('active');  
+                    $('#wishlist-btn').removeClass('in-wishlist'); 
                 }
             },
             error: function(xhr, status, error) {

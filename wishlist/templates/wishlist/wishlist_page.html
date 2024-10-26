@@ -148,6 +148,16 @@
     <h1 style="font-size: 36px; font-weight: 600; color: #fff; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
         My Wishlist
     </h1>
+
+    <!-- Sort Dropdown -->
+    <div class="mb-4" style="display: flex; align-items: center; gap: 10px;">
+        <label for="sort" style="color: white; font-size: 16px; margin-left: 20px; font-weight: bold;">Sort by:</label>
+        <select id="sort" class="form-select" style="max-width: 200px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: #fff; color: #000; font-size: 16px;" onchange="sortWishlist()">
+            <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest Added</option>
+            <option value="oldest" {% if request.GET.sort == "oldest" %}selected{% endif %}>Oldest Added</option>        
+        </select>
+    </div>   
+
     <div class="wishlist-grid">
         {% for item in wishlist_items %}
             <div class="wishlist-card" data-id="{{ item.car.id }}">
@@ -180,6 +190,15 @@
 </div>
 
 <script>
+function sortWishlist() {
+    const sortOrder = document.getElementById('sort').value;
+    console.log('Sort value changed to:', sortOrder); // Debugging log
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', sortOrder);
+    console.log('Updated URL:', url.toString()); // Debugging log
+    window.location.href = url;
+}
+
 $(document).ready(function() {
     $('.remove-icon').click(function() {
     const carId = $(this).data('car-id');
