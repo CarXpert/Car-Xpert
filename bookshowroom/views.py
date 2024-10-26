@@ -25,7 +25,7 @@ def show_booking(request):
         'user': request.user,
     }
 
-    return render(request, "booking.html", context)
+    return render(request, "test2.html", context)
 
 
 def get_showrooms(request):

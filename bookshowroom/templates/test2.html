@@ -162,6 +162,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     margin: 20px;
     transition: transform 0.2s, box-shadow 0.2s;
+    width:45%;
 }
 
 .booking-card:hover {
@@ -208,6 +209,7 @@
 .booking-details {
     margin-top: 15px;
     text-align: left; /* Ensure left alignment */
+    width:100%;
 }
 
 .booking-detail {
@@ -234,7 +236,7 @@
     margin-top: 20px;
 }
 
-.edit-button, .delete-button {
+.edit-button, .delete-button, .location-button {
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
@@ -253,7 +255,11 @@
     background-color: #dc3545;
 }
 
-.edit-button:hover, .delete-button:hover {
+.location-button {
+  background-color: #674ea7;
+}
+
+.edit-button:hover, .delete-button:hover, .location-button:hover {
     opacity: 0.8;
     transform: translateY(-2px);
 }
@@ -273,6 +279,7 @@
         flex-direction: column;
         align-items: center;
         gap:25px;
+        min-width:600px;
     }
     .calendar-container,
     #bookings {
@@ -292,7 +299,16 @@
     .weekdays {
         font-size: 2vw;
     }
+    .booking-card {
+ 
+    width:60%;
+  }
+}
 
+@media (max-width: 2000px) {
+  .booking-card {
+ 
+ width:60%;}
 }
 
 select, input, textarea{
@@ -412,6 +428,14 @@ select, input, textarea{
         border-radius: 10px;
         font-size:2em;
     }
+
+    .logo-img {
+   
+    width: 100%; /* Ensures image scales within the max-width constraint */
+  
+    display: block;
+    margin: 0 auto; /* Centers the image horizontally */
+}
 </style>
 
 <div class="outer-container">
@@ -648,15 +672,17 @@ if (bookings.length === 0) {
     document.getElementById("booking_cards").style.justifyContent = 'top';
     bookings.forEach((booking) => {
         
+        const brand = booking.car.brand
         const name = booking.car.car_type; // Access the car name from the booking object
         const visitDate = booking.visit_date; // Get visit date
         const visitTime = booking.visit_time; // Get visit time
         const status = booking.status; // Get booking status
         const notes = booking.notes; // Get notes
         const showroom = booking.showroom; // Get showroom name
+        const myStaticUrl = "{% static 'images/' %}" + brand + ".png";
 
         // Build the HTML string for the booking card
-        htmlString += `<div class="booking-card">
+        htmlString += `<div id="${booking.id}" class="booking-card">
             <div class="booking-header">
                 <h3>${showroom.name}</h3>
                 <div class="booking-status status-${status}">
@@ -664,6 +690,7 @@ if (bookings.length === 0) {
                 </div>
             </div>
             <div class="booking-details">
+                <img src="${myStaticUrl}" alt="${brand} logo" class="logo-img">
                 <div class="booking-detail">
                     <strong>Car:</strong>
                     <span>${booking.car.brand}, ${booking.car.car_type}, ${booking.car.model}</span>
@@ -676,8 +703,13 @@ if (bookings.length === 0) {
                     <strong>Visit Time:</strong>
                     <span>${visitTime}</span>
                 </div>
+             
            `;
 
+          //  <div class="booking-detail">
+          //           <strong>Location:</strong>
+          //           <span>${booking.showroom.location}, ${booking.showroom.regency}</span>
+          //       </div>
             if (notes) {
                 htmlString += `<div class="booking-detail">
                     <strong>Notes:</strong>
@@ -699,6 +731,7 @@ if (bookings.length === 0) {
             htmlString += `<div class="booking-actions">
                 <button class="edit-button" onclick="editBooking('${booking.id}')">Edit</button>
                 <button class="delete-button" onclick="deleteBooking('${booking.id}')">Delete</button>
+                <button class="location-button" onclick="deleteBooking('${booking.id}')">Location</button>
             </div>`;
         }
 
