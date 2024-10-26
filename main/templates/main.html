@@ -15,7 +15,6 @@
             color: #fff;
         }
 
-        /* Main Container Styling */
         .main-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -36,16 +35,16 @@
         /* Filter Styling */
         .filter-container {
             display: flex;
-            justify-content: flex-end; /* Align the filter to the right */
+            justify-content: flex-end;
             margin-bottom: 20px;
         }
 
         .filter-dropdown {
             padding: 8px;
-            background-color: #1f2937; /* Dark background */
+            background-color: #1f2937;
             color: white;
             border-radius: 5px;
-            border: 1px solid #4b5563; /* Darker border */
+            border: 1px solid #4b5563;
             cursor: pointer;
             font-size: 16px;
         }
@@ -55,7 +54,6 @@
             color: white;
         }
 
-        /* Car Grid Styling */
         .car-grid {
             display: flex;
             justify-content: space-around;
@@ -63,9 +61,8 @@
             flex-wrap: wrap;
         }
 
-        /* Car Card Styling */
         .car-card {
-            background-color: #fff; /* Set background color to white */
+            background-color: #fff;
             width: 220px;
             padding: 20px;
             border-radius: 8px;
@@ -89,16 +86,14 @@
         .car-card h3 {
             margin: 10px 0;
             font-size: 18px;
-            color: #000; /* Text color inside card */
-            font-weight: bold;
+            color: #000;
         }
 
         .car-card p {
             font-size: 14px;
-            color: #555; /* Text color inside card */
+            color: #555;
         }
 
-        /* Action buttons */
         .car-card a {
             display: inline-flex;
             align-items: center;
@@ -116,17 +111,79 @@
             background-color: #0056b3;
         }
 
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%; /* Responsive Width */
+            max-width: 600px; /* Max width for larger screens */
+            color: #000;
+            overflow-y: auto; /* Enable scrolling if content is too long */
+            max-height: 90vh; /* Limit height of the modal */
+        }
+        
+        .modal form {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 10px; /* Space between grid items */
+        }
+        
+        .modal form div {
+            margin-bottom: 10px;
+        }
+        
+        .modal form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .modal form input[type="text"],
+        .modal form input[type="number"],
+        .modal form input[type="date"],
+        .modal form input[type="checkbox"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .modal form button {
+            grid-column: span 2; /* Stretch the button across two columns */
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        
         /* Icon buttons in the card */
         .card-actions {
             display: flex;
             justify-content: center;
             margin-top: auto;
         }
-
-        .card-actions button {
-            border: none;
-            background: none;
-            cursor: pointer;
+        
+        .modal form button:hover {
+            background-color: #218838;
         }
 
         .card-actions button i {
@@ -257,27 +314,35 @@
             height: auto;
             margin-bottom: 10px;
         }
-
+        
     </style>
+</head>
 
-    <!-- Title and Filter Section -->
-    <div class="title-filter-container">
-        <h1>Available Cars</h1>
-        <div class="filter-container">
-            <form method="GET" action="{% url 'main:show_main' %}">
-                <select name="filter" class="filter-dropdown" onchange="this.form.submit()">
-                    <option value="">Sort by...</option>
-                    <option value="mileage_high">Highest Mileage</option>
-                    <option value="mileage_low">Lowest Mileage</option>
-                    <option value="year_high">Newest Year</option>
-                    <option value="year_low">Oldest Year</option>
-                    <option value="price_high">Highest Price</option>
-                    <option value="price_low">Lowest Price</option>
-                </select>
-            </form>
+<body>
+    <div class="main-container">
+        <div class="flex justify-between items-center mb-4">
+            <h1>Available Cars</h1>
+
+            <!-- Add Car Button (Visible only to Admin) -->
+            {% if user.is_authenticated and user.is_staff %}
+                <button id="add-car-button" data-url="{% url 'main:add_car' %}" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Car</button>
+            {% endif %}
+
+            <div class="filter-container">
+                <form method="GET" action="{% url 'main:show_main' %}">
+                    <select name="filter" class="filter-dropdown" onchange="this.form.submit()">
+                        <option value="">Sort by...</option>
+                        <option value="mileage_high">Highest Mileage</option>
+                        <option value="mileage_low">Lowest Mileage</option>
+                        <option value="year_high">Newest Year</option>
+                        <option value="year_low">Oldest Year</option>
+                        <option value="price_high">Highest Price</option>
+                        <option value="price_low">Lowest Price</option>
+                    </select>
+                </form>
+            </div>
         </div>
-    </div>
-
+        
     <!-- Car Grid Section -->
     <div class="car-grid">
         {% for car in cars|slice:":40" %}
@@ -296,6 +361,51 @@
         </div>
         {% endfor %}
     </div>
+
+    <!-- Modal Pop-up for Add Car Form -->
+    <div id="add-car-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <h2>Add New Car</h2>
+            <form id="add-car-form">
+                {% csrf_token %}
+                <div><label>Brand:</label><input type="text" name="brand" required></div>
+                <div><label>Car Type:</label><input type="text" name="car_type" required></div>
+                <div><label>Model:</label><input type="text" name="model" required></div>
+                <div><label>Color:</label><input type="text" name="color" required></div>
+                <div><label>Year:</label><input type="number" name="year" required></div>
+                <div><label>Transmission:</label><input type="text" name="transmission" required></div>
+                <div><label>Fuel Type:</label><input type="text" name="fuel_type" required></div>
+                <div><label>Doors:</label><input type="number" name="doors" required></div>
+                <div><label>Cylinder Size (cc):</label><input type="number" name="cylinder_size" required></div>
+                <div><label>Cylinder Total:</label><input type="number" name="cylinder_total" required></div>
+                <div><label>Turbo:</label><input type="checkbox" name="turbo"></div>
+                <div><label>Mileage (km):</label><input type="number" name="mileage" required></div>
+                <div><label>License Plate:</label><input type="text" name="license_plate" required></div>
+                <div><label>Price (Cash):</label><input type="number" name="price_cash" required></div>
+                <div><label>Price (Credit):</label><input type="number" name="price_credit" required></div>
+                <div><label>PKB Value:</label><input type="number" name="pkb_value" required></div>
+                <div><label>PKB Base:</label><input type="number" name="pkb_base" required></div>
+                <div><label>STNK Expiry Date:</label><input type="date" name="stnk_date" required></div>
+                <div><label>Levy Expiry Date:</label><input type="date" name="levy_date" required></div>
+                <div><label>SWDKLLJ:</label><input type="number" name="swdkllj" required></div>
+                <div><label>Total Levy:</label><input type="number" name="total_levy" required></div>
+                <!-- Additional input fields here -->
+                <div>
+                    <label>Showroom:</label>
+                    <select name="showroom_id" required>
+                        {% for showroom in showrooms %}
+                            <option value="{{ showroom.pk }}">{{ showroom.fields.showroom_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit">Add Car</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript for Modal and AJAX -->
+    <script src="{% static 'scripts/promo.js' %}"></script>
 
     <!-- News Section -->
     <div class="news-section">

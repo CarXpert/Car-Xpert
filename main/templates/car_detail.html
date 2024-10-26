@@ -2,13 +2,11 @@
 <html>
 <head>
     <title>{{ car.brand }} {{ car.model }} - Details</title>
-    <!-- Load static tag -->
     {% load static %}
-    {% load humanize %} <!-- Load humanize after enabling it in settings -->
+    {% load humanize %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* Background Gradient */
         body {
             margin: 0;
             padding: 0;
@@ -17,7 +15,6 @@
             color: #fff;
         }
 
-        /* Main Container */
         .main-container {
             max-width: 1000px;
             margin: 40px auto;
@@ -28,15 +25,13 @@
             color: #fff;
         }
 
-        /* Top Section for Car Image and Info */
         .car-details {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            flex-wrap: wrap; /* Ensure wrapping on smaller screens */
+            flex-wrap: wrap;
         }
 
-        /* Car Image Styling */
         .car-details img {
             width: 300px;
             border-radius: 15px;
@@ -44,25 +39,15 @@
             margin-bottom: 20px;
         }
 
-        /* Car Info Container */
         .car-info-container {
-            display: flex;
             flex-grow: 1;
             margin-left: 20px;
-            justify-content: space-between;
-            align-items: center;
             padding: 15px;
-        }
-
-        /* Car Info - Name and Price */
-        .car-info {
-            margin-bottom: 20px;
         }
 
         .car-info h1 {
             font-size: 34px;
             font-weight: bold;
-            margin-bottom: 10px;
         }
 
         .car-info .price {
@@ -70,7 +55,6 @@
             font-weight: bold;
         }
 
-        /* Car Description Box */
         .description-box {
             background-color: #000;
             padding: 20px;
@@ -81,20 +65,16 @@
         .description-box h2 {
             font-size: 24px;
             font-weight: bold;
-            color: #fff;
-            margin-bottom: 20px;
         }
 
-        /* Additional Info and Description Styling */
         .additional-info {
             display: flex;
             justify-content: space-between;
-            flex-wrap: wrap; /* Make the columns stack on smaller screens */
+            flex-wrap: wrap;
         }
 
         .additional-info .left, .additional-info .right {
             width: 45%;
-            margin-bottom: 20px;
         }
 
         .additional-info p {
@@ -103,11 +83,9 @@
             color: #fff;
         }
 
-        /* Button Section */
         .button-section {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             margin-top: 30px;
         }
 
@@ -133,13 +111,11 @@
             background-color: #0056b3;
         }
 
-        /* Date Styling */
         .date-info {
             font-size: 12px;
             color: #ddd;
         }
 
-        /* Styling for Gmaps Image */
         .right img {
             width: 300px;
             border-radius: 15px; 
@@ -147,7 +123,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .car-details {
                 flex-direction: column;
@@ -155,20 +130,11 @@
             }
 
             .car-info-container {
-                margin-left: 0;
                 text-align: center;
             }
 
-            .car-info h1 {
-                font-size: 28px;
-            }
-
-            .car-info .price {
-                font-size: 22px;
-            }
-
             .additional-info .left, .additional-info .right {
-                width: 100%; /* Stack the columns vertically */
+                width: 100%;
             }
         }
 
@@ -222,16 +188,11 @@
     </style>
 </head>
 <body>
-    <!-- Include the header like in main.html -->
     {% include 'header.html' %}
 
     <div class="main-container">
-        <!-- Car Details Section (Image + Info) -->
         <div class="car-details">
-            <!-- Car Image -->
             <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} logo">
-
-            <!-- Car Info and Additional Information -->
             <div class="car-info-container">
                 <!-- Car Name and Price -->
                 <div class="car-info">
@@ -246,7 +207,6 @@
             </div>
         </div>
 
-        <!-- Black Box for Additional Information with Title -->
         <div class="description-box">
             <h2>Car Description</h2>
             <div class="additional-info">
@@ -269,7 +229,6 @@
             </div>
         </div>
 
-        <!-- Dealership Information Section -->
         <div class="description-box">
             <h2>Dealership Information</h2>
             <div class="additional-info">
@@ -284,24 +243,20 @@
             </div>
         </div>
 
-        <!-- Buttons and Date Info Section -->
         <div class="button-section">
-            <!-- Date Information -->
             <div class="date-info">
                 <p>Created: {{ car.created_at|date:"d M Y" }}</p>
                 <p>Last Updated: {{ car.updated_at|date:"d M Y" }}</p>
             </div>
 
-            <!-- Buttons: Back to Home and Edit Data -->
             <div>
                 <a href="{% url 'main:show_main' %}" class="btn-back">Back to Home</a>
-                <a href="#" class="btn-edit">Edit Data</a> <!-- Link to Edit -->
-                {% comment "" %} ini masih dummy button untuk edit pagenya
-                <a href="{% url 'main:edit_car' car.id %}" class="btn-edit">Edit Data</a> <!-- Link to Edit -->
-                {% endcomment %}
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'main:edit_car' car.id %}" class="btn-edit">Edit Data</a>
+                {% endif %}
             </div>
         </div>
-    </div>   
+    </div>
 </body>
 
 <!-- Wishlist Script -->
