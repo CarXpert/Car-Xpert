@@ -142,9 +142,9 @@
         /* Styling for Gmaps Image */
         .right img {
             width: 300px;
-            border-radius: 15px;  /* Rounded corners */
-            margin-left: 20px;    /* Shift the image to the right */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add a shadow for consistency */
+            border-radius: 15px; 
+            margin-left: 20px;   
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
         }
 
         /* Responsive Design */
@@ -199,24 +199,24 @@
         }
 
         .wishlist-icon.in-wishlist {
-            color: red; /* Gaya untuk ikon yang ditambahkan ke wishlist */
+            color: red; 
         }
 
         .wishlist-icon i {
-            color: white; /* Warna default */
-            transition: color 0.3s; /* Transisi halus untuk perubahan warna */
+            color: white; 
+            transition: color 0.3s;
         }
 
         .wishlist-icon i.active {
-            color: red; /* Warna ketika ikon aktif */
+            color: red;
         }
 
         .wishlist-icon .fas {
-            color: white; /* Warna default */
+            color: white; 
         }
 
         .wishlist-icon .fas.active {
-            color: red; /* Warna ketika mobil ada di wishlist */
+            color: red; 
         }
 
     </style>
@@ -304,10 +304,11 @@
     </div>   
 </body>
 
+<!-- Wishlist Script -->
 <script>
 $(document).ready(function() {
     var carId = $('#wishlist-btn').data('car-id');
-    var isAuthenticated = {{ user.is_authenticated|lower }};  // Convert to JavaScript boolean
+    var isAuthenticated = {{ user.is_authenticated|lower }}; 
 
     $('#wishlist-btn').click(function() {
         if (!isAuthenticated) {

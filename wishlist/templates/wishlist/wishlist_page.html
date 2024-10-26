@@ -6,7 +6,6 @@
 <title>My Wishlist</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-<!-- Include SweetAlert2 CSS and JS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -27,7 +26,7 @@
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 20px;
         padding: 20px;
-        min-height: 310px; /* Set a minimum height for the grid */
+        min-height: 310px; 
     }
     .wishlist-card {
         display: flex;
@@ -112,7 +111,6 @@
         background-color: #4ba5ff;
         transform: translateY(-3px);
     }
-    /* Tooltip */
     .tooltip {
         position: relative;
         display: inline-block;
@@ -150,7 +148,6 @@
         My Wishlist
     </h1>
 
-    <!-- Sort Dropdown -->
     {% if wishlist_items|length > 1 %}
     <div class="mb-4" style="display: flex; align-items: center; gap: 10px;">
         <label for="sort" style="color: white; font-size: 16px; margin-left: 20px; font-weight: bold;">Sort by:</label>
@@ -204,8 +201,6 @@ $(document).ready(function() {
     $('.remove-icon').click(function() {
         const carId = $(this).data('car-id');
         const $card = $(this).closest('.wishlist-card');
-
-        // Display SweetAlert confirmation dialog
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -216,7 +211,7 @@ $(document).ready(function() {
             confirmButtonText: 'Yes, remove car!',
             cancelButtonText: 'Cancel',
             customClass: {
-                popup: 'swal2-custom' // Apply the custom class here
+                popup: 'swal2-custom' 
             }
         }).then((result) => {
             if (result.isConfirmed) {
@@ -231,14 +226,10 @@ $(document).ready(function() {
                         if (!response.in_wishlist) {
                             $card.fadeOut(300, function() {
                                 $card.remove();
-
-                                // Check if no items left in the wishlist
                                 if ($('.wishlist-card').length < 2) {
-                                    // Hide the sort dropdown
                                     $('#sort').closest('.mb-4').hide();
                                 }
                                 if ($('.wishlist-card').length === 0) {
-                                    // Hide the sort dropdown
                                     $('#sort').closest('.mb-4').hide();
                                     $('.wishlist-grid').html('<p>No items in your wishlist.</p>');
                                 }
