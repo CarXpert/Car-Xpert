@@ -25,4 +25,5 @@ urlpatterns = [
     path('wishlist/', include('wishlist.urls')),
     path('auth/', include('authentication.urls', namespace='authentication')),
     path("wishlist/",include("wishlist.urls")),
+    path('bookshowroom/', include('bookshowroom.urls'))
 ]
