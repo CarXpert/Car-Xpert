@@ -19,7 +19,7 @@
         }
 
         .navbar {
-            width: 100vw; /* Pastikan navbar memenuhi seluruh lebar layar */
+            width: 100vw;
             background-color: #000000;
             padding: 1rem 2rem;
             display: flex;
@@ -46,6 +46,7 @@
             position: relative;
             display: flex;
             align-items: center;
+            width: 300px; /* Fixed width for stability */
         }
 
         .search-container i {
@@ -61,7 +62,7 @@
             padding: 12px 20px 12px 40px;
             border-radius: 25px;
             color: white;
-            width: 300px;
+            width: 100%; /* 100% width to make it responsive */
             outline: none;
             font-size: 14px;
             transition: all 0.3s ease;
@@ -131,7 +132,7 @@
             }
 
             .search-input {
-                width: 200px;
+                width: 100%; /* Ensures responsiveness on smaller screens */
             }
         }
 
@@ -148,7 +149,7 @@
             }
 
             .search-container {
-                width: 100%;
+                width: 100%; /* Adjusts to 100% on smaller screens */
             }
 
             .search-input {
@@ -192,6 +193,11 @@
                 <a href="{% url 'compare_cars' %}">
                     <button aria-label="Compare">
                         <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </a>
+                <a href="{% url 'bookshowroom:show_booking' %}">
+                    <button aria-label="bookshowroom">
+                        <i class="fas fa-calendar-alt"></i>
                     </button>
                 </a>
 
