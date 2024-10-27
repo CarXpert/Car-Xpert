@@ -50,6 +50,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            text-align: left;
         }
 
         .car-info h1 {
@@ -73,6 +74,7 @@
             padding: 20px;
             border-radius: 10px;
             margin-top: 20px;
+            text-align: left;
         }
 
         .description-box h2 {
@@ -197,6 +199,12 @@
         .wishlist-icon .fas.active {
             color: red; 
         }
+
+        /* Card Actions */
+        .card-actions {
+            display: flex;
+            justify-content: {% if user.is_staff %}space-between{% else %}center{% endif %};
+        }
     </style>
 </head>
 <body>
@@ -204,11 +212,11 @@
         <div class="car-details">
             <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} logo">
             
-            <div class="car-info-container" style="text-align: left;">
+            <div class="car-info-container">
                 <!-- Car Name and Price -->
                 <div class="car-info">
-                    <h1 style="text-align: left;">{{ car.brand }} {{ car.car_type }}</h1>
-                    <p class="price" style="text-align: left;">Rp {{ car.price_cash|intcomma }}</p>
+                    <h1>{{ car.brand }} {{ car.car_type }}</h1>
+                    <p class="price">Rp {{ car.price_cash|intcomma }}</p>
                 </div>
     
                 <!-- Wishlist Icon Wrapper -->
@@ -220,8 +228,8 @@
             </div>
         </div>
     
-        <div class="description-box" style="text-align: left;">
-            <h2 style="text-align: left;">Car Description</h2><br>
+        <div class="description-box">
+            <h2>Car Description</h2><br>
             <div class="additional-info">
                 <div class="left">
                     <p><strong>Car Model:</strong> {{ car.model }}</p>
@@ -242,8 +250,8 @@
             </div>
         </div>
     
-        <div class="description-box" style="text-align: left;">
-            <h2 style="text-align: left;">Dealership Information</h2><br>
+        <div class="description-box">
+            <h2>Dealership Information</h2><br>
             <div class="additional-info">
                 <div class="left">
                     <p><strong>Dealership Name:</strong> {{ car.showroom.showroom_name }}</p>
