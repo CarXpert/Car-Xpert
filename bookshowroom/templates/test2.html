@@ -155,14 +155,15 @@
 
 /* Individual Booking Card */
 .booking-card {
-    background-color: #2c2c4b;
+    /* background-color: #2c2c4b; */
+    background-color: white;
     border: 1px solid #674ea7;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     margin: 20px;
     transition: transform 0.2s, box-shadow 0.2s;
-    width:45%;
+    width:40%;
 }
 
 .booking-card:hover {
@@ -181,7 +182,7 @@
 
 .booking-header h3 {
     font-size: 1.6em;
-    color: #ffffff;
+    color: black;
     margin: 0;
 }
 
@@ -216,7 +217,7 @@
     display: flex;
     justify-content: space-between; /* Distribute space evenly */
     margin: 5px 0; /* Add margin for spacing */
-    color: #ccc;
+    color: black;
 }
 
 .booking-detail strong {
@@ -226,7 +227,7 @@
 .booking-notes {
     margin-top: 10px;
     padding: 10px;
-    background-color: #2c2c4b;
+    background-color: grey;
     border-left: 5px solid #674ea7;
     font-style: italic;
     color: #f0f0f0;
@@ -689,6 +690,7 @@ if (bookings.length === 0) {
                     ${status.charAt(0).toUpperCase() + status.slice(1)}
                 </div>
             </div>
+            <img src="{% static 'images/Gmaps.png' %}" alt="Google Maps" class="location-image" style="display:none;">
             <div class="booking-details">
                 <img src="${myStaticUrl}" alt="${brand} logo" class="logo-img">
                 <div class="booking-detail">
@@ -731,7 +733,7 @@ if (bookings.length === 0) {
             htmlString += `<div class="booking-actions">
                 <button class="edit-button" onclick="editBooking('${booking.id}')">Edit</button>
                 <button class="delete-button" onclick="deleteBooking('${booking.id}')">Delete</button>
-                <button class="location-button" onclick="deleteBooking('${booking.id}')">Location</button>
+                <button class="location-button" onclick="showLocation('${booking.id}')">Location</button>
             </div>`;
         }
 
@@ -742,6 +744,23 @@ if (bookings.length === 0) {
     // Update the DOM with the constructed HTML
     document.getElementById("booking_cards").innerHTML = htmlString; // Set the HTML content of the booking cards
     
+}
+
+function showLocation(booking_id){
+    const parentElement = document.getElementById(booking_id);
+    const bookingDetails = parentElement.querySelector('.booking-details');
+    const bookingActions = parentElement.querySelector('.booking-actions');
+    const locationImage = parentElement.querySelector('.location-image');
+    const bookingNotes = bookingDetails.querySelector('booking-notes');
+
+    if (bookingNotes) {
+    // Element exists, perform your actions here
+    bookingNotes.style.display = 'none';
+    // You can add additional logic or manipulate the element
+    }   
+    bookingDetails.style.display = 'none';
+    bookingActions.style.display = 'none';
+    locationImage.style.display = 'block';
 }
 
 function addBooking() {
@@ -1074,8 +1093,7 @@ fetch("{% url 'bookshowroom:get_showrooms' %}")
   })
   .catch(error => console.error('Error fetching showrooms:', error));
 
-//   fetchLocations();
-//   fetchCars();
+
 }
 
 function editBookingEntry() {
