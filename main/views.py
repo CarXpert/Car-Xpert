@@ -33,14 +33,32 @@ def main_view(request):
 
 
 def show_main(request):
+    filter_type = request.GET.get("filter")
     cars = Car.objects.all()
-    news = NewsArticle.objects.all().order_by('-published_date')[:3]  # Get the latest 3 news articles
+
+    if filter_type == "mileage_high":
+        cars = cars.order_by("-mileage")
+    elif filter_type == "mileage_low":
+        cars = cars.order_by("mileage")
+    elif filter_type == "year_high":
+        cars = cars.order_by("-year")
+    elif filter_type == "year_low":
+        cars = cars.order_by("year")
+    elif filter_type == "price_high":
+        cars = cars.order_by("-price_cash")
+    elif filter_type == "price_low":
+        cars = cars.order_by("price_cash")
+    
+
+    news = NewsArticle.objects.all().order_by('-published_date')[:3]
+    
     context = {
-        'cars': cars,
-        'news': news,  
-        'user': request.user
+        'cars': cars[:40],  # Limit to 40 cars as per your main.html template
+        'news': news,
+        'user': request.user,
     }
-    return render(request, 'main.html', context)  
+    return render(request, 'main.html', context)
+
 
 def landing_page(request):
     return render(request, 'landing_page.html')
