@@ -390,14 +390,9 @@
                 <div><label>Levy Expiry Date:</label><input type="date" name="levy_date" required></div>
                 <div><label>SWDKLLJ:</label><input type="number" name="swdkllj" required></div>
                 <div><label>Total Levy:</label><input type="number" name="total_levy" required></div>
-                <!-- Additional input fields here -->
-                <div>
-                    <label>Showroom:</label>
-                    <select name="showroom_id" required>
-                        {% for showroom in showrooms %}
-                            <option value="{{ showroom.pk }}">{{ showroom.fields.showroom_name }}</option>
-                        {% endfor %}
-                    </select>
+                <div><label>Showroom Name:</label><input type="text" name="showroom_name" required></div>
+                <div><label>Showroom Location:</label><input type="text" name="showroom_location" required></div>
+                <div><label>Showroom Regency:</label><input type="text" name="showroom_regency" required></div>
                 </div>
                 <button type="submit">Add Car</button>
             </form>

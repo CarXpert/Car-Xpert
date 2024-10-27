@@ -92,21 +92,36 @@ def edit_car_view(request, car_id):
 
     return render(request, 'edit_car.html', {'form': form, 'car': car})
 
-login_required
+@login_required
+@login_required
 def add_car(request):
     if request.method == 'POST' and request.user.is_staff:
         form = AddCarForm(request.POST)
         if form.is_valid():
             car = form.save(commit=False)
-            showroom_id = request.POST.get('showroom_id')  # Ambil showroom_id dari form
-            car.showroom = ShowRoom.objects.get(id=showroom_id)  # Hubungkan ke showroom
+
+            # Retrieve showroom details from form data
+            showroom_name = request.POST.get('showroom_name')
+            showroom_location = request.POST.get('showroom_location')
+            showroom_regency = request.POST.get('showroom_regency')
+
+            # Check if showroom exists, or create a new one
+            showroom, created = ShowRoom.objects.get_or_create(
+                showroom_name=showroom_name,
+                defaults={
+                    'showroom_location': showroom_location,
+                    'showroom_regency': showroom_regency
+                }
+            )
+
+            # Link the car to the showroom
+            car.showroom = showroom
             car.created_at = timezone.now()
             car.updated_at = timezone.now()
             car.save()
             return JsonResponse({'success': True})
 
     return JsonResponse({'success': False})
-
 from django.http import JsonResponse
 from django.db.models import Q
 
