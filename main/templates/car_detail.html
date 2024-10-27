@@ -1,12 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>{{ car.brand }} {{ car.model }} - Details</title>
-    {% load static %}
-    {% load humanize %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        /* General Styling */
         body {
             margin: 0;
             padding: 0;
@@ -193,12 +197,9 @@
         .wishlist-icon .fas.active {
             color: red; 
         }
-
     </style>
 </head>
 <body>
-    {% include 'header.html' %}
-
     <div class="main-container">
         <div class="car-details">
             <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} logo">
@@ -325,3 +326,4 @@ $(document).ready(function() {
 </script>
 
 </html>
+{% endblock content %}
