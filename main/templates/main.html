@@ -357,6 +357,9 @@
 
             <div class="card-actions">
                 <a href="{% url 'main:car_detail' car.id %}">View Details</a>
+                {% if user.is_staff %}
+                    <button class="delete-car-btn" data-car-id="{{ car.id }}">Delete</button>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
@@ -390,22 +393,49 @@
                 <div><label>Levy Expiry Date:</label><input type="date" name="levy_date" required></div>
                 <div><label>SWDKLLJ:</label><input type="number" name="swdkllj" required></div>
                 <div><label>Total Levy:</label><input type="number" name="total_levy" required></div>
-                <!-- Additional input fields here -->
-                <div>
-                    <label>Showroom:</label>
-                    <select name="showroom_id" required>
-                        {% for showroom in showrooms %}
-                            <option value="{{ showroom.pk }}">{{ showroom.fields.showroom_name }}</option>
-                        {% endfor %}
-                    </select>
+                <div><label>Showroom Name:</label><input type="text" name="showroom_name" required></div>
+                <div><label>Showroom Location:</label><input type="text" name="showroom_location" required></div>
+                <div><label>Showroom Regency:</label><input type="text" name="showroom_regency" required></div>
+                <!-- Submit Button -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <button type="submit" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                        Add Car
+                    </button>
                 </div>
-                <button type="submit">Add Car</button>
             </form>
         </div>
     </div>
 
     <!-- JavaScript for Modal and AJAX -->
     <script src="{% static 'scripts/promo.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-car-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const carId = this.getAttribute('data-car-id');
+    
+                    if (confirm('Are you sure you want to delete this car?')) {
+                        fetch(`/main/delete_car/${carId}/`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}', // CSRF token for security
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                this.closest('.car-card').remove(); // Remove the card from the DOM
+                            } else {
+                                alert('Error deleting the car.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    }
+                });
+            });
+        });
+    </script>
 
     <!-- News Section -->
     <div class="news-section">
