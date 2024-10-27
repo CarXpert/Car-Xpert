@@ -25,7 +25,7 @@ urlpatterns = [
     path('cars/', include('cars_detail.urls')),  # Mengarah ke app cars_detail (detail mobil)
     path('comparecars/', include('comparecars.urls')),
     path('auth/', include('authentication.urls', namespace='authentication')),
-    path("wishlist/",include("wishlist.urls")),
+    path("wishlist/",include("wishlist.urls", namespace="wishlist")),
     path('bookshowroom/', include('bookshowroom.urls')),
     path('news/', include('news.urls', namespace='news')),
 ]

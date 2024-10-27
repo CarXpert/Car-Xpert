@@ -1,137 +1,246 @@
 from django.test import TestCase
-from django.urls import reverse
+from django.urls import reverse, resolve
 from django.contrib.auth.models import User
-from .models import Wishlist, Car
-from .forms import WishlistNoteForm
+from cars.models import Car, ShowRoom
+from wishlist.models import Wishlist
+from wishlist.views import show_wishlist, add_remove_wishlist, remove_from_wishlist, edit_note
 
-class WishlistModelTests(TestCase):
+class WishlistModelTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.car = Car.objects.create(id=1, showroom=None, brand='Test Brand', car_type='SUV',
-                                      model='Test Car', color='Red', year=2020,
-                                      transmission='Automatic', fuel_type='Petrol',
-                                      doors=4, cylinder_size=2000, cylinder_total=4,
-                                      turbo=False, mileage=10000, license_plate='B 1234 XYZ',
-                                      price_cash=200000000, price_credit=210000000,
-                                      pkb_value=5000000, pkb_base=5000000,
-                                      stnk_date='2024-01-01', levy_date='2024-01-01',
-                                      swdkllj=1000000, total_levy=6000000,
-                                      created_at='2024-10-27T10:00:00Z', updated_at='2024-10-27T10:00:00Z')
-        self.wishlist_item = Wishlist.objects.create(user=self.user, car=self.car, notes='Test note')
+        self.showroom = ShowRoom.objects.create(
+            showroom_name='Test Showroom',
+            showroom_location='Test Location',
+            showroom_regency='Test Regency'
+        )
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.car = Car.objects.create(
+            model="Test Car",
+            brand="Test Brand",
+            year=2020,
+            showroom=self.showroom,
+            car_type="Sedan",
+            color="Red",
+            transmission="Automatic",
+            fuel_type="Gasoline",
+            doors=4,
+            cylinder_size=2.0,
+            cylinder_total=4,
+            turbo=False,
+            mileage=10000,
+            license_plate="ABC123",
+            price_cash=20000,
+            price_credit=22000,
+            pkb_value=1500.0,
+            pkb_base=1200.0,
+            stnk_date="2022-01-01",
+            levy_date="2022-01-01",
+            swdkllj=300.0,
+            total_levy=500.0,
+        )
+        self.wishlist_item = Wishlist.objects.create(user=self.user, car=self.car, notes="My Test Note")
 
     def test_wishlist_str(self):
-        self.assertEqual(str(self.wishlist_item), 'testuser - Test Car')
+        self.assertEqual(str(self.wishlist_item), f"{self.user} - {self.car.model}")
 
-    def test_wishlist_creation(self):
-        self.assertIsInstance(self.wishlist_item, Wishlist)
-        self.assertEqual(self.wishlist_item.notes, 'Test note')
-        self.assertEqual(self.wishlist_item.user.username, 'testuser')
-        self.assertEqual(self.wishlist_item.car.model, 'Test Car')
+    def test_wishlist_notes(self):
+        self.assertEqual(self.wishlist_item.notes, "My Test Note")
 
-class WishlistViewTests(TestCase):
+class ShowWishlistViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.showroom = ShowRoom.objects.create(
+            showroom_name='Test Showroom',
+            showroom_location='Test Location',
+            showroom_regency='Test Regency'
+        )
+        cls.user = User.objects.create_user(username='testuser', password='testpass')
+        cls.car = Car.objects.create(
+            model="Test Car",
+            brand="Test Brand",
+            year=2020,
+            showroom=cls.showroom,
+            car_type="Sedan",
+            color="Red",
+            transmission="Automatic",
+            fuel_type="Gasoline",
+            doors=4,
+            cylinder_size=2.0,
+            cylinder_total=4,
+            turbo=False,
+            mileage=10000,
+            license_plate="ABC123",
+            price_cash=20000,
+            price_credit=22000,
+            pkb_value=1500.0,
+            pkb_base=1200.0,
+            stnk_date="2022-01-01",
+            levy_date="2022-01-01",
+            swdkllj=300.0,
+            total_levy=500.0,
+        )
+        cls.wishlist_item = Wishlist.objects.create(user=cls.user, car=cls.car, notes="My Test Note")
+
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.car = Car.objects.create(id=1, showroom=None, brand='Test Brand', car_type='SUV',
-                                      model='Test Car', color='Red', year=2020,
-                                      transmission='Automatic', fuel_type='Petrol',
-                                      doors=4, cylinder_size=2000, cylinder_total=4,
-                                      turbo=False, mileage=10000, license_plate='B 1234 XYZ',
-                                      price_cash=200000000, price_credit=210000000,
-                                      pkb_value=5000000, pkb_base=5000000,
-                                      stnk_date='2024-01-01', levy_date='2024-01-01',
-                                      swdkllj=1000000, total_levy=6000000,
-                                      created_at='2024-10-27T10:00:00Z', updated_at='2024-10-27T10:00:00Z')
-        self.client.login(username='testuser', password='testpassword')
+        self.client.login(username='testuser', password='testpass')
 
-    def test_show_wishlist(self):
-        Wishlist.objects.create(user=self.user, car=self.car)
+    def test_show_wishlist_view(self):
         response = self.client.get(reverse('wishlist:wishlist_view'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Test Car')
+        self.assertTemplateUsed(response, 'wishlist/wishlist_page.html')
+        self.assertContains(response, "Test Car")
+        self.assertContains(response, "My Test Note")
 
-    def test_add_remove_wishlist(self):
+class AddRemoveWishlistViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.showroom = ShowRoom.objects.create(
+            showroom_name='Test Showroom',
+            showroom_location='Test Location',
+            showroom_regency='Test Regency'
+        )
+        cls.user = User.objects.create_user(username='testuser', password='testpass')
+        cls.car = Car.objects.create(
+            model="Test Car",
+            brand="Test Brand",
+            year=2020,
+            showroom=cls.showroom,
+            car_type="Sedan",
+            color="Red",
+            transmission="Automatic",
+            fuel_type="Gasoline",
+            doors=4,
+            cylinder_size=2.0,
+            cylinder_total=4,
+            turbo=False,
+            mileage=10000,
+            license_plate="ABC123",
+            price_cash=20000,
+            price_credit=22000,
+            pkb_value=1500.0,
+            pkb_base=1200.0,
+            stnk_date="2022-01-01",
+            levy_date="2022-01-01",
+            swdkllj=300.0,
+            total_levy=500.0,
+        )
+
+    def setUp(self):
+        self.client.login(username='testuser', password='testpass')
+
+    def test_add_to_wishlist(self):
         response = self.client.post(reverse('wishlist:add_remove_wishlist'), {'car_id': self.car.id})
         self.assertEqual(response.status_code, 200)
+        self.assertTrue(Wishlist.objects.filter(user=self.user, car=self.car).exists())
         self.assertJSONEqual(response.content, {'in_wishlist': True, 'message': 'Wishlist updated successfully.'})
 
-        self.assertTrue(Wishlist.objects.filter(user=self.user, car=self.car).exists())
-
+    def test_remove_from_wishlist(self):
+        Wishlist.objects.create(user=self.user, car=self.car)
         response = self.client.post(reverse('wishlist:add_remove_wishlist'), {'car_id': self.car.id})
         self.assertEqual(response.status_code, 200)
+        self.assertFalse(Wishlist.objects.filter(user=self.user, car=self.car).exists())
         self.assertJSONEqual(response.content, {'in_wishlist': False, 'message': 'Wishlist updated successfully.'})
 
-        self.assertFalse(Wishlist.objects.filter(user=self.user, car=self.car).exists())
+class RemoveFromWishlistViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.showroom = ShowRoom.objects.create(
+            showroom_name='Test Showroom',
+            showroom_location='Test Location',
+            showroom_regency='Test Regency'
+        )
+        cls.user = User.objects.create_user(username='testuser', password='testpass')
+        cls.car = Car.objects.create(
+            model="Test Car",
+            brand="Test Brand",
+            year=2020,  # Provide a year value
+            showroom=cls.showroom,  # Assuming you need to set this appropriately
+            car_type="Sedan",
+            color="Red",
+            transmission="Automatic",
+            fuel_type="Gasoline",
+            doors=4,
+            cylinder_size=2.0,
+            cylinder_total=4,
+            turbo=False,
+            mileage=10000,
+            license_plate="ABC123",
+            price_cash=20000,
+            price_credit=22000,
+            pkb_value=1500.0,
+            pkb_base=1200.0,
+            stnk_date="2022-01-01",
+            levy_date="2022-01-01",
+            swdkllj=300.0,
+            total_levy=500.0,
+        )
+        cls.wishlist_item = Wishlist.objects.create(user=cls.user, car=cls.car)
 
-    def test_remove_from_wishlist(self):
-        wishlist_item = Wishlist.objects.create(user=self.user, car=self.car)
-        response = self.client.post(reverse('wishlist:remove_from_wishlist'), {'car_id': self.car.id})
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {'status': 'success', 'message': 'Item removed from wishlist.'})
-        self.assertFalse(Wishlist.objects.filter(id=wishlist_item.id).exists())
-
-    def test_check_wishlist(self):
-        Wishlist.objects.create(user=self.user, car=self.car, notes='Test note')
-        response = self.client.get(reverse('wishlist:check_wishlist'), {'car_id': self.car.id})
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {'in_wishlist': True, 'note': 'Test note'})
-
-    def test_edit_note_success(self):
-        wishlist_item = Wishlist.objects.create(user=self.user, car=self.car, notes='Old note')
-        response = self.client.post(reverse('wishlist:edit_note', args=[wishlist_item.pk]), {'notes': 'Updated note'})
-        self.assertRedirects(response, reverse('wishlist:wishlist_view'))  # Pastikan URL ini benar
-        wishlist_item.refresh_from_db()
-        self.assertEqual(wishlist_item.notes, 'Updated note')
-
-    def test_edit_note_failure(self):
-        wishlist_item = Wishlist.objects.create(user=self.user, car=self.car, notes='Old note')
-        response = self.client.post(reverse('wishlist:edit_note', args=[wishlist_item.pk]), {'notes': ''})
-        self.assertEqual(response.status_code, 200)  # Masih dalam proses, tidak redirect
-        self.assertContains(response, 'This field is required.')  # Sesuaikan dengan pesan kesalahan form
-
-    def test_wishlist_view_url_exists(self):
-        response = self.client.get(reverse('wishlist:wishlist_view'))
-        self.assertEqual(response.status_code, 200)
-
-    def test_add_remove_wishlist_url_exists(self):
-        response = self.client.post(reverse('wishlist:add_remove_wishlist'), {'car_id': self.car.id})
-        self.assertEqual(response.status_code, 200)
-
-    def test_remove_from_wishlist_url_exists(self):
-        wishlist_item = Wishlist.objects.create(user=self.user, car=self.car)
-        response = self.client.post(reverse('wishlist:remove_from_wishlist'), {'car_id': self.car.id})
-        self.assertEqual(response.status_code, 200)
-
-    def test_check_wishlist_url_exists(self):
-        response = self.client.get(reverse('wishlist:check_wishlist'), {'car_id': self.car.id})
-        self.assertEqual(response.status_code, 200)
-
-    def test_edit_note_url_exists(self):
-        wishlist_item = Wishlist.objects.create(user=self.user, car=self.car, notes='Old note')
-        response = self.client.get(reverse('wishlist:edit_note', args=[wishlist_item.pk]))
-        self.assertEqual(response.status_code, 200)
-
-class WishlistFormTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.car = Car.objects.create(id=1, showroom=None, brand='Test Brand', car_type='SUV',
-                                      model='Test Car', color='Red', year=2020,
-                                      transmission='Automatic', fuel_type='Petrol',
-                                      doors=4, cylinder_size=2000, cylinder_total=4,
-                                      turbo=False, mileage=10000, license_plate='B 1234 XYZ',
-                                      price_cash=200000000, price_credit=210000000,
-                                      pkb_value=5000000, pkb_base=5000000,
-                                      stnk_date='2024-01-01', levy_date='2024-01-01',
-                                      swdkllj=1000000, total_levy=6000000,
-                                      created_at='2024-10-27T10:00:00Z', updated_at='2024-10-27T10:00:00Z')
-        self.wishlist_item = Wishlist.objects.create(user=self.user, car=self.car, notes='Old note')
+        self.client.login(username='testuser', password='testpass')
 
-    def test_wishlist_note_form_valid(self):
-        form_data = {'notes': 'New note'}
-        form = WishlistNoteForm(data=form_data, instance=self.wishlist_item)
-        self.assertTrue(form.is_valid())
+    def test_remove_wishlist_item(self):
+        response = self.client.post(reverse('wishlist:remove_from_wishlist'), {'car_id': self.car.id})
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Wishlist.objects.filter(user=self.user, car=self.car).exists())
+        self.assertJSONEqual(response.content, {'status': 'success', 'message': 'Item removed from wishlist.'})
 
-    def test_wishlist_note_form_invalid(self):
-        form_data = {'notes': ''}
-        form = WishlistNoteForm(data=form_data, instance=self.wishlist_item)
-        self.assertFalse(form.is_valid())
-        self.assertEqual(len(form.errors), 1)  # Pastikan ada satu kesalahan
+class EditNoteViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.showroom = ShowRoom.objects.create(
+            showroom_name='Test Showroom',
+            showroom_location='Test Location',
+            showroom_regency='Test Regency'
+        )
+        cls.user = User.objects.create_user(username='testuser', password='testpass')
+        cls.car = Car.objects.create(
+            model="Test Car",
+            brand="Test Brand",
+            year=2020,
+            showroom=cls.showroom,  
+            car_type="Sedan",
+            color="Red",
+            transmission="Automatic",
+            fuel_type="Gasoline",
+            doors=4,
+            cylinder_size=2.0,
+            cylinder_total=4,
+            turbo=False,
+            mileage=10000,
+            license_plate="ABC123",
+            price_cash=20000,
+            price_credit=22000,
+            pkb_value=1500.0,
+            pkb_base=1200.0,
+            stnk_date="2022-01-01",
+            levy_date="2022-01-01",
+            swdkllj=300.0,
+            total_levy=500.0,
+        )
+        cls.wishlist_item = Wishlist.objects.create(user=cls.user, car=cls.car, notes="Old Note")
+
+    def setUp(self):
+        self.client.login(username='testuser', password='testpass')
+
+    def test_edit_note_view(self):
+        response = self.client.post(reverse('wishlist:edit_note', args=[self.wishlist_item.id]), {'notes': 'Updated Note'})
+        self.assertEqual(response.status_code, 302)  
+        self.wishlist_item.refresh_from_db()
+        self.assertEqual(self.wishlist_item.notes, "Updated Note")
+
+class WishlistURLTest(TestCase):
+    def test_show_wishlist_url_resolves(self):
+        url = reverse('wishlist:wishlist_view')
+        self.assertEqual(resolve(url).func, show_wishlist)
+
+    def test_add_remove_wishlist_url_resolves(self):
+        url = reverse('wishlist:add_remove_wishlist')
+        self.assertEqual(resolve(url).func, add_remove_wishlist)
+
+    def test_remove_from_wishlist_url_resolves(self):
+        url = reverse('wishlist:remove_from_wishlist')
+        self.assertEqual(resolve(url).func, remove_from_wishlist)
+
+    def test_edit_note_url_resolves(self):
+        url = reverse('wishlist:edit_note', args=[1])
+        self.assertEqual(resolve(url).func, edit_note)

@@ -163,7 +163,7 @@
             <div class="wishlist-card" data-id="{{ item.car.id }}">
                 <img src="{% static 'images/' %}{{ item.car.brand }}.png" alt="{{ item.car.brand }} logo">
                 <div class="card-content">
-                    <h3>{{ item.car.brand }} - {{ item.car.model|title }}</h3>
+                    <h3>{{ item.car.brand }} - {{ item.car.car_type|title }}</h3>
                     <p class="showroom-name">{{ item.car.showroom.showroom_name|title }}</p>
                     <p class="wishlist-note">{{ item.notes|default:"No notes yet" }}</p>
                 </div>

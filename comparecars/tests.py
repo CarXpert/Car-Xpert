@@ -72,7 +72,6 @@ class CompareCarsTests(TestCase):
         self.list_comparisons_url = reverse('list_comparisons')
         self.edit_comparison_title_url = lambda id: reverse('edit_comparison_title', args=[id])
 
-
     def test_compare_cars_post(self):
         self.client.login(username='testuser', password='password')
         response = self.client.post(self.compare_cars_url, json.dumps({
@@ -84,6 +83,16 @@ class CompareCarsTests(TestCase):
         self.assertIn('Comparison created successfully', response.json().get('message'))
         self.assertTrue(CompareCar.objects.exists())
         self.assertTrue(CompareCarUser.objects.exists())
+
+    def test_compare_cars_post_invalid_data(self):
+        self.client.login(username='testuser', password='password')
+        response = self.client.post(self.compare_cars_url, json.dumps({
+            'car_one_id': 'invalid_id', 
+            'car_two_id': str(self.car2.id)  
+        }), content_type="application/json")
+        
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('error', response.json())
 
     def test_compare_cars_get(self):
         response = self.client.get(self.compare_cars_url)
@@ -102,6 +111,34 @@ class CompareCarsTests(TestCase):
         self.assertTemplateUsed(response, 'view_compare.html')
         self.assertEqual(response.context['car1'], self.car1)
         self.assertEqual(response.context['car2'], self.car2)
+
+    def test_compare_cars_with_id_put(self):
+        self.client.login(username='testuser', password='password')
+        comparecar = CompareCar.objects.create(car1=self.car1, car2=self.car2)
+        CompareCarUser.objects.create(comparecar=comparecar, user=self.user)
+
+        response = self.client.put(self.compare_cars_with_id_url(comparecar.id), json.dumps({
+            'car_one_id': str(self.car2.id), 
+            'car_two_id': str(self.car1.id)
+        }), content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Comparison updated successfully', response.json().get('message'))
+        comparecar.refresh_from_db()
+        self.assertEqual(comparecar.car1, self.car2)
+        self.assertEqual(comparecar.car2, self.car1)
+
+    def test_compare_cars_with_id_put_invalid_data(self):
+        self.client.login(username='testuser', password='password')
+        comparecar = CompareCar.objects.create(car1=self.car1, car2=self.car2)
+        CompareCarUser.objects.create(comparecar=comparecar, user=self.user)
+
+        response = self.client.put(self.compare_cars_with_id_url(comparecar.id), json.dumps({
+            'car_one_id': 'invalid_id'
+        }), content_type="application/json")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('error', response.json())
 
     def test_compare_cars_with_id_delete(self):
         self.client.login(username='testuser', password='password')
@@ -141,3 +178,15 @@ class CompareCarsTests(TestCase):
         self.assertIn('Title updated successfully', response.json().get('message'))
         comparecar.refresh_from_db()
         self.assertEqual(comparecar.title, 'Updated Title')
+
+    def test_edit_comparison_title_no_title(self):
+        self.client.login(username='testuser', password='password')
+        comparecar = CompareCar.objects.create(car1=self.car1, car2=self.car2)
+        comparison_user = CompareCarUser.objects.create(comparecar=comparecar, user=self.user)
+
+        response = self.client.put(self.edit_comparison_title_url(comparison_user.id), json.dumps({
+        }), content_type="application/json")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('error', response.json())
+
