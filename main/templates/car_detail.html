@@ -3,11 +3,6 @@
 {% load humanize %}
 
 {% block content %}
-{% extends 'base.html' %}
-{% load static %}
-{% load humanize %}
-
-{% block content %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,19 +50,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            text-align: left; /* Ensures content in this container is left-aligned */
         }
 
         .car-info h1 {
             font-size: 34px;
             font-weight: bold;
-            text-align: left; /* Left-aligns the car name */
         }
 
         .car-info .price {
             font-size: 26px;
             font-weight: bold;
-            text-align: left; /* Left-aligns the price */
         }
 
         .wishlist-container {
@@ -81,32 +73,27 @@
             padding: 20px;
             border-radius: 10px;
             margin-top: 20px;
-            text-align: left; /* Left-aligns the description box content */
         }
 
         .description-box h2 {
             font-size: 24px;
             font-weight: bold;
-            text-align: left; /* Left-aligns the headings */
         }
 
         .additional-info {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            text-align: left; /* Ensures all additional info content is left-aligned */
         }
 
         .additional-info .left, .additional-info .right {
             width: 45%;
-            text-align: left; /* Ensures left-alignment within each info box */
         }
 
         .additional-info p {
             font-size: 16px;
             margin-bottom: 10px;
             color: #fff;
-            text-align: left; /* Left-aligns each paragraph */
         }
 
         .button-section {
@@ -149,7 +136,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
         }
 
-        /* Media Queries */
         @media (max-width: 768px) {
             .car-details {
                 flex-direction: column;
@@ -219,7 +205,7 @@
             <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} logo">
             <div class="car-info-container">
                 <!-- Car Name and Price -->
-                <div class="car-info text-left">
+                <div class="car-info">
                     <h1>{{ car.brand }} {{ car.car_type }}</h1>
                     <p class="price">Rp {{ car.price_cash|intcomma }}</p>
                 </div>
@@ -284,4 +270,60 @@
         </div>
     </div>
 </body>
+
+<!-- Wishlist Script -->
+<script>
+$(document).ready(function() {
+    var carId = $('#wishlist-btn').data('car-id');
+    var isAuthenticated = {{ user.is_authenticated|lower }}; 
+
+    $('#wishlist-btn').click(function() {
+        if (!isAuthenticated) {
+            window.location.href = "{% url 'authentication:login' %}";  
+            return;  
+        }
+
+        var $icon = $(this).find('.fas');
+        $.ajax({
+            url: '{% url "wishlist:add_remove_wishlist" %}',
+            type: 'POST',
+            data: { 
+                'car_id': carId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.in_wishlist) {
+                    $icon.addClass('active');  
+                    $('#wishlist-btn').addClass('in-wishlist'); 
+                } else {
+                    $icon.removeClass('active');  
+                    $('#wishlist-btn').removeClass('in-wishlist'); 
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+    $.ajax({
+        url: '{% url "wishlist:check_wishlist" %}',  
+        type: 'GET',
+        data: { 'car_id': carId },
+        success: function(response) {
+            if (response.in_wishlist) {
+                $('#wishlist-btn .fas').addClass('active'); 
+                $('#wishlist-btn').addClass('in-wishlist'); 
+            } else {
+                $('#wishlist-btn .fas').removeClass('active'); 
+                $('#wishlist-btn').removeClass('in-wishlist'); 
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+});
+</script>
+
+</html>
 {% endblock content %}
