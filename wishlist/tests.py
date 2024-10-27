@@ -7,7 +7,6 @@ from .forms import WishlistNoteForm
 class WishlistModelTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-        # Menggunakan field model yang benar
         self.car = Car.objects.create(id=1, showroom=None, brand='Test Brand', car_type='SUV',
                                       model='Test Car', color='Red', year=2020,
                                       transmission='Automatic', fuel_type='Petrol',

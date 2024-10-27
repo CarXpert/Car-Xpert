@@ -12,8 +12,6 @@ import json
 import os
 from django.conf import settings
 
-
-
 def main_view(request):
     # Path ke file showrooms.json
     showroom_file_path = os.path.join(settings.BASE_DIR, 'cars', 'fixtures', 'showrooms.json')
