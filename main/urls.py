@@ -11,5 +11,5 @@ urlpatterns = [
     path('news/', include('news.urls', namespace='news')), 
     path('add_car/', views.add_car, name='add_car'),  
     path('get_cars_filtered/<str:query>/', views.get_cars_filtered, name="get_cars_filtered"),
-    path('delete_car/<uuid:car_id>/', views.delete_car, name='delete_car'),
+    path('main/delete_car/<uuid:car_id>/', views.delete_car, name='delete_car'),
 ]
