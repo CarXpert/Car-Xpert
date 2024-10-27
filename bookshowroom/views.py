@@ -20,7 +20,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 import json
 
-@login_required(login_url='/login')
+@login_required(login_url='/auth/login/')
 def show_booking(request):
     context = {
         'user': request.user,
@@ -69,7 +69,7 @@ def get_cars(request, showroom_id_str):
     return JsonResponse(car_list, safe=False)
 
 
-@login_required(login_url='/login')
+@login_required(login_url='/auth/login/')
 def get_bookings(request):
     data = Booking.objects.select_related('user', 'showroom', 'car').filter(user=request.user)
     bookings = []
@@ -117,7 +117,7 @@ def get_bookings(request):
         })
     return JsonResponse(bookings, safe=False)
 
-@login_required(login_url='/login')
+@login_required(login_url='/auth/login/')
 def get_bookings_by_date(request, visit_date):
     visit_date_obj = datetime.strptime(visit_date, '%b %d %Y').date()
     data = Booking.objects.select_related('user', 'showroom', 'car').filter(visit_date=visit_date_obj, user=request.user)
@@ -166,7 +166,7 @@ def get_bookings_by_date(request, visit_date):
         })
     return JsonResponse(bookings, safe=False)
 
-@login_required(login_url='/login')
+@login_required(login_url='/auth/login/')
 def get_booking_by_id(request, booking_id_str):
     try:
         booking_id = uuid.UUID(booking_id_str)
@@ -229,7 +229,7 @@ def show_json_by_id(request, id):
 
 @csrf_exempt
 @require_POST
-@login_required(login_url='/login')
+@login_required(login_url='/auth/login/')
 def create_booking_ajax(request):
     showroom_id = request.POST.get("showroom_id")
     car_id = request.POST.get("car_id")
@@ -270,7 +270,7 @@ def create_booking_ajax(request):
 
 
 from django.shortcuts import get_object_or_404
-@login_required(login_url='/login')
+@login_required(login_url='/auth/login/')
 def delete_booking(request, booking_id_str):
     try:
         booking_id = uuid.UUID(booking_id_str)
@@ -284,7 +284,7 @@ def delete_booking(request, booking_id_str):
 
     return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
 
-@login_required(login_url='/login')
+@login_required(login_url='/auth/login/')
 def edit_booking(request):
     booking_id_str = request.POST.get('booking_id')
     try:
