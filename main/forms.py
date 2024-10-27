@@ -1,6 +1,6 @@
 # forms.py in the main app
 from django import forms
-from cars.models import Car  # Ensure you're importing the Car model from the correct app
+from cars.models import Car
 
 class CarEditForm(forms.ModelForm):
     class Meta:
