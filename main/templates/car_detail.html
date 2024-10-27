@@ -203,13 +203,14 @@
     <div class="main-container">
         <div class="car-details">
             <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} logo">
-            <div class="car-info-container">
+            
+            <div class="car-info-container" style="text-align: left;">
                 <!-- Car Name and Price -->
                 <div class="car-info">
-                    <h1>{{ car.brand }} {{ car.car_type }}</h1>
-                    <p class="price">Rp {{ car.price_cash|intcomma }}</p>
+                    <h1 style="text-align: left;">{{ car.brand }} {{ car.car_type }}</h1>
+                    <p class="price" style="text-align: left;">Rp {{ car.price_cash|intcomma }}</p>
                 </div>
-
+    
                 <!-- Wishlist Icon Wrapper -->
                 <div class="wishlist-container">
                     <button id="wishlist-btn" class="wishlist-icon {% if in_wishlist %}in-wishlist{% endif %}" data-car-id="{{ car.id }}">
@@ -218,9 +219,9 @@
                 </div>
             </div>
         </div>
-
-        <div class="description-box">
-            <h2>Car Description</h2><br>
+    
+        <div class="description-box" style="text-align: left;">
+            <h2 style="text-align: left;">Car Description</h2><br>
             <div class="additional-info">
                 <div class="left">
                     <p><strong>Car Model:</strong> {{ car.model }}</p>
@@ -240,9 +241,9 @@
                 </div>
             </div>
         </div>
-
-        <div class="description-box">
-            <h2>Dealership Information</h2><br>
+    
+        <div class="description-box" style="text-align: left;">
+            <h2 style="text-align: left;">Dealership Information</h2><br>
             <div class="additional-info">
                 <div class="left">
                     <p><strong>Dealership Name:</strong> {{ car.showroom.showroom_name }}</p>
@@ -254,13 +255,13 @@
                 </div>
             </div>
         </div>
-
+    
         <div class="button-section">
             <div class="date-info">
                 <p>Created: {{ car.created_at|date:"d M Y" }}</p>
                 <p>Last Updated: {{ car.updated_at|date:"d M Y" }}</p>
             </div>
-
+    
             <div>
                 <a href="{% url 'main:show_main' %}" class="btn-back">Back to Home</a>
                 {% if user.is_authenticated and user.is_staff %}
@@ -268,7 +269,7 @@
                 {% endif %}
             </div>
         </div>
-    </div>
+    </div>    
 </body>
 
 <!-- Wishlist Script -->

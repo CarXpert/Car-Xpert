@@ -24,8 +24,15 @@
         }
 
         /* Title and Filter Section Styling */
+        .title-heading {
+            font-size: 40px;
+            font-weight: bold; 
+            text-align: center;
+            color: #ffffff; 
+            margin-bottom: 20px;
+        }
         .title-filter-container h1 {
-            font-size: 32px; /* Larger size */
+            font-size: 32px; 
             font-weight: bold;
             margin-bottom: 20px;
             text-align: center;
@@ -72,6 +79,8 @@
             color: #000; /* Ensure text color contrasts with white background */
             display: flex;
             flex-direction: column;
+            position: relative;
+            padding-bottom: 50px;
         }
         .car-card:hover {
             transform: translateY(-10px);
@@ -126,20 +135,24 @@
         }
 
         .modal-content {
-            background-color: #fff;
+            background: linear-gradient(to bottom, #000000, #1b1b5c); /* Black to Dark Blue gradient */
             padding: 20px;
             border-radius: 10px;
-            width: 90%; /* Responsive Width */
-            max-width: 600px; /* Max width for larger screens */
-            color: #000;
-            overflow-y: auto; /* Enable scrolling if content is too long */
-            max-height: 90vh; /* Limit height of the modal */
+            width: 90%;
+            max-width: 600px;
+            color: #ffffff;
+            overflow-y: auto;
+            max-height: 90vh;
         }
         
-        .modal form {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Two columns */
-            gap: 10px; /* Space between grid items */
+        .modal form div {
+            margin-bottom: 15px;
+        }
+        
+        .modal form label {
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 14px;
         }
         
         .modal form div {
@@ -157,38 +170,67 @@
         .modal form input[type="date"],
         .modal form input[type="checkbox"] {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 10px;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            font-size: 14px;
             box-sizing: border-box;
+            background-color: #1f2937;
+            color: #ffffff;
+        }
+        
+        .modal form input[type="checkbox"] {
+            transform: scale(1.3);
+            margin-left: 10px;
         }
         
         .modal form button {
-            grid-column: span 2; /* Stretch the button across two columns */
             background-color: #28a745;
             color: white;
-            padding: 10px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            border-radius: 8px;
+            font-weight: bold;
             font-size: 16px;
-            margin-top: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            display: block;
+            margin: 20px auto 0; /* Center and position at the bottom */
         }
-        
-        /* Icon buttons in the card */
-        .card-actions {
-            display: flex;
-            justify-content: center;
-            margin-top: auto;
-        }
-        
         .modal form button:hover {
             background-color: #218838;
         }
 
+        .close {
+            display: none;
+        }
+        
+
+        
+        /* Icon buttons in the card */
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            padding: 0;
+        }
+        
+
+
         .card-actions button i {
             color: #000; /* Change icon color for better visibility */
             font-size: 20px;
+        }
+
+        .modal h2 {
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         /* News Section */
@@ -257,6 +299,7 @@
             transition: background-color 0.3s ease;
             margin-top: 10px;
             text-align: center;
+            cursor: pointer;
         }
 
         .btn-success {
@@ -279,9 +322,37 @@
         .btn-danger {
             background-color: #dc3545; /* Red for Delete */
         }
-
+    
         .btn-danger:hover {
             background-color: #c82333;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-circle {
+            width: 40px;
+            height: 40px;
+            background-color: #dc3545;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
         }
 
         /* "See All News" Link Styling */
@@ -321,7 +392,7 @@
 <body>
     <div class="main-container">
         <div class="flex justify-between items-center mb-4">
-            <h1>Available Cars</h1>
+            <h1 class="title-heading">Available Cars</h1>
 
             <!-- Add Car Button (Visible only to Admin) -->
             {% if user.is_authenticated and user.is_staff %}
@@ -354,16 +425,19 @@
             <p>Year: {{ car.year }}</p>
             <p>Mileage: {{ car.mileage }} km</p>
             <p>Price: Rp {{ car.price_cash|intcomma }}</p>
-
+    
             <div class="card-actions">
-                <a href="{% url 'main:car_detail' car.id %}">View Details</a>
+                <a href="{% url 'main:car_detail' car.id %}" class="btn btn-primary">View Details</a>
                 {% if user.is_staff %}
-                    <button class="delete-car-btn" data-car-id="{{ car.id }}">Delete</button>
+                    <button class="btn-circle delete-car-btn" data-car-id="{{ car.id }}">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 {% endif %}
             </div>
         </div>
         {% endfor %}
     </div>
+    
 
     <!-- Modal Pop-up for Add Car Form -->
     <div id="add-car-modal" class="modal">
@@ -398,10 +472,18 @@
                 <div><label>Showroom Regency:</label><input type="text" name="showroom_regency" required></div>
                 <!-- Submit Button -->
                 <div style="text-align: center; margin-top: 20px;">
-                    <button type="submit" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
-                        Add Car
-                    </button>
+                    <div style="display: inline-block;">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus-circle" style="margin-right: 8px;"></i> Add Car
+                        </button>
+                    </div>
+                    <div style="display: inline-block; margin-left: 10px;">
+                        <button type="button" onclick="window.location.href='{% url 'main:show_main' %}'" class="btn btn-secondary">
+                            Back
+                        </button>
+                    </div>
                 </div>
+
             </form>
         </div>
     </div>
