@@ -409,33 +409,8 @@
     <!-- JavaScript for Modal and AJAX -->
     <script src="{% static 'scripts/promo.js' %}"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.delete-car-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const carId = this.getAttribute('data-car-id');
-    
-                    if (confirm('Are you sure you want to delete this car?')) {
-                        fetch(`/main/delete_car/${carId}/`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRFToken': '{{ csrf_token }}', // CSRF token for security
-                            },
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                this.closest('.car-card').remove(); // Remove the card from the DOM
-                            } else {
-                                alert('Error deleting the car.');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                    }
-                });
-            });
-        });
-    </script>
+    <!-- JavaScript for delete AJAX -->
+    <script src="{% static 'scripts/deleteCar.js' %}"></script>
 
     <!-- News Section -->
     <div class="news-section">
