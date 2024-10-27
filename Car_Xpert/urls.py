@@ -26,7 +26,7 @@ urlpatterns = [
     path('comparecars/', include('comparecars.urls')),
     path('auth/', include('authentication.urls', namespace='authentication')),
     path("wishlist/",include("wishlist.urls")),
-    path('bookshowroom/', include('bookshowroom.urls')),
+    path('bookshowroom/', include('bookshowroom.urls', namespace='bookshowroom')),
     path('news/', include('news.urls', namespace='news')),
 ]
 

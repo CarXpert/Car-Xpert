@@ -18,7 +18,7 @@
 
         .main-container {
             max-width: 1000px;
-            margin: 40px auto;
+            margin: 40px;
             background-color: #2e3b8d;
             padding: 30px;
             border-radius: 20px;
@@ -204,9 +204,6 @@
             color: white;             /* Set icon color to black or any other color */
         }
 
-        #booking {
-            margin-right:15%;
-        }
 
         .outermost-container{
             display:flex;
@@ -214,20 +211,6 @@
             gap:0px;
             align-items:center;
             justify-content: center;
-        }
-        
-        @media (max-width: 1900px) {
-            #booking {
-            margin-right:0%;
-            }
-
-        }
-
-        @media (max-width: 2100px) {
-            #booking {
-            margin-right:10%;
-            }
-
         }
 
 
@@ -332,13 +315,13 @@
           <!-- Visit Date Field -->
           <div class="flex flex-col">
             <label for="id_visit_date" class="mb-2 text-sm font-bold">Visit Date:</label>
-            <input type="date" name="visit_date" id="id_visit_date" min="{{ today_date }}" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-          </div>
+            <input type="date" name="visit_date" id="id_visit_date" min="{{ today_date }}" value="{{ today_date }}" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
   
           <!-- Visit Time Field -->
           <div class="flex flex-col">
             <label for="id_visit_time" class="mb-2 text-sm font-bold">Visit Time:</label>
-            <input type="time" name="visit_time" id="id_visit_time" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="time" name="visit_time" id="id_visit_time" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" value="12:00" required>
           </div>
   
           <!-- Notes Field -->
@@ -353,7 +336,7 @@
           </button>
 
           <!-- Submit Button -->
-          <button id="submit" type="submit" class="w-full py-3 font-bold bg-blue-600 hover:bg-blue-700 rounded-md transition-colors">
+          <button id="submit" class="w-full py-3 font-bold bg-blue-600 hover:bg-blue-700 rounded-md transition-colors" onclick="addBookingEntry()">
             Save Booking
           </button>
         </form>
@@ -422,6 +405,7 @@ $(document).ready(function() {
     const bookingButton = document.getElementById('booking-button');
     const bookingFormContainer = document.getElementById('booking');
     const cancelButton = document.getElementById('cancel');
+    const submitButton = document.getElementById('submit');
 
     // Toggle form visibility on button click
     bookingButton.addEventListener('click', () => {
@@ -429,15 +413,31 @@ $(document).ready(function() {
     });
 
     // Toggle form visibility on button click
-    cancelButtonn.addEventListener('click', () => {
+    cancelButton.addEventListener('click', () => {
         bookingFormContainer.style.display="none";
     });
 
     
+   function addBookingEntry() {
+        fetch("{% url 'bookshowroom:create_booking_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#bookingForm')),
+        })
+        .then(response => {
+            if (response.ok) {
+            bookingFormContainer.style.display="none";
+            } else {
+            throw new Error('Error creating booking');
+            }
+        })
+        .catch(error => {
 
-    function Book() {
+        });
 
-    }
+     
+        return false;
+        }
+ 
 
 </script>
 

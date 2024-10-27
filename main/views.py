@@ -11,6 +11,12 @@ from django.http import JsonResponse
 import json
 import os
 from django.conf import settings
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponse
+from bookshowroom.models import Booking
+from django.utils.html import strip_tags
+from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
 
 def main_view(request):
     # Path ke file showrooms.json
@@ -53,7 +59,7 @@ def car_detail(request, car_id):
         'showroom': car.showroom,  # The related showroom
         'is_in_wishlist': is_in_wishlist,
         'user': request.user,  # Pass user to the template
-        'today_date' : timezone.now().date()
+        'today_date' : timezone.now().date().strftime('%Y-%m-%d')
     }
     return render(request, 'car_detail.html', context)
 
@@ -148,4 +154,45 @@ def get_cars_filtered(request, query):
     } for car in cars]
 
     return JsonResponse({"cars": cars_data, "query": query}, safe=False)
+
+# @csrf_exempt
+# @require_POST
+# @login_required(login_url='/login')
+# def create_booking_ajax(request):
+#     showroom_id = request.POST.get("showroom_id")
+#     car_id = request.POST.get("car_id")
+#     visit_date = request.POST.get("visit_date")
+#     visit_time = request.POST.get("visit_time")
+#     notes = strip_tags(request.POST.get("notes", "")) 
+#     user = request.user
+
+#     try:
+#         showroom = ShowRoom.objects.get(id=showroom_id)
+#     except ShowRoom.DoesNotExist:
+#         return JsonResponse({"error": "Showroom not found"}, status=404)
+
+#     car = None
+#     if car_id:
+#         try:
+#             car = Car.objects.get(id=car_id)
+#         except Car.DoesNotExist:
+#             return JsonResponse({"error": "Car not found"}, status=404)
+
+#     try:
+#         visit_date = datetime.strptime(visit_date, "%Y-%m-%d").date()
+#         visit_time = datetime.strptime(visit_time, "%H:%M").time()
+#     except ValueError:
+#         return JsonResponse({"error": "Invalid date or time format"}, status=400)
+
+#     new_booking = Booking(
+#         user=user,
+#         showroom=showroom,
+#         car=car,
+#         visit_date=visit_date,
+#         visit_time=visit_time,
+#         notes=notes,
+#     )
+#     new_booking.save()
+
+#     return HttpResponse(b"CREATED", status=201)
 

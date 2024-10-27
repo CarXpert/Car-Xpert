@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-
+# from bookshowroom.views import create_booking_ajax
 app_name = 'main'
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('news/', include('news.urls', namespace='news')), 
     path('add_car/', views.add_car, name='add_car'),  
     path('get_cars_filtered/<str:query>/', views.get_cars_filtered, name="get_cars_filtered"), 
+    # path('create_booking_ajax/', create_booking_ajax, name='create_booking_ajax'),
 ]
