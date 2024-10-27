@@ -52,7 +52,8 @@ def car_detail(request, car_id):
         'car': car,
         'showroom': car.showroom,  # The related showroom
         'is_in_wishlist': is_in_wishlist,
-        'user': request.user  # Pass user to the template
+        'user': request.user,  # Pass user to the template
+        'today_date' : timezone.now().date()
     }
     return render(request, 'car_detail.html', context)
 

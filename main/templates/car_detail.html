@@ -5,6 +5,7 @@
     {% load static %}
     {% load humanize %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
@@ -136,6 +137,8 @@
             .additional-info .left, .additional-info .right {
                 width: 100%;
             }
+
+            
         }
 
         @media (max-width: 480px) {
@@ -151,6 +154,7 @@
                 font-size: 14px;
                 padding: 10px 15px;
             }
+
         }
 
         /* Wishlist Icon Styling */
@@ -185,12 +189,55 @@
             color: red; 
         }
 
+        .booking-button{
+            font-size: 50px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            background: none; 
+            border: none; 
+            display: inline-block;
+            position: relative;
+            margin-left:10px;
+        }
+
+        .booking-button i {
+            color: white;             /* Set icon color to black or any other color */
+        }
+
+        #booking {
+            margin-right:15%;
+        }
+
+        .outermost-container{
+            display:flex;
+            flex-wrap:wrap;
+            gap:0px;
+            align-items:center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 1900px) {
+            #booking {
+            margin-right:0%;
+            }
+
+        }
+
+        @media (max-width: 2100px) {
+            #booking {
+            margin-right:10%;
+            }
+
+        }
+
+
     </style>
 </head>
 <body>
     {% include 'header.html' %}
-
+    <div class="outermost-container">
     <div class="main-container">
+        
         <div class="car-details">
             <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} logo">
             <div class="car-info-container">
@@ -204,6 +251,10 @@
             <button id="wishlist-btn" class="wishlist-icon {% if in_wishlist %}in-wishlist{% endif %}" data-car-id="{{ car.id }}">
                 <i class="fas fa-heart"></i>
             </button>
+            <button id="booking-button" class="booking-button">
+                <i class="fas fa-calendar-alt"></i>
+            </button>
+          
             </div>
         </div>
 
@@ -257,6 +308,59 @@
             </div>
         </div>
     </div>
+    <div id="booking" class="w-full max-w-lg p-8 bg-white/10 rounded-lg shadow-lg hidden">
+        <h1 class="text-2xl font-bold text-center mb-6 text-white">Create New Booking</h1>
+        <form id="bookingForm" method="POST" enctype="multipart/form-data" class="space-y-4">
+          {% csrf_token %}
+  
+          <!-- Showroom Field (Unchangeable Select) -->
+          <div class="flex flex-col">
+            <label for="id_showroom" class="mb-2 text-sm font-bold">Showroom:</label>
+            <select name="showroom" id="id_showroom" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
+              <option value="{{ car.showroom.id }}" selected>{{ car.showroom.showroom_name }}</option>
+            </select>
+          </div>
+  
+          <!-- Car Field (Unchangeable Select) -->
+          <div class="flex flex-col">
+            <label for="id_car" class="mb-2 text-sm font-bold">Car:</label>
+            <select name="car" id="id_car" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
+              <option value="{{ car.id }}" selected>{{ car.brand }}, {{ car.car_type }}, {{ car.model }}</option>
+            </select>
+          </div>
+  
+          <!-- Visit Date Field -->
+          <div class="flex flex-col">
+            <label for="id_visit_date" class="mb-2 text-sm font-bold">Visit Date:</label>
+            <input type="date" name="visit_date" id="id_visit_date" min="{{ today_date }}" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+  
+          <!-- Visit Time Field -->
+          <div class="flex flex-col">
+            <label for="id_visit_time" class="mb-2 text-sm font-bold">Visit Time:</label>
+            <input type="time" name="visit_time" id="id_visit_time" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+  
+          <!-- Notes Field -->
+          <div class="flex flex-col">
+            <label for="id_notes" class="mb-2 text-sm font-bold">Notes:</label>
+            <textarea name="notes" id="id_notes" placeholder="Additional information (optional)" class="p-3 rounded-md bg-gray-800 text-white h-40 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+          </div>
+          
+          <!-- Cancel Button -->
+          <button id="cancel" class="w-full py-3 font-bold bg-red-600 hover:bg-red-700 rounded-md transition-colors">
+            Cancel Booking
+          </button>
+
+          <!-- Submit Button -->
+          <button id="submit" type="submit" class="w-full py-3 font-bold bg-blue-600 hover:bg-blue-700 rounded-md transition-colors">
+            Save Booking
+          </button>
+        </form>
+      </div>
+    </div>
+</div>
+
 </body>
 
 <!-- Wishlist Script -->
@@ -313,6 +417,27 @@ $(document).ready(function() {
 
 
     });
+
+    // Get button and form container elements
+    const bookingButton = document.getElementById('booking-button');
+    const bookingFormContainer = document.getElementById('booking');
+    const cancelButton = document.getElementById('cancel');
+
+    // Toggle form visibility on button click
+    bookingButton.addEventListener('click', () => {
+        bookingFormContainer.style.display="block";
+    });
+
+    // Toggle form visibility on button click
+    cancelButtonn.addEventListener('click', () => {
+        bookingFormContainer.style.display="none";
+    });
+
+    
+
+    function Book() {
+
+    }
 
 </script>
 
