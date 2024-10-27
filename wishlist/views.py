@@ -84,9 +84,9 @@ def edit_note(request, pk):
     if request.method == 'POST':
         form = WishlistNoteForm(request.POST, instance=wishlist_item)
         if form.is_valid():
-            form.save()  # Update the notes
-            return redirect('wishlist:wishlist_view')  # Redirect to the wishlist view after saving
+            form.save() 
+            return redirect('wishlist:wishlist_view')  
     else:
-        form = WishlistNoteForm(instance=wishlist_item)  # Show the current notes in the form
+        form = WishlistNoteForm(instance=wishlist_item)  
     
     return render(request, 'wishlist/edit_note.html', {'form': form, 'wishlist_item': wishlist_item})

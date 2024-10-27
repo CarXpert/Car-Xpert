@@ -8,5 +8,5 @@ urlpatterns = [
     path('add-remove/', add_remove_wishlist, name='add_remove_wishlist'),
     path('remove/', remove_from_wishlist, name='remove_from_wishlist'),
     path('check-wishlist/', check_wishlist, name='check_wishlist'),
-    path('edit-note/<int:pk>/', edit_note, name='edit_note'),  # New URL for editing notes
+    path('edit-note/<int:pk>/', edit_note, name='edit_note'),  
 ]

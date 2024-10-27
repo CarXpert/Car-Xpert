@@ -60,7 +60,7 @@ document.getElementById("articleForm").addEventListener("submit", function(event
     event.preventDefault();  // Mencegah pengiriman form default
 
     let formData = new FormData(this);  // Mengambil semua data dari form
-    let csrfToken = '{{ csrf_token }}'; // Token CSRF untuk keamanan
+    let csrfToken = '{{ csrf_token }}'; 
 
     fetch("{% url 'news:create_article' %}", {
         method: "POST",
@@ -69,7 +69,7 @@ document.getElementById("articleForm").addEventListener("submit", function(event
             "X-Requested-With": "XMLHttpRequest",// Menandakan bahwa permintaan ini adalah AJAX
             "Accept": "application/json"         // Meminta respons dalam format JSON
         },
-        body: formData, // Kirim data form
+        body: formData, 
     })
     .then(response => {
         if (!response.ok) {
@@ -79,12 +79,12 @@ document.getElementById("articleForm").addEventListener("submit", function(event
     })
     .then(data => {
         if (data.success) {
-            document.getElementById("successMessage").classList.remove("hidden"); // Tampilkan pesan sukses
+            document.getElementById("successMessage").classList.remove("hidden"); 
             setTimeout(() => {
-                window.location.href = "{% url 'news:news_article_list' %}"; // Redirect ke halaman daftar artikel
+                window.location.href = "{% url 'news:news_article_list' %}"; 
             }, 2000);
         } else {
-            console.error("Error creating article:", data.error); // Tampilkan error jika ada
+            console.error("Error creating article:", data.error);
         }
     })
     .catch(error => console.error("Error:", error));
