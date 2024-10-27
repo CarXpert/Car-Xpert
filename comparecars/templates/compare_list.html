@@ -3,8 +3,6 @@
 {% block content %}
 <section class="bg-gradient-to-b from-black via-indigo-900 to-indigo-700 text-white min-h-screen py-12">
     <h1 class="container mx-auto p-6 text-3xl font-bold text-center">Comparison List</h1>
-
-    <!-- Button to Add a New Comparison -->
     <div class="text-center mb-8">
         <button class="add-comparison-button bg-blue-600 hover:bg-green-600 text-white py-3 px-6 rounded-full font-semibold text-lg transition" 
                 onclick="window.location.href='{% url 'compare_cars' %}'">
@@ -15,41 +13,35 @@
     <div class="text-center mb-8">
         <label for="sort-order" class="mr-4">Sort By:</label>
         <select id="sort-order" class="px-4 py-2 rounded-md bg-gray-200 text-gray-900" onchange="sortComparisons()">
-            <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Newest First</option>
-            <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Oldest First</option>
+            <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Newest</option>
+            <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Oldest</option>
         </select>
     </div>
-    <!-- Comparison List -->
     <div class="comparison-list grid gap-8 max-w-6xl mx-auto grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {% if comparisons %}
             {% for comparison in comparisons %}
-            <!-- Comparison Card -->
             <div id="comparison-{{ comparison.id }}" class="comparison-card bg-white text-black rounded-xl p-4 shadow-lg hover:shadow-2xl transform transition hover:-translate-y-2 relative">
-                
-                <!-- Delete Button with Trash Icon -->
                 <button class="absolute top-2 right-2 text-red-600 hover:text-red-800 text-lg" onclick="event.preventDefault(); event.stopPropagation(); deleteComparison({{ comparison.id }})">
                     <i class="fas fa-trash"></i>
                 </button>
 
-                <!-- Editable Title Section -->
                 <div class="flex justify-between items-center mb-2">
                     <input type="text" id="comparison-title-{{ comparison.id }}" value="{{ comparison.comparecar.title }}" class="bg-transparent font-semibold text-lg w-full focus:outline-none border-b-2 border-transparent focus:border-indigo-500 transition-all hidden" onblur="saveComparisonTitle({{ comparison.id }})" onkeydown="handleKeyPress(event, {{ comparison.id }})">
                     
                     <span id="comparison-title-display-{{ comparison.id }}" class="block">{{ comparison.comparecar.title }}</span>
                 </div>
 
-                <!-- Car Images -->
+
                 <a href="{% url 'compare_cars_with_id' comparison.id %}" class="block w-full h-full">
                     <div class="flex gap-2 mb-4">
                         <img class="w-1/2 rounded-md" src="{% static 'images/' %}{{ comparison.comparecar.car1.brand }}.png" alt="{{ comparison.comparecar.car1.brand }}">
                         <img class="w-1/2 rounded-md" src="{% static 'images/' %}{{ comparison.comparecar.car2.brand }}.png" alt="{{ comparison.comparecar.car2.brand }}">
                     </div>
 
-                    <!-- Comparison Details -->
+
                     <p class="text-sm text-gray-700">{{ comparison.comparecar.car1.brand }} vs {{ comparison.comparecar.car2.brand }}</p>
                 </a>
 
-                <!-- Pencil Button for Editing Title -->
                 <button class="absolute bottom-2 right-2 text-blue-500 hover:text-blue-700" onclick="enableTitleEditing({{ comparison.id }})">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
@@ -62,17 +54,15 @@
 </section>
 
 <script>
-    // Enable editing of the title by showing the input field
     function enableTitleEditing(id) {
         const inputField = document.getElementById(`comparison-title-${id}`);
         const titleDisplay = document.getElementById(`comparison-title-display-${id}`);
         
-        titleDisplay.style.display = 'none';  // Hide the title text
-        inputField.classList.remove('hidden');  // Show the input field
-        inputField.focus();  // Focus the input for immediate editing
+        titleDisplay.style.display = 'none'; 
+        inputField.classList.remove('hidden');  
+        inputField.focus(); 
     }
 
-    // Save the edited title when the user exits the input field or presses Enter
     function saveComparisonTitle(id) {
         const newTitle = document.getElementById(`comparison-title-${id}`).value;
 
@@ -86,9 +76,9 @@
         })
         .then(response => {
             if (response.ok) {
-                document.getElementById(`comparison-title-display-${id}`).innerText = newTitle;  // Update displayed title
-                document.getElementById(`comparison-title-${id}`).classList.add('hidden');  // Hide the input field
-                document.getElementById(`comparison-title-display-${id}`).style.display = 'block';  // Show the updated title
+                document.getElementById(`comparison-title-display-${id}`).innerText = newTitle;  
+                document.getElementById(`comparison-title-${id}`).classList.add('hidden');  
+                document.getElementById(`comparison-title-display-${id}`).style.display = 'block';  
             } else {
                 response.text().then((text) => console.error('Error:', text));
                 alert('Failed to update title.');
@@ -99,20 +89,19 @@
         });
     }
 
-    // Handle the Enter key press to trigger the save when editing title
+
     function handleKeyPress(event, id) {
         if (event.key === 'Enter') {
-            event.preventDefault();  // Prevent the form from submitting
-            saveComparisonTitle(id);  // Save the title
+            event.preventDefault();  
+            saveComparisonTitle(id); 
         }
     }
 
-    // AJAX function to delete a comparison
     function deleteComparison(id) {
         fetch(`/comparecars/compare/${id}/`, {
             method: 'DELETE',
             headers: {
-                'X-CSRFToken': getCookie('csrftoken')  // CSRF token for security
+                'X-CSRFToken': getCookie('csrftoken')  
             }
         })
         .then(response => {

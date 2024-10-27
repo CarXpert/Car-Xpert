@@ -1,12 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>{{ car.brand }} {{ car.model }} - Details</title>
-    {% load static %}
-    {% load humanize %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        /* General Styling */
         body {
             margin: 0;
             padding: 0;
@@ -43,6 +47,9 @@
             flex-grow: 1;
             margin-left: 20px;
             padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .car-info h1 {
@@ -53,6 +60,12 @@
         .car-info .price {
             font-size: 26px;
             font-weight: bold;
+        }
+
+        .wishlist-container {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
         }
 
         .description-box {
@@ -184,12 +197,9 @@
         .wishlist-icon .fas.active {
             color: red; 
         }
-
     </style>
 </head>
 <body>
-    {% include 'header.html' %}
-
     <div class="main-container">
         <div class="car-details">
             <img src="{% static 'images/' %}{{ car.brand }}.png" alt="{{ car.brand }} logo">
@@ -200,15 +210,17 @@
                     <p class="price">Rp {{ car.price_cash|intcomma }}</p>
                 </div>
 
-            <!-- Wishlist Icon -->
-            <button id="wishlist-btn" class="wishlist-icon {% if in_wishlist %}in-wishlist{% endif %}" data-car-id="{{ car.id }}">
-                <i class="fas fa-heart"></i>
-            </button>
+                <!-- Wishlist Icon Wrapper -->
+                <div class="wishlist-container">
+                    <button id="wishlist-btn" class="wishlist-icon {% if in_wishlist %}in-wishlist{% endif %}" data-car-id="{{ car.id }}">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
         <div class="description-box">
-            <h2>Car Description</h2>
+            <h2>Car Description</h2><br>
             <div class="additional-info">
                 <div class="left">
                     <p><strong>Car Model:</strong> {{ car.model }}</p>
@@ -230,7 +242,7 @@
         </div>
 
         <div class="description-box">
-            <h2>Dealership Information</h2>
+            <h2>Dealership Information</h2><br>
             <div class="additional-info">
                 <div class="left">
                     <p><strong>Dealership Name:</strong> {{ car.showroom.showroom_name }}</p>
@@ -310,10 +322,8 @@ $(document).ready(function() {
             console.error('Error:', error);
         }
     });
-
-
-    });
-
+});
 </script>
 
 </html>
+{% endblock content %}

@@ -1,455 +1,4 @@
-{% extends "base.html" %}
-{% load static %}
-{% block content %}
-<style>
-    
-    
-    body {
-        width:100vw;
-        height:100vh;
-        margin: 0;
-        background: linear-gradient(to bottom, #000000, #0f0f3d, #1b1b5c);
-    }
-
-    .content{
-    font-family: Arial, sans-serif;
-    margin-top:50px;
-  
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    width:100%;
-    color: white;
-    flex-wrap: wrap;
-    flex-direction: column;
-    }
-
-    .outer-container {
-    font-family: Arial, sans-serif;
-    margin:auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    color: white;
-    flex-wrap: wrap;
-    /* flex-direction: column; */
-}
-
-/* Calendar and Bookings Container */
-.calendar-container {
-    width: 45vw;
-    aspect-ratio: 4 / 3;
-    border: 1px solid #674ea7;
-    background-color: #1b1b3a; /* Dark background to match theme */
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-left: 10px;
-}
-
-.month-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.month-navigation button {
-    background-color: #674ea7;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.month-navigation button:hover {
-    background-color: #4d37a2;
-}
-
-.month-name {
-    font-size: 1.5vw;
-    font-weight: bold;
-}
-
-.weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    margin-bottom: 10px;
-    text-align: center;
-    font-size: 1.3vw;
-    color: #ccc; /* Light text for better contrast */
-}
-
-.weekdays div {
-    font-weight: bold;
-    padding: 5px 0;
-}
-
-.days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
-}
-
-.days button {
-    width: 100%;
-    aspect-ratio: 1/1;
-    padding: 20px;
-    background-color: #2c2c4b; /* Dark button color */
-    border: 1px solid #674ea7;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1.35vw;
-    color: #fff;
-}
-
-.days button:disabled {
-    background-color: #4d4d6f;
-    cursor: not-allowed;
-}
-
-.days button:hover:enabled {
-    background-color: #674ea7;
-    color: #fff;
-}
-
-.days button.booked {
-    background-color: #674ea7;
-    color: #fff;
-}
-
-.days button.past {
-    opacity: 0.25;
-    pointer-events: auto;
-}
-
-#bookings {
-    display: none;
-    width: 40vw;
-    margin-left: 50px;
-    background-color: #1b1b3a;
-    height: 85vh;
-    flex-direction: column;
-    align-items: center;
-    color: #fff;
-    border: 1px solid #674ea7;
-
-}
-
-#booking_cards {
-    display: flex;
-    overflow: auto;
-    width: 100%;
-    height: 80%;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    border-top: 1px solid #674ea7;
-    border-bottom: 1px solid #674ea7;
-}
-
-/* Individual Booking Card */
-.booking-card {
-    background-color: #2c2c4b;
-    border: 1px solid #674ea7;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    margin: 20px;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.booking-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
-}
-
-.booking-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #4d4d6f;
-    padding-bottom: 10px;
-    gap: 10px;
-}
-
-.booking-header h3 {
-    font-size: 1.6em;
-    color: #ffffff;
-    margin: 0;
-}
-
-.booking-status {
-    font-weight: bold;
-    color: #ffffff;
-    padding: 6px 12px;
-    border-radius: 15px;
-    font-size: 0.9em;
-    text-transform: uppercase;
-}
-
-.status-pending {
-    background-color: #ffa500;
-}
-
-.status-confirmed {
-    background-color: #28a745;
-}
-
-.status-canceled {
-    background-color: #dc3545;
-}
-
-.booking-details {
-    margin-top: 15px;
-    text-align: left; /* Ensure left alignment */
-}
-
-.booking-detail {
-    display: flex;
-    justify-content: space-between; /* Distribute space evenly */
-    margin: 5px 0; /* Add margin for spacing */
-    color: #ccc;
-}
-
-.booking-detail strong {
-    min-width: 120px; /* Adjust width as needed to align the colons */
-}
-
-.booking-notes {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #2c2c4b;
-    border-left: 5px solid #674ea7;
-    font-style: italic;
-    color: #f0f0f0;
-}
-
-.booking-actions {
-    margin-top: 20px;
-}
-
-.edit-button, .delete-button {
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    color: white;
-    margin-top: 10px;
-    transition: background 0.3s ease, transform 0.2s;
-}
-
-.edit-button {
-    background-color: #ffa500;
-}
-
-.delete-button {
-    background-color: #dc3545;
-}
-
-.edit-button:hover, .delete-button:hover {
-    opacity: 0.8;
-    transform: translateY(-2px);
-}
-
-
-#book_button {
-    width: 50%;
-    height: 5%;
-    margin: 5%;
-    font-size: 1.3vw;
-}
-
-/* Media Query for Mobile Devices */
-@media (max-width: 1300px) {
-   
-    .outer-container {
-        flex-direction: column;
-        align-items: center;
-        gap:25px;
-    }
-    .calendar-container,
-    #bookings {
-        width: 90vw;
-        margin: 10px 0;
-    }
-
-    .days button {
-        font-size: 2vw;
-    }
-
-    .month-name {
-        font-size: 3vw;
-        font-weight: bold;
-    }
-
-    .weekdays {
-        font-size: 2vw;
-    }
-
-}
-
-select, input, textarea{
-    color:#000000;
-}
-
-#booking-title{
-    margin-top:20px;
-    font-size: 3em;
-}
-
- /* Form container styling */
- #bookingForm {
-        max-width: 600px; /* Adjust width as needed */
-        margin: auto;
-        margin-top:30px;
-    }
-
-    /* Label styling */
-    #bookingForm label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-        text-align: left;
-    }
-
-    /* Input, select, and textarea styling */
-    #bookingForm input[type="text"],
-    #bookingForm input[type="date"],
-    #bookingForm input[type="time"],
-    #bookingForm select,
-    #bookingForm textarea {
-        width: 100%; /* Span the full width */
-        padding: 10px; /* Add padding for a larger look */
-        margin-bottom: 20px; /* Space between fields */
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px; /* Make text larger */
-    }
-
-    /* Button styling */
-    #bookingForm button[type="submit"],
-    #bookingForm button[type="button"] {
-        width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        border: none;
-        border-radius: 4px;
-        background-color: #4CAF50; /* Green color */
-        color: white;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-
-    #bookingForm button[type="button"] {
-        background-color: #f44336; /* Red color for cancel button */
-    }
-
-    /* Form container styling */
-    #editForm {
-        max-width: 600px;
-        margin: auto;
-        margin-top:30px;
-    }
-
-    /* Label styling */
-    #editForm label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-        text-align: left;
-    }
-
-    /* Input, select, and textarea styling */
-    #editForm input[type="text"],
-    #editForm input[type="date"],
-    #editForm input[type="time"],
-    #editForm select,
-    #editForm textarea {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-    }
-
-    /* Button styling */
-    #editForm button[type="submit"],
-    #editForm button[type="button"] {
-        width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-
-    #editForm button[type="submit"] {
-        background-color: #4CAF50;
-        color: white;
-    }
-
-    #editForm button[type="button"] {
-        background-color: #f44336;
-        color: white;
-    }
-
-    #date_header{
-        margin-bottom:30px;
-    }
-
-    #book_button{
-        background-color: #674ea7;
-        height:10%;
-        border-radius: 10px;
-        font-size:2em;
-    }
-</style>
-
-<div class="outer-container">
-<div class="calendar-container">
-    <div class="month-navigation">
-        <button id="prev-month">←</button>
-        <div class="month-name" id="month-name">October 2024</div>
-        <button id="next-month">→</button>
-    </div>
-
-    <div class="weekdays">
-        <div>Sun</div>
-        <div>Mon</div>
-        <div>Tue</div>
-        <div>Wed</div>
-        <div>Thu</div>
-        <div>Fri</div>
-        <div>Sat</div>
-    </div>
-
-    <div class="days" id="days-container">
-        <!-- Days will be generated dynamically -->
-    </div>
-    
-</div>
-<div id="bookings">
-<div id="booking-title">Bookings</div>
-<div><h1 id="date_header"></h1>
-</div>
-    <div id="booking_cards">Haha</div>
-  
-    <button id="book_button" onclick="addBooking()">Book a new appointment</button>
-    
-</div>
-</div>
-
-<script>
-    const daysContainer = document.getElementById("days-container");
+const daysContainer = document.getElementById("days-container");
     const monthName = document.getElementById("month-name");
 
     const today = new Date();
@@ -648,22 +197,30 @@ if (bookings.length === 0) {
     document.getElementById("booking_cards").style.justifyContent = 'top';
     bookings.forEach((booking) => {
         
+        const brand = booking.car.brand
         const name = booking.car.car_type; // Access the car name from the booking object
         const visitDate = booking.visit_date; // Get visit date
         const visitTime = booking.visit_time; // Get visit time
         const status = booking.status; // Get booking status
         const notes = booking.notes; // Get notes
         const showroom = booking.showroom; // Get showroom name
+        const myStaticUrl = "{% static 'images/' %}" + brand + ".png";
 
         // Build the HTML string for the booking card
-        htmlString += `<div class="booking-card">
+        htmlString += `<div id="${booking.id}" class="booking-card">
             <div class="booking-header">
                 <h3>${showroom.name}</h3>
                 <div class="booking-status status-${status}">
                     ${status.charAt(0).toUpperCase() + status.slice(1)}
                 </div>
             </div>
+            <img src="{% static 'images/Gmaps.png' %}" alt="Google Maps" class="location-img" style="display:none;">
+            <div class="booking-detail" style="display:none;">
+                    <strong>Location:</strong>
+                    <span>${booking.showroom.location}, ${booking.showroom.regency}</span>
+                </div>
             <div class="booking-details">
+                <img src="${myStaticUrl}" alt="${brand} logo" class="car-img">
                 <div class="booking-detail">
                     <strong>Car:</strong>
                     <span>${booking.car.brand}, ${booking.car.car_type}, ${booking.car.model}</span>
@@ -676,8 +233,8 @@ if (bookings.length === 0) {
                     <strong>Visit Time:</strong>
                     <span>${visitTime}</span>
                 </div>
+             
            `;
-
             if (notes) {
                 htmlString += `<div class="booking-detail">
                     <strong>Notes:</strong>
@@ -699,16 +256,65 @@ if (bookings.length === 0) {
             htmlString += `<div class="booking-actions">
                 <button class="edit-button" onclick="editBooking('${booking.id}')">Edit</button>
                 <button class="delete-button" onclick="deleteBooking('${booking.id}')">Delete</button>
-            </div>`;
+                <button class="location-button" onclick="showLocation('${booking.id}')">Location</button>
+            </div>
+            <div class="back-card-button-div" style="display:none;">
+            <button class="back-card-button" onclick="showCard('${booking.id}')">Back</button></div></div>`;
+        } else {
+            htmlString += `<div class="booking-actions"><button class="location-button" onclick="showLocation('${booking.id}')">Location</button>
+            </div>
+            <div class="back-card-button-div" style="display:none;">
+            <button class="back-card-button" onclick="showCard('${booking.id}')">Back</button></div></div>`; // Close the booking card div
         }
 
-        htmlString += `</div>`; // Close the booking card div
     });
 }
 
     // Update the DOM with the constructed HTML
     document.getElementById("booking_cards").innerHTML = htmlString; // Set the HTML content of the booking cards
     
+}
+
+function showCard(booking_id){
+    const parentElement = document.getElementById(booking_id);
+    const bookingDetails = parentElement.querySelector('.booking-details');
+    const bookingActions = parentElement.querySelector('.booking-actions');
+    const locationImage = parentElement.querySelector('.location-img');
+    const bookingNotes = parentElement.querySelector('.booking-notes');
+    const backButton = parentElement.querySelector('.back-card-button-div');
+    const bookingLocation = parentElement.querySelector('.booking-detail');
+
+    if (bookingNotes) {
+    // Element exists, perform your actions here
+    bookingNotes.style.display = 'block';
+    // You can add additional logic or manipulate the element
+    }   
+    backButton.style.display = 'none';
+    bookingDetails.style.display = 'block';
+    bookingActions.style.display = 'block';
+    locationImage.style.display = 'none';
+    bookingLocation.style.display = 'none';
+}
+function showLocation(booking_id){
+    const parentElement = document.getElementById(booking_id);
+    const bookingDetails = parentElement.querySelector('.booking-details');
+    const bookingActions = parentElement.querySelector('.booking-actions');
+    const locationImage = parentElement.querySelector('.location-img');
+    const bookingNotes = parentElement.querySelector('.booking-notes');
+    const backButton = parentElement.querySelector('.back-card-button-div');
+    const bookingLocation = parentElement.querySelector('.booking-detail');
+
+    if (bookingNotes) {
+    // Element exists, perform your actions here
+    bookingNotes.style.display = 'none';
+    // You can add additional logic or manipulate the element
+    }   
+    backButton.style.display = 'block';
+    bookingDetails.style.display = 'none';
+    bookingActions.style.display = 'none';
+    locationImage.style.display = 'block';
+    bookingLocation.style.display = 'block';
+
 }
 
 function addBooking() {
@@ -879,7 +485,7 @@ if (!selectedShowroomId) {  // Use the correct variable here
         .then(data => {
             console.log(data);
             if (data.length === 0) {
-                carSelect.innerHTML += '<option value="">No cars available</option>';
+               
                 return;
             }
 
@@ -1041,8 +647,7 @@ fetch("{% url 'bookshowroom:get_showrooms' %}")
   })
   .catch(error => console.error('Error fetching showrooms:', error));
 
-//   fetchLocations();
-//   fetchCars();
+
 }
 
 function editBookingEntry() {
@@ -1081,9 +686,3 @@ if (document.cookie && document.cookie !== '') {
 }
 return cookieValue;
 }
-
-
-
-    </script>
-  
-{% endblock %}

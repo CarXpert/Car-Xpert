@@ -2,23 +2,22 @@
 {% load static %}
 {% block content %}
 <section class="bg-gradient-to-b from-black via-indigo-900 to-indigo-700 text-white min-h-screen py-12">
-    <!-- Car Comparison Section -->
     <div class="car-comparison container mx-auto px-6 py-12">
         <div class="car-cards grid grid-cols-1 md:grid-cols-2 gap-8 justify-center">
-            <!-- Car 1 Card -->
+
             <div class="car-card bg-white bg-opacity-10 rounded-xl p-6 shadow-lg hover:shadow-2xl transform transition hover:-translate-y-1">
                 <h3 class="text-lg font-semibold mb-4">{{ car1.brand }} - {{ car1.model }}</h3>
                 <img id="car1-img" src="{% static 'images/' %}{{ car1.brand }}.png" alt="{{ car1.brand }}" class="car-image w-full h-48 object-contain mt-4" />
             </div>
 
-            <!-- Car 2 Card -->
+
             <div class="car-card bg-white bg-opacity-10 rounded-xl p-6 shadow-lg hover:shadow-2xl transform transition hover:-translate-y-1">
                 <h3 class="text-lg font-semibold mb-4">{{ car2.brand }} - {{ car2.model }}</h3>
                 <img id="car2-img" src="{% static 'images/' %}{{ car2.brand }}.png" alt="{{ car2.brand }}" class="car-image w-full h-48 object-contain mt-4" />
             </div>
         </div>
 
-        <!-- Comparison Table -->
+
         <div class="comparison-section mt-12">
             <table class="comparison-table w-full max-w-4xl mx-auto bg-white bg-opacity-10 text-white rounded-lg shadow-lg">
                 <thead class="bg-indigo-800 text-white">
@@ -63,7 +62,6 @@
             </table>
         </div>
 
-        <!-- Back Button -->
         <div class="mt-8 text-center">
             <a href="{% url 'list_comparisons' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-full">
                 Back to Comparison List

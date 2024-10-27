@@ -3,7 +3,6 @@
 {% block content %}
 <section class="car-comparison w-full py-12 px-4 bg-gradient-to-b from-black via-indigo-900 to-indigo-700 text-white min-h-screen">
     <div class="car-cards grid grid-cols-1 md:grid-cols-2 gap-8 justify-center mx-auto max-w-7xl">
-        <!-- Car 1 Card -->
         <div class="car-card bg-white bg-opacity-10 rounded-xl p-6 shadow-lg hover:shadow-2xl transform transition hover:-translate-y-1">
             <h3 class="text-lg font-semibold mb-4">Car 1</h3>
             <select id="car1" class="w-full px-4 py-2 rounded-md bg-gray-200 text-gray-900 focus:outline-none">
@@ -15,7 +14,7 @@
             <img id="car1-img" src="" alt="Car 1" class="car-image w-full mt-4 hidden" data-img-path="{% static 'images/' %}">
         </div>
 
-        <!-- Car 2 Card -->
+
         <div class="car-card bg-white bg-opacity-10 rounded-xl p-6 shadow-lg hover:shadow-2xl transform transition hover:-translate-y-1">
             <h3 class="text-lg font-semibold mb-4">Car 2</h3>
             <select id="car2" class="w-full px-4 py-2 rounded-md bg-gray-200 text-gray-900 focus:outline-none">
@@ -28,7 +27,7 @@
         </div>
     </div>
 
-    <!-- Comparison Table -->
+
     <div class="comparison-section mt-12 mx-auto max-w-7xl">
         <table class="comparison-table w-full bg-white bg-opacity-10 text-white rounded-lg shadow-lg">
             <thead class="bg-indigo-800 text-white">
@@ -73,7 +72,7 @@
         </table>
     </div>
 
-    <!-- Buttons -->
+
     <div class="button-container flex justify-center gap-6 mt-10 flex-wrap">
         <button class="action-button compare-button bg-blue-600 text-white font-semibold py-3 px-8 rounded-full hover:bg-blue-700" onclick="compareCars()">
             Compare Cars
@@ -88,22 +87,19 @@
 </section>
 
 <script>
-    // The JavaScript part here remains the same
-    let carData = {};  // Stores fetched car data
+    let carData = {};  
 
-    // Fetch cars from the server
     function loadCars() {
         fetch('/comparecars/get-cars/')
             .then(response => response.json())
             .then(data => {
-                carData = {};  // Reset before saving
-                data.forEach(car => carData[car.id] = car);  // Save cars by ID
+                carData = {};  
+                data.forEach(car => carData[car.id] = car);  
                 populateDropdowns(data);
             })
             .catch(error => console.error('Error fetching cars:', error));
     }
 
-    // Populate dropdowns with fetched cars
     function populateDropdowns(cars) {
         const car1Dropdown = document.getElementById('car1');
         const car2Dropdown = document.getElementById('car2');
@@ -113,7 +109,7 @@
         });
     }
 
-    // Compare selected cars
+
     function compareCars() {
         const car1Id = document.getElementById('car1').value;
         const car2Id = document.getElementById('car2').value;
@@ -133,7 +129,6 @@
         document.getElementById('car2-img').style.display = 'block';
     }
 
-    // Update the comparison table
     function updateTable(carNumber, car) {
         document.getElementById(`car${carNumber}-brand`).textContent = car.brand;
         document.getElementById(`car${carNumber}-model`).textContent = car.model;
@@ -156,7 +151,7 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')  // For CSRF protection
+                'X-CSRFToken': getCookie('csrftoken') 
             },
             body: JSON.stringify({
                 car_one_id: car1Id,
@@ -165,7 +160,7 @@
         })
         .then(response => {
             if (response.status === 403) {
-                // Jika respon menunjukkan bahwa login diperlukan, arahkan ke login
+                
                 window.location.href = '/auth/login/';
             } else if (response.ok) {
                 return response.json();
@@ -183,8 +178,6 @@
         });
     }
     
-
-    // Get CSRF token
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie) {
@@ -204,7 +197,6 @@
         window.location.href = '/comparecars/list-comparisons/';
     }
 
-    // Load cars when the page is loaded
     document.addEventListener('DOMContentLoaded', loadCars);
 </script>
 {% endblock content %}

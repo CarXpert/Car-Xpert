@@ -18,6 +18,7 @@ from django.http import JsonResponse
 import uuid
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+import json
 
 @login_required(login_url='/login')
 def show_booking(request):
@@ -29,10 +30,7 @@ def show_booking(request):
 
 
 def get_showrooms(request):
-    # Get all showrooms, and then filter by unique names
     showrooms = ShowRoom.objects.values('showroom_name', 'showroom_regency', 'showroom_location')
-    
-    # Use a set to track unique showroom names
     unique_showrooms = []
     seen_names = set()
 
@@ -46,18 +44,12 @@ def get_showrooms(request):
 
 
 def get_locations(request, showroom_name):
-    # Fetch showrooms with the matching showroom_name
-    locations = ShowRoom.objects.filter(showroom_name=showroom_name).values('id', 'showroom_location', 'showroom_regency')
-    
-    location_list = list(locations)  # Convert queryset to list of dicts
+    locations = ShowRoom.objects.filter(showroom_name=showroom_name).values('id', 'showroom_name', 'showroom_location', 'showroom_regency')
+    location_list = list(locations)  
     return JsonResponse(location_list, safe=False)
 
-from django.http import JsonResponse
-from .models import Car
 
 def get_cars(request, showroom_id_str):
-    # Fetch cars that belong to the showroom with the matching showroom_id
-
     try:
         showroom_id = uuid.UUID(showroom_id_str)
     except ValueError:
@@ -73,13 +65,9 @@ def get_cars(request, showroom_id_str):
         'total_levy', 'created_at', 'updated_at'
     )
     
-    car_list = list(cars)  # Convert queryset to list of dicts
+    car_list = list(cars)  
     return JsonResponse(car_list, safe=False)
 
-
-import json
-from django.http import JsonResponse
-from .models import Booking
 
 @login_required(login_url='/login')
 def get_bookings(request):
@@ -180,16 +168,13 @@ def get_bookings_by_date(request, visit_date):
 
 @login_required(login_url='/login')
 def get_booking_by_id(request, booking_id_str):
-
     try:
         booking_id = uuid.UUID(booking_id_str)
     except ValueError:
         return JsonResponse({'error': 'Invalid showroom ID format.'}, status=400)
     
-    # Retrieve the booking object or return a 404 if not found
     booking = get_object_or_404(Booking.objects.select_related('user', 'showroom', 'car'), id=booking_id)
     
-    # Format the booking data into a dictionary
     booking_data = {
         'id': booking.id,
         'user': {
@@ -232,10 +217,7 @@ def get_booking_by_id(request, booking_id_str):
         'notes': booking.notes,
     }
     
-    # Return the booking data as a JSON response
     return JsonResponse(booking_data, safe=False)
-
-
 
 def show_xml_by_id(request, id):
     data = Booking.objects.filter(pk=id)
@@ -253,10 +235,9 @@ def create_booking_ajax(request):
     car_id = request.POST.get("car_id")
     visit_date = request.POST.get("visit_date")
     visit_time = request.POST.get("visit_time")
-    notes = strip_tags(request.POST.get("notes", ""))  # Strip HTML tags
+    notes = strip_tags(request.POST.get("notes", "")) 
     user = request.user
 
-    # Get the related showroom and car objects
     try:
         showroom = ShowRoom.objects.get(id=showroom_id)
     except ShowRoom.DoesNotExist:
@@ -269,14 +250,12 @@ def create_booking_ajax(request):
         except Car.DoesNotExist:
             return JsonResponse({"error": "Car not found"}, status=404)
 
-    # Convert visit_date and visit_time to the correct format
     try:
         visit_date = datetime.strptime(visit_date, "%Y-%m-%d").date()
         visit_time = datetime.strptime(visit_time, "%H:%M").time()
     except ValueError:
         return JsonResponse({"error": "Invalid date or time format"}, status=400)
 
-    # Create a new booking
     new_booking = Booking(
         user=user,
         showroom=showroom,
@@ -293,7 +272,6 @@ def create_booking_ajax(request):
 from django.shortcuts import get_object_or_404
 @login_required(login_url='/login')
 def delete_booking(request, booking_id_str):
-
     try:
         booking_id = uuid.UUID(booking_id_str)
     except ValueError:
@@ -305,9 +283,9 @@ def delete_booking(request, booking_id_str):
         return JsonResponse({'success': True, 'message': 'Booking deleted successfully.'})
 
     return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
+
 @login_required(login_url='/login')
 def edit_booking(request):
-
     booking_id_str = request.POST.get('booking_id')
     try:
         booking_id = uuid.UUID(booking_id_str)
@@ -317,16 +295,14 @@ def edit_booking(request):
     booking = get_object_or_404(Booking, id=booking_id)
     
     if request.method == 'POST':
-        # Update booking fields directly from the request
         showroom_id = request.POST.get("showroom_id")
         car_id = request.POST.get("car_id")
         visit_date = request.POST.get('visit_date')
         visit_time = request.POST.get('visit_time')
         notes = request.POST.get('notes')
 
-        # Perform manual validation if necessary
         errors = {}
-        if not visit_date:  # Example validation
+        if not visit_date:  
             errors['visit_date'] = 'This field is required.'
         if not visit_time:
             errors['visit_time'] = 'This field is required.'
@@ -334,7 +310,6 @@ def edit_booking(request):
         if errors:
             return JsonResponse({'success': False, 'errors': errors})
         
-        # Update the booking instance
         booking.car = Car.objects.get(id=car_id)
         booking.showroom = ShowRoom.objects.get(id=showroom_id)
         booking.visit_date = visit_date
@@ -344,7 +319,7 @@ def edit_booking(request):
 
         return JsonResponse({'success': True, 'message': 'Booking updated successfully!'})
 
-    # Handle GET request if needed
+ 
     return JsonResponse({'form': {
         'visit_date': booking.visit_date,
         'visit_time': booking.visit_time,

@@ -80,12 +80,11 @@ def compare_cars_with_id(request, id):
 
 def get_cars(request):
     try:
-        # Ambil semua data mobil
         cars = Car.objects.all()
         car_list = []
         for car in cars:
             car_list.append({
-                'id': str(car.id),  # Pastikan UUID dikonversi ke string
+                'id': str(car.id),  
                 'brand': car.brand,
                 'model': car.model,
                 'year': car.year,
@@ -119,8 +118,6 @@ def edit_comparison_title(request, id):
 
             if not new_title:
                 return JsonResponse({'error': 'No title provided'}, status=400)
-
-            # Ambil comparison dan update title
             comparison = get_object_or_404(CompareCarUser, id=id, user=request.user)
             comparison.comparecar.title = new_title
             comparison.comparecar.save()

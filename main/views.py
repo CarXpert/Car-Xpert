@@ -33,14 +33,32 @@ def main_view(request):
 
 
 def show_main(request):
+    filter_type = request.GET.get("filter")
     cars = Car.objects.all()
-    news = NewsArticle.objects.all().order_by('-published_date')[:3]  # Get the latest 3 news articles
+
+    if filter_type == "mileage_high":
+        cars = cars.order_by("-mileage")
+    elif filter_type == "mileage_low":
+        cars = cars.order_by("mileage")
+    elif filter_type == "year_high":
+        cars = cars.order_by("-year")
+    elif filter_type == "year_low":
+        cars = cars.order_by("year")
+    elif filter_type == "price_high":
+        cars = cars.order_by("-price_cash")
+    elif filter_type == "price_low":
+        cars = cars.order_by("price_cash")
+    
+
+    news = NewsArticle.objects.all().order_by('-published_date')[:3]
+    
     context = {
-        'cars': cars,
-        'news': news,  
-        'user': request.user
+        'cars': cars[:40],  # Limit to 40 cars as per your main.html template
+        'news': news,
+        'user': request.user,
     }
-    return render(request, 'main.html', context)  
+    return render(request, 'main.html', context)
+
 
 def landing_page(request):
     return render(request, 'landing_page.html')
@@ -88,3 +106,63 @@ def add_car(request):
             return JsonResponse({'success': True})
 
     return JsonResponse({'success': False})
+
+from django.http import JsonResponse
+from django.db.models import Q
+
+def get_cars_filtered(request, query):
+    query_words = query.split()
+    
+    filters = Q()
+    for word in query_words:
+        word_filter = (
+            Q(brand__icontains=word) |
+            Q(car_type__icontains=word) |
+            Q(year__icontains=word) |
+            Q(model__icontains=word) |
+            Q(color__icontains=word) |
+            Q(transmission__icontains=word) |
+            Q(fuel_type__icontains=word) |
+            Q(license_plate__icontains=word) |
+            Q(showroom__showroom_name__icontains=word) |
+            Q(showroom__showroom_location__icontains=word) |
+            Q(showroom__showroom_regency__icontains=word)
+        )
+        filters &= word_filter  
+
+    cars = Car.objects.filter(filters)
+
+    cars_data = [{
+        "id": str(car.id),
+        "brand": car.brand,
+        "car_type": car.car_type,
+        "model": car.model,
+        "color": car.color,
+        "year": car.year,
+        "transmission": car.transmission,
+        "fuel_type": car.fuel_type,
+        "doors": car.doors,
+        "cylinder_size": car.cylinder_size,
+        "cylinder_total": car.cylinder_total,
+        "turbo": car.turbo,
+        "mileage": car.mileage,
+        "license_plate": car.license_plate,
+        "price_cash": car.price_cash,
+        "price_credit": car.price_credit,
+        "pkb_value": car.pkb_value,
+        "pkb_base": car.pkb_base,
+        "stnk_date": car.stnk_date.isoformat(),
+        "levy_date": car.levy_date.isoformat(),
+        "swdkllj": car.swdkllj,
+        "total_levy": car.total_levy,
+        "created_at": car.created_at.isoformat(),
+        "updated_at": car.updated_at.isoformat(),
+        "showroom": {
+            "name": car.showroom.showroom_name,
+            "location": car.showroom.showroom_location,
+            "regency": car.showroom.showroom_regency
+        }
+    } for car in cars]
+
+    return JsonResponse({"cars": cars_data, "query": query}, safe=False)
+
