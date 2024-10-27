@@ -93,15 +93,14 @@ from django.http import JsonResponse
 from django.db.models import Q
 
 def get_cars_filtered(request, query):
-    # Split query into words by spaces
     query_words = query.split()
     
-    # Build the filter for each word
     filters = Q()
     for word in query_words:
         word_filter = (
             Q(brand__icontains=word) |
             Q(car_type__icontains=word) |
+            Q(year__icontains=word) |
             Q(model__icontains=word) |
             Q(color__icontains=word) |
             Q(transmission__icontains=word) |
@@ -111,12 +110,10 @@ def get_cars_filtered(request, query):
             Q(showroom__showroom_location__icontains=word) |
             Q(showroom__showroom_regency__icontains=word)
         )
-        filters &= word_filter  # Combine filters with AND for each word
+        filters &= word_filter  
 
-    # Retrieve cars that match all words
     cars = Car.objects.filter(filters)
 
-    # Prepare data for JSON response
     cars_data = [{
         "id": str(car.id),
         "brand": car.brand,
@@ -149,6 +146,5 @@ def get_cars_filtered(request, query):
         }
     } for car in cars]
 
-    # Return JSON response
     return JsonResponse({"cars": cars_data, "query": query}, safe=False)
 

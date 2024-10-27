@@ -457,34 +457,22 @@
 <script>
     async function fetchAndDisplayCars(query) {
     try {
-         // Encode the showroom name to be URL-safe
         const encodedQuery = encodeURIComponent(query);
-
-        // Generate base URL and remove the trailing slash if there is one
         const baseUrl = "{% url 'main:get_cars_filtered' query='dummy_id' %}".replace('dummy_id', '');
-
-        // Remove any potential trailing slash in baseUrl to avoid double slashes
         const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-
-        // Construct the full URL by appending the encoded showroom name
         const url = `${cleanBaseUrl}${encodedQuery}/`;
 
-        // Fetch the filtered cars data from the endpoint
         const response = await fetch(url);
         const data = await response.json();
         
-        // Get the car grid container
         const carGrid = document.querySelector('.car-grid');
         
-        // Clear any existing content in the car grid
         carGrid.innerHTML = '';
 
-        // Insert each car into the car grid
         data.cars.slice(0, 40).forEach(car => {
             const carCard = document.createElement('div');
             carCard.classList.add('car-card');
 
-            // Dynamically create the HTML structure for each car card
             carCard.innerHTML = `
                 <img src="/static/images/${car.brand}.png" alt="${car.brand} ${car.model}">
                 <h3>${car.brand} ${car.car_type}</h3>
@@ -498,20 +486,19 @@
                 </div>
             `;
 
-            // Append the car card to the car grid
             carGrid.appendChild(carCard);
         });
     } catch (error) {
         console.error('Error fetching cars:', error);
     }
 }
-    // Get the search input element
+ 
     const searchInput = document.getElementById('search-input');
 
-    // Add an event listener to detect changes in the input field
+ 
     searchInput.addEventListener('input', () => {
         const query = searchInput.value.trim();
-        if (query) { // Only call the function if the query is not empty
+        if (query) { 
             fetchAndDisplayCars(query);
         }
     });
