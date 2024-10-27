@@ -181,3 +181,13 @@ def get_cars_filtered(request, query):
 
     return JsonResponse({"cars": cars_data, "query": query}, safe=False)
 
+@login_required
+def delete_car(request, car_id):
+    if request.method == 'DELETE' and request.user.is_staff:
+        try:
+            car = Car.objects.get(id=car_id)
+            car.delete()
+            return JsonResponse({'success': True})
+        except Car.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Car not found'})
+    return JsonResponse({'success': False, 'error': 'Unauthorized or invalid request'})
