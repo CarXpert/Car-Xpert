@@ -57,7 +57,7 @@ class ViewTest(TestCase):
             showroom_regency="Regency A"
         )
 
-        # Membuat objek mobil dengan semua field yang bersifat NOT NULL
+        # Membuat objek mobil 
         self.car = Car.objects.create(
             showroom=self.showroom,
             brand="Toyota",
@@ -122,10 +122,10 @@ class CarEditFormTest(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_car_edit_form_invalid_data(self):
-        # Empty data should result in a form with errors
+        
         form = CarEditForm(data={})
         self.assertFalse(form.is_valid())
-        # Check for the expected errors on required fields
+        
         required_fields = ['model', 'color', 'year', 'fuel_type', 'cylinder_size', 'mileage', 
                            'stnk_date', 'levy_date', 'license_plate', 'price_cash', 'price_credit']
         for field in required_fields:
@@ -178,14 +178,14 @@ class AjaxTest(TestCase):
         # Membuat admin untuk mengakses fitur yang membutuhkan otorisasi admin
         self.admin_user = User.objects.create_superuser(username='admin', password='admin123')
 
-        # Membuat showroom contoh
+        # Membuat showroom 
         self.showroom = ShowRoom.objects.create(
             showroom_name="Sample Showroom",
             showroom_location="Broadway",
             showroom_regency="Regency B"
         )
 
-        # Membuat objek mobil dengan semua field yang bersifat NOT NULL
+        # Membuat objek mobil 
         self.car = Car.objects.create(
             showroom=self.showroom,
             brand="Honda",
