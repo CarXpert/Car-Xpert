@@ -48,7 +48,7 @@ class ViewTest(TestCase):
     def setUp(self):
         # Membuat user biasa dan admin
         self.user = User.objects.create_user(username='testuser', password='12345')
-        self.admin_user = User.objects.create_superuser(username='adminuser', password='12345')
+        self.admin_user = User.objects.create_superuser(username='admin', password='admin123')
 
         # Membuat showroom contoh
         self.showroom = ShowRoom.objects.create(
@@ -176,7 +176,7 @@ class AddCarFormTest(TestCase):
 class AjaxTest(TestCase):
     def setUp(self):
         # Membuat admin untuk mengakses fitur yang membutuhkan otorisasi admin
-        self.admin_user = User.objects.create_superuser(username='adminuser', password='12345')
+        self.admin_user = User.objects.create_superuser(username='admin', password='admin123')
 
         # Membuat showroom contoh
         self.showroom = ShowRoom.objects.create(
@@ -213,7 +213,7 @@ class AjaxTest(TestCase):
 
 
     def test_add_car_ajax(self):
-        self.client.login(username='adminuser', password='12345')
+        self.client.login(username='admin', password='admin123')
         response = self.client.post(reverse('main:add_car'), {
             'brand': 'Toyota',
             'model': 'Avanza',
@@ -223,7 +223,7 @@ class AjaxTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_delete_car_ajax(self):
-        self.client.login(username='adminuser', password='12345')
+        self.client.login(username='admin', password='admin123')
         car = Car.objects.create(showroom=self.showroom, brand="Toyota", model="Avanza")
         response = self.client.delete(reverse('main:delete_car', args=[car.id]), HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
