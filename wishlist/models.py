@@ -9,5 +9,5 @@ class Wishlist(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.car.model}"
+        return f"{self.user} - {self.car.model}"
 
