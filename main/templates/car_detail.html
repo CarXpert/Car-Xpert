@@ -46,7 +46,7 @@
             padding: 15px;
         }
 
-        .car-info h1 {
+        .car-info h1 { 
             font-size: 34px;
             font-weight: bold;
         }
@@ -293,52 +293,60 @@
     </div>
     <div id="booking" class="w-full max-w-lg p-8 bg-white/10 rounded-lg shadow-lg hidden">
         <h1 class="text-2xl font-bold text-center mb-6 text-white">Create New Booking</h1>
-        <form id="bookingForm" method="POST" enctype="multipart/form-data" class="space-y-4">
-          {% csrf_token %}
-  
-          <!-- Showroom Field (Unchangeable Select) -->
-          <div class="flex flex-col">
-            <label for="id_showroom" class="mb-2 text-sm font-bold">Showroom:</label>
-            <select name="showroom" id="id_showroom" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
-              <option value="{{ car.showroom.id }}" selected>{{ car.showroom.showroom_name }}</option>
-            </select>
-          </div>
-  
-          <!-- Car Field (Unchangeable Select) -->
-          <div class="flex flex-col">
-            <label for="id_car" class="mb-2 text-sm font-bold">Car:</label>
-            <select name="car" id="id_car" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
-              <option value="{{ car.id }}" selected>{{ car.brand }}, {{ car.car_type }}, {{ car.model }}</option>
-            </select>
-          </div>
-  
-          <!-- Visit Date Field -->
-          <div class="flex flex-col">
-            <label for="id_visit_date" class="mb-2 text-sm font-bold">Visit Date:</label>
-            <input type="date" name="visit_date" id="id_visit_date" min="{{ today_date }}" value="{{ today_date }}" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <form id="bookingForm" method="POST" class="space-y-4" onsubmit="return addBookingEntry(event)">
+            
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            <!-- Showroom Field (Unchangeable Select) -->   
+            <div class="flex flex-col">
+                <label for="id_showroom" class="mb-2 text-sm font-bold">Showroom:</label>
+                <select name="showroom_id" id="id_showroom" class="p-3 rounded-md bg-gray-800 text-white" disabled>
+                    <option value="{{ car.showroom.id }}" selected>{{ car.showroom.showroom_name }}</option>
+                </select>
             </div>
-  
-          <!-- Visit Time Field -->
-          <div class="flex flex-col">
-            <label for="id_visit_time" class="mb-2 text-sm font-bold">Visit Time:</label>
-            <input type="time" name="visit_time" id="id_visit_time" class="p-3 rounded-md bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" value="12:00" required>
-          </div>
-  
-          <!-- Notes Field -->
-          <div class="flex flex-col">
-            <label for="id_notes" class="mb-2 text-sm font-bold">Notes:</label>
-            <textarea name="notes" id="id_notes" placeholder="Additional information (optional)" class="p-3 rounded-md bg-gray-800 text-white h-40 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-          </div>
-          
-          <!-- Cancel Button -->
-          <button id="cancel" class="w-full py-3 font-bold bg-red-600 hover:bg-red-700 rounded-md transition-colors">
-            Cancel Booking
-          </button>
 
-          <!-- Submit Button -->
-          <button id="submit" class="w-full py-3 font-bold bg-blue-600 hover:bg-blue-700 rounded-md transition-colors" onclick="addBookingEntry()">
-            Save Booking
-          </button>
+             <!-- Location Field (Unchangeable Select) -->
+            <div class="flex flex-col">
+                <label for="id_showroom" class="mb-2 text-sm font-bold">Showroom:</label>
+                <select name="location" id="id_showroom" class="p-3 rounded-md bg-gray-800 text-white" disabled>
+                    <option value="{{ car.showroom.showroom_location }}" selected>{{ car.showroom.showroom_location }}</option>
+                </select>
+            </div>
+        
+            <!-- Car Field (Unchangeable Select) -->
+            <div class="flex flex-col">
+                <label for="id_car" class="mb-2 text-sm font-bold">Car:</label>
+                <select name="car" id="id_car" class="p-3 rounded-md bg-gray-800 text-white" disabled>
+                    <option value="{{ car.id }}" selected>{{ car.brand }}, {{ car.car_type }}, {{ car.model }}</option>
+                </select>
+            </div>
+        
+            <!-- Visit Date Field -->
+            <div class="flex flex-col">
+                <label for="id_visit_date" class="mb-2 text-sm font-bold">Visit Date:</label>
+                <input type="date" name="visit_date" id="id_visit_date" min="{{ today_date }}" value="{{ today_date }}" class="p-3 rounded-md bg-gray-800 text-white" required>
+            </div>
+        
+            <!-- Visit Time Field -->
+            <div class="flex flex-col">
+                <label for="id_visit_time" class="mb-2 text-sm font-bold">Visit Time:</label>
+                <input type="time" name="visit_time" id="id_visit_time" class="p-3 rounded-md bg-gray-800 text-white" value="12:00" required>
+            </div>
+        
+            <!-- Notes Field -->
+            <div class="flex flex-col">
+                <label for="id_notes" class="mb-2 text-sm font-bold">Notes:</label>
+                <textarea name="notes" id="id_notes" placeholder="Additional information (optional)" class="p-3 rounded-md bg-gray-800 text-white h-40"></textarea>
+            </div>
+            
+            <!-- Cancel Button -->
+            <button id="cancel" type="button" class="w-full py-3 font-bold bg-red-600 hover:bg-red-700 rounded-md transition-colors">
+                Cancel Booking
+            </button>
+        
+            <!-- Submit Button -->
+            <button id="submit" type="submit" class="w-full py-3 font-bold bg-blue-600 hover:bg-blue-700 rounded-md transition-colors">
+                Save Booking
+            </button>
         </form>
       </div>
     </div>
@@ -350,7 +358,7 @@
 <script>
 $(document).ready(function() {
     var carId = $('#wishlist-btn').data('car-id');
-    var isAuthenticated = {{ user.is_authenticated|lower }}; 
+    var isAuthenticated = "{{ user.is_authenticated|lower }}"; 
 
     $('#wishlist-btn').click(function() {
         if (!isAuthenticated) {
@@ -418,25 +426,50 @@ $(document).ready(function() {
     });
 
     
-   function addBookingEntry() {
-        fetch("{% url 'bookshowroom:create_booking_ajax' %}", {
-            method: "POST",
-            body: new FormData(document.querySelector('#bookingForm')),
-        })
-        .then(response => {
-            if (response.ok) {
-            bookingFormContainer.style.display="none";
-            } else {
-            throw new Error('Error creating booking');
-            }
-        })
-        .catch(error => {
+    async function addBookingEntry(event) {
+    // Get the form element
+    const bookingForm = document.getElementById('bookingForm');
 
-        });
+    // Prepare your data as a URL-encoded string
+    const formDataString = new URLSearchParams(new FormData(bookingForm)).toString();
 
-     
-        return false;
+    fetch("{% url 'bookshowroom:create_booking_ajax' %}", {
+        method: "POST",
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'), // Include CSRF token for security
+            'Content-Type': 'text/html', // Set content type to HTML
+        },
+        body: formDataString, // Send form data as a URL-encoded string
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
         }
+        return response.text(); // Assuming the response is text
+    })
+    .then(data => {
+        console.log(data); // Handle the response data
+        // You can also update the UI here based on the response
+    })
+    .catch(error => {
+        console.error('Error:', error); // Handle any errors
+    });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
  
 
 </script>

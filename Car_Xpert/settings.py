@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'cars',
     'authentication', 
     'bookshowroom',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
