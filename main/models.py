@@ -7,6 +7,9 @@ class ShowRoom(models.Model):
     showroom_name = models.CharField(max_length=30)
     showroom_location = models.TextField()
     showroom_regency = models.CharField(max_length=30)
+    
+    def __str__(self):
+        return self.showroom_name
 
 
 class Car(models.Model):
