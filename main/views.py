@@ -11,6 +11,8 @@ from django.http import JsonResponse
 import json
 import os
 from django.conf import settings
+from django.http import HttpResponse
+from django.core import serializers
 
 def main_view(request):
     # Path ke file showrooms.json
@@ -58,6 +60,10 @@ def show_main(request):
         'user': request.user,
     }
     return render(request, 'main.html', context)
+
+def show_json(request):
+    data = Car.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 
 def landing_page(request):
