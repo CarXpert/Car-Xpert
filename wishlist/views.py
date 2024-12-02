@@ -1,10 +1,12 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from .models import Wishlist, Car
 from wishlist.forms import WishlistNoteForm
+from django.core import serializers
+
 
 @login_required(login_url='/auth/login/')
 def show_wishlist(request):
@@ -90,3 +92,7 @@ def edit_note(request, pk):
         form = WishlistNoteForm(instance=wishlist_item)  
     
     return render(request, 'wishlist/edit_note.html', {'form': form, 'wishlist_item': wishlist_item})
+
+def show_json(request):
+    data = Wishlist.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")

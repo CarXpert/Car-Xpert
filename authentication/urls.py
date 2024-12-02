@@ -7,4 +7,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('signup/', views.signup_view, name='signup'),
     path('logout/', views.logout_view, name='logout'),  # If you have a logout view
+    path('login_django/', views.login_django, name='login_django'),
+    path('register_django/', views.register_django, name='register_django'),
+    path('logout_djangp/', views.logout_django, name='logout_django'),
 ]
