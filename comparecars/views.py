@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.core import serializers
+from django.http import HttpResponse
+from .models import CompareCarUser
 
 @csrf_exempt
 
@@ -128,3 +131,14 @@ def edit_comparison_title(request, id):
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@login_required
+def list_comparisons_json(request):
+    try:
+        comparisons = CompareCarUser.objects.filter(user=request.user)
+        data = serializers.serialize("json", comparisons)
+
+        return HttpResponse(data, content_type="application/json")
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
