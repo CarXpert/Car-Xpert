@@ -92,7 +92,7 @@ def login_django(request):
             "status": False,
             "message": "Login gagal, periksa kembali email atau kata sandi."
         }, status=401)
-    
+
 @csrf_exempt
 def register_django(request):
     if request.method == 'POST':

@@ -8,4 +8,5 @@ urlpatterns = [
     path('list-comparisons/', views.list_comparisons, name='list_comparisons'),
     path('list-comparisons/json/', views.list_comparisons_json, name='list_comparisons_json'),
     path('compare/<int:id>/edit-comparison-title/', views.edit_comparison_title, name='edit_comparison_title'),
+    path('api/show-comparisons/', views.show_comparison_json, name='show_comparison_json'), 
 ]

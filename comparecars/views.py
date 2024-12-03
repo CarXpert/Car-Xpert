@@ -10,6 +10,8 @@ import json
 from django.core import serializers
 from django.http import HttpResponse
 from .models import CompareCarUser
+import logging
+from django.contrib.auth.models import AnonymousUser
 
 @csrf_exempt
 
@@ -133,12 +135,82 @@ def edit_comparison_title(request, id):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 @login_required
-def list_comparisons_json(request):
+def show_comparison_json(request):
     try:
+        # Ambil semua perbandingan milik pengguna yang sedang login
         comparisons = CompareCarUser.objects.filter(user=request.user)
-        data = serializers.serialize("json", comparisons)
-
-        return HttpResponse(data, content_type="application/json")
-
+        data = []
+        
+        for comparison in comparisons:
+            data.append({
+                'id': comparison.id,
+                'title': comparison.comparecar.title,
+                'date_added': comparison.comparecar.date_added,
+                'car1': {
+                    'id': comparison.comparecar.car1.id,
+                    'brand': comparison.comparecar.car1.brand,
+                    'model': comparison.comparecar.car1.model,
+                    'year': comparison.comparecar.car1.year,
+                    'fuel_type': comparison.comparecar.car1.fuel_type,
+                    'color': comparison.comparecar.car1.color,
+                    'price_cash': comparison.comparecar.car1.price_cash,
+                },
+                'car2': {
+                    'id': comparison.comparecar.car2.id,
+                    'brand': comparison.comparecar.car2.brand,
+                    'model': comparison.comparecar.car2.model,
+                    'year': comparison.comparecar.car2.year,
+                    'fuel_type': comparison.comparecar.car2.fuel_type,
+                    'color': comparison.comparecar.car2.color,
+                    'price_cash': comparison.comparecar.car2.price_cash,
+                },
+            })
+        
+        return JsonResponse(data, safe=False, status=200)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+
+
+logger = logging.getLogger(__name__)
+
+#@login_required
+def list_comparisons_json(request):
+    try:
+        # Validasi pengguna
+        if isinstance(request.user, AnonymousUser):
+            logger.error("User is not authenticated.")
+            return JsonResponse({'error': 'User is not authenticated'}, status=401)
+
+        # Ambil data dari database
+        comparisons = CompareCarUser.objects.filter(user=request.user)
+        logger.info(f"User: {request.user}, Comparisons Count: {comparisons.count()}")
+
+        res_data = []
+        for comparison in comparisons:
+            try:
+                comparecar = comparison.comparecar
+                logger.info(f"Processing comparison ID: {comparison.pk}")
+
+                car1_brand = comparecar.car1.brand if comparecar.car1 else "Unknown"
+                car1_model = comparecar.car1.model if comparecar.car1 else "Unknown"
+                car2_brand = comparecar.car2.brand if comparecar.car2 else "Unknown"
+                car2_model = comparecar.car2.model if comparecar.car2 else "Unknown"
+                date_added = comparecar.date_added.strftime('%Y-%m-%d %H:%M:%S') if comparecar.date_added else "Unknown"
+
+                res_data.append({
+                    'id': comparison.pk,
+                    'title': comparecar.title or 'Untitled Comparison',
+                    'car1': {'brand': car1_brand, 'model': car1_model},
+                    'car2': {'brand': car2_brand, 'model': car2_model},
+                    'date_added': date_added,
+                })
+
+            except Exception as e:
+                logger.error(f"Error processing comparison ID {comparison.pk}: {e}")
+
+        return JsonResponse(res_data, safe=False)
+
+    except Exception as e:
+        logger.error(f"Error in list_comparisons_json: {e}")
+        return JsonResponse({'error': 'Something went wrong while processing the request.'}, status=500)
