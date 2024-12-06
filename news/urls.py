@@ -14,4 +14,7 @@ urlpatterns = [
     path('xml/', views.show_xml, name='show_xml'),  # Semua artikel dalam XML
     path('<int:id>/json/', views.show_json_by_id, name='show_json_by_id'),  # Artikel berdasarkan ID dalam JSON
     path('<int:id>/xml/', views.show_xml_by_id, name='show_xml_by_id'),  # Artikel berdasarkan ID dalam XML
+    path('api/add/', views.add_article_api, name='add_article_api'),
+    path('api/<int:id>/edit/', views.edit_article_api, name='edit_article_api'),
+    path('api/<int:id>/delete/', views.delete_article_api, name='delete_article_api'),
 ]

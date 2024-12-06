@@ -7,6 +7,7 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+import json
 
 # Cek apakah user adalah admin
 def is_admin(user):
@@ -98,3 +99,34 @@ def delete_article_direct(request, id):
 def news_detail(request, id):
     article = get_object_or_404(NewsArticle, id=id)
     return render(request, 'news_detail.html', {'article': article})
+
+@csrf_exempt
+def add_article_api(request):
+    if request.method == "POST":
+        data = json.loads(request.body.decode('utf-8'))
+        form = NewsArticleForm(data)
+        if form.is_valid():
+            article = form.save()
+            return JsonResponse({"success": True, "id": article.id})
+        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+    return JsonResponse({"message": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def edit_article_api(request, id):
+    article = get_object_or_404(NewsArticle, id=id)
+    if request.method == "PUT":
+        data = json.loads(request.body.decode('utf-8'))
+        form = NewsArticleForm(data, instance=article)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"success": True})
+        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+    return JsonResponse({"message": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def delete_article_api(request, id):
+    article = get_object_or_404(NewsArticle, id=id)
+    if request.method == "DELETE":
+        article.delete()
+        return JsonResponse({"success": True})
+    return JsonResponse({"message": "Invalid request method"}, status=405)
