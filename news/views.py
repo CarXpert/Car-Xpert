@@ -103,12 +103,25 @@ def news_detail(request, id):
 @csrf_exempt
 def add_article_api(request):
     if request.method == "POST":
-        data = json.loads(request.body.decode('utf-8'))
-        form = NewsArticleForm(data)
-        if form.is_valid():
-            article = form.save()
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        category = request.POST.get('category')
+        content = request.POST.get('content')
+        image = request.FILES.get('image')  # Mendapatkan file gambar
+
+        if title and author and category and content:
+            article = NewsArticle(
+                title=title,
+                author=author,
+                category=category,
+                content=content,
+                image=image,  # Simpan gambar ke field 'image' (pastikan field ini ada di model)
+            )
+            article.save()
             return JsonResponse({"success": True, "id": article.id})
-        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+        else:
+            return JsonResponse({"success": False, "errors": "Missing fields"}, status=400)
+
     return JsonResponse({"message": "Invalid request method"}, status=405)
 
 @csrf_exempt
