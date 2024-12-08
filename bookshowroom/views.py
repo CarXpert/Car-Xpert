@@ -326,3 +326,56 @@ def edit_booking(request):
         'status': booking.status,
         'notes': booking.notes,
     }})
+
+
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.http import JsonResponse
+
+@login_required(login_url='/auth/login/')
+@csrf_exempt
+def create_mood_flutter(request):
+    if request.method == 'POST':
+
+        showroom_id = request.POST.get("showroom_id")
+        car_id = request.POST.get("car_id")
+        visit_date = request.POST.get("visit_date")
+        visit_time = request.POST.get("visit_time")
+        notes = strip_tags(request.POST.get("notes", "")) 
+        user = request.user
+
+        try:
+            showroom = ShowRoom.objects.get(id=showroom_id)
+        except ShowRoom.DoesNotExist:
+            return JsonResponse({"error": "Showroom not found"}, status=404)
+
+        car = None
+        if car_id:
+            try:
+                car = Car.objects.get(id=car_id)
+            except Car.DoesNotExist:
+                return JsonResponse({"error": "Car not found"}, status=404)
+
+        try:
+            visit_date = datetime.strptime(visit_date, "%Y-%m-%d").date()
+            visit_time = datetime.strptime(visit_time, "%H:%M").time()
+        except ValueError:
+            return JsonResponse({"error": "Invalid date or time format"}, status=400)
+
+        new_booking = Booking(
+            user=user,
+            showroom=showroom,
+            car=car,
+            visit_date=visit_date,
+            visit_time=visit_time,
+            notes=notes,
+        )
+        new_booking.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+    
+def show_booking_object(request):
+    data = Booking.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
