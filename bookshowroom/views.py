@@ -332,16 +332,19 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import JsonResponse
 
+@require_POST
 @login_required(login_url='/auth/login/')
 @csrf_exempt
-def create_mood_flutter(request):
+def create_booking_flutter(request):
     if request.method == 'POST':
 
-        showroom_id = request.POST.get("showroom_id")
-        car_id = request.POST.get("car_id")
-        visit_date = request.POST.get("visit_date")
-        visit_time = request.POST.get("visit_time")
-        notes = strip_tags(request.POST.get("notes", "")) 
+        data = json.loads(request.body)
+
+        showroom_id = data.get("showroom_id")
+        car_id = data.get("car_id")
+        visit_date = data.get("visit_date")
+        visit_time = data.get("visit_time")
+        notes = strip_tags(data.get("notes", "")) 
         user = request.user
 
         try:
@@ -358,7 +361,7 @@ def create_mood_flutter(request):
 
         try:
             visit_date = datetime.strptime(visit_date, "%Y-%m-%d").date()
-            visit_time = datetime.strptime(visit_time, "%H:%M").time()
+            visit_time = datetime.strptime(visit_time, "%I:%M %p").time()
         except ValueError:
             return JsonResponse({"error": "Invalid date or time format"}, status=400)
 
@@ -375,6 +378,7 @@ def create_mood_flutter(request):
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
+
     
 def show_booking_object(request):
     data = Booking.objects.filter(user=request.user)
