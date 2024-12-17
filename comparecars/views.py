@@ -13,23 +13,44 @@ from .models import CompareCarUser
 import logging
 from django.contrib.auth.models import AnonymousUser
 
-@csrf_exempt
+from urllib.parse import parse_qs
 
+@csrf_exempt
 def compare_cars(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
+            print(f"HTTP Method: {request.method}, Path: {request.path}")
+            print(f"User: {request.user}, Authenticated: {request.user.is_authenticated}")
+            print(request.body)
+
+            if request.content_type == 'application/x-www-form-urlencoded':
+                parsed_body = parse_qs(request.body.decode('utf-8'))
+                print(f"Parsed Body: {parsed_body}")
+
+                data = {key: values[0] for key, values in parsed_body.items()}
+            else:
+                # Jika JSON, langsung load
+                data = json.loads(request.body)
+
+            print(f"Final Data: {data}")
+
             car_one_id = data.get('car_one_id')
             car_two_id = data.get('car_two_id')
+            print(car_one_id)
+            print(car_two_id)
 
             car_one = get_object_or_404(Car, id=car_one_id)
             car_two = get_object_or_404(Car, id=car_two_id)
+            print(car_one)
+            print(car_two)
+
             comparecar = CompareCar.objects.create(car1=car_one, car2=car_two)
             CompareCarUser.objects.create(comparecar=comparecar, user=request.user)
 
             return JsonResponse({'message': 'Comparison created successfully'}, status=201)
 
         except Exception as e:
+            print(str(e))
             return JsonResponse({'error': str(e)}, status=400)
 
     elif request.method == 'GET':
@@ -40,48 +61,35 @@ def compare_cars(request):
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
 
+
 @login_required
 @csrf_exempt
 def compare_cars_with_id(request, id):
     comparison = get_object_or_404(CompareCarUser, id=id, user=request.user)
 
-    if request.method == 'GET':
-        return render(request, 'view_compare.html', {
-            'car1': comparison.comparecar.car1,
-            'car2': comparison.comparecar.car2
-        })
-
-    elif request.method == 'DELETE':
-        comparison.comparecar.delete()
-        return JsonResponse({'message': 'Comparison deleted successfully'}, status=204)
-
-    elif request.method == 'PUT':
+    if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            title = data.get('title', None)
-            if title is not None:
-                comparison.comparecar.title = title
-                comparison.comparecar.save()
-                return JsonResponse({'message': 'Comparison title updated successfully'}, status=200)
+            method = data.get('method')
 
-            car_one_id = data.get('car_one_id')
-            car_two_id = data.get('car_two_id')
+            # Handle DELETE emulasi
+            if method == 'DELETE':
+                comparison.comparecar.delete()
+                return JsonResponse({'message': 'Comparison deleted successfully'}, status=200)
 
-            car_one = get_object_or_404(Car, id=car_one_id)
-            car_two = get_object_or_404(Car, id=car_two_id)
-
-            comparison.comparecar.car1 = car_one
-            comparison.comparecar.car2 = car_two
-            comparison.comparecar.save()
-
-            return JsonResponse({'message': 'Comparison updated successfully'}, status=200)
+            # Handle PUT emulasi
+            elif method == 'PUT':
+                new_title = data.get('title')
+                if new_title:
+                    comparison.comparecar.title = new_title
+                    comparison.comparecar.save()
+                    return JsonResponse({'message': 'Comparison title updated successfully'}, status=200)
+                return JsonResponse({'error': 'No title provided'}, status=400)
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
-    else:
-        return HttpResponseNotAllowed(['GET', 'DELETE', 'PUT'])
-    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 def get_cars(request):
     try:
@@ -177,6 +185,16 @@ logger = logging.getLogger(__name__)
 #@login_required
 def list_comparisons_json(request):
     try:
+        sort_order = request.GET.get('sort', 'newest')
+        print(f"Sorting by: {sort_order}")  
+
+        comparisons = CompareCarUser.objects.filter(user=request.user)
+
+        if sort_order == 'newest':
+            comparisons = comparisons.order_by('-comparecar__date_added')
+        elif sort_order == 'oldest':
+            comparisons = comparisons.order_by('comparecar__date_added')
+
         # Validasi pengguna
         if isinstance(request.user, AnonymousUser):
             logger.error("User is not authenticated.")
