@@ -2,6 +2,8 @@
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+
+from bookshowroom.views import get_showrooms
 from . import views
 
 app_name = 'main'
@@ -16,4 +18,5 @@ urlpatterns = [
     path('get_cars_filtered/<str:query>/', views.get_cars_filtered, name="get_cars_filtered"),
     path('main/delete_car/<uuid:car_id>/', views.delete_car, name='delete_car'),
     path('main/json/', views.show_json, name='show_json'),
+    path('get-showrooms/', get_showrooms, name='get_showrooms')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # Menambahkan static URL

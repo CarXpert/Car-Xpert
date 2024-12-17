@@ -13,6 +13,7 @@ import os
 from django.conf import settings
 from django.http import HttpResponse
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
 
 def main_view(request):
     # Path ke file showrooms.json
@@ -81,7 +82,8 @@ def car_detail(request, car_id):
     return render(request, 'car_detail.html', context)
 
 # Ensure only staff members (admins) can access this view
-@user_passes_test(lambda u: u.is_staff)
+
+@csrf_exempt
 def edit_car_view(request, car_id):
     # Fetch the car instance or return a 404 if not found
     car = get_object_or_404(Car, id=car_id)
@@ -99,7 +101,7 @@ def edit_car_view(request, car_id):
     return render(request, 'edit_car.html', {'form': form, 'car': car})
 
 @login_required
-@login_required
+@csrf_exempt
 def add_car(request):
     if request.method == 'POST' and request.user.is_staff:
         form = AddCarForm(request.POST)
@@ -197,3 +199,4 @@ def delete_car(request, car_id):
         except Car.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Car not found'})
     return JsonResponse({'success': False, 'error': 'Unauthorized or invalid request'})
+
