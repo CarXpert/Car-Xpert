@@ -74,19 +74,19 @@ def login_django(request):
     if user is not None:
         if user.is_active:
             auth_login(request, user)
-            # Status login sukses.
+            # Cek apakah user adalah admin
+            is_admin = user.is_superuser or user.is_staff
             return JsonResponse({
                 "username": user.username,
                 "status": True,
-                "message": "Login sukses!"
-                # Tambahkan data lainnya jika ingin mengirim data ke Flutter.
+                "message": "Login sukses!",
+                "is_admin": is_admin  # Tambahkan informasi admin
             }, status=200)
         else:
             return JsonResponse({
                 "status": False,
                 "message": "Login gagal, akun dinonaktifkan."
             }, status=401)
-
     else:
         return JsonResponse({
             "status": False,
