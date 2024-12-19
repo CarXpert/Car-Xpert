@@ -106,7 +106,9 @@ def get_cars(request):
                 'price_cash': car.price_cash,
             })
         return JsonResponse(car_list, safe=False)
+    
     except Exception as e:
+        print(f"Error: {e}")
         return JsonResponse({'error': str(e)}, status=500)
 
 @login_required(login_url='/auth/login/')
@@ -232,3 +234,4 @@ def list_comparisons_json(request):
     except Exception as e:
         logger.error(f"Error in list_comparisons_json: {e}")
         return JsonResponse({'error': 'Something went wrong while processing the request.'}, status=500)
+
