@@ -13,6 +13,7 @@ import os
 from django.conf import settings
 from django.http import HttpResponse
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
 
 def main_view(request):
     # Path ke file showrooms.json
@@ -81,7 +82,8 @@ def car_detail(request, car_id):
     return render(request, 'car_detail.html', context)
 
 # Ensure only staff members (admins) can access this view
-@user_passes_test(lambda u: u.is_staff)
+
+@csrf_exempt
 def edit_car_view(request, car_id):
     # Fetch the car instance or return a 404 if not found
     car = get_object_or_404(Car, id=car_id)
@@ -98,7 +100,11 @@ def edit_car_view(request, car_id):
 
     return render(request, 'edit_car.html', {'form': form, 'car': car})
 
-@login_required
+import logging
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
 @login_required
 def add_car(request):
     if request.method == 'POST' and request.user.is_staff:
@@ -125,9 +131,16 @@ def add_car(request):
             car.created_at = timezone.now()
             car.updated_at = timezone.now()
             car.save()
+            logger.info(f"Mobil dengan ID {car.id} berhasil ditambahkan.")
             return JsonResponse({'success': True})
+        else:
+            # Log form errors
+            logger.error(f"Form tidak valid: {form.errors}")
+            # Return form errors for debugging
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+    logger.warning(f"Permintaan tidak diizinkan dari user {request.user.username}.")
+    return JsonResponse({'success': False, 'error': 'Unauthorized or invalid request'}, status=403)
 
-    return JsonResponse({'success': False})
 from django.http import JsonResponse
 from django.db.models import Q
 
@@ -197,3 +210,21 @@ def delete_car(request, car_id):
         except Car.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Car not found'})
     return JsonResponse({'success': False, 'error': 'Unauthorized or invalid request'})
+
+def showrooms_data(request):
+    # Mengambil semua data dari model ShowRoom
+    showrooms = ShowRoom.objects.all()
+
+    # Menyusun data menjadi list of dictionaries
+    data = [
+        {
+            "id": str(showroom.id),
+            "showroom_name": showroom.showroom_name,
+            "showroom_location": showroom.showroom_location,
+            "showroom_regency": showroom.showroom_regency
+        }
+        for showroom in showrooms
+    ]
+
+    # Return response dalam format JSON
+    return JsonResponse({"showrooms": data}, safe=False)
