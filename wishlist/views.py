@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
@@ -6,7 +7,6 @@ from django.views.decorators.http import require_POST
 from .models import Wishlist, Car
 from wishlist.forms import WishlistNoteForm
 from django.core import serializers
-
 
 @login_required(login_url='/auth/login/')
 def show_wishlist(request):
@@ -18,11 +18,9 @@ def show_wishlist(request):
     else:
         wishlist_items = wishlist_items.order_by('created_at')
 
-    # Fetching the related Car objects for each wishlist item
     car_ids = wishlist_items.values_list('car', flat=True)
     car_objects = Car.objects.filter(id__in=car_ids)
 
-    # Creating a list of dictionaries with both Wishlist and Car data
     wishlist_with_cars = []
     for item in wishlist_items:
         car = item.car
@@ -32,7 +30,7 @@ def show_wishlist(request):
         })
 
     context = {
-        'wishlist_items': wishlist_with_cars,  # List of dictionaries with both wishlist and car objects
+        'wishlist_items': wishlist_with_cars,  
         'sort_order': sort_order,
     }
 
@@ -62,9 +60,7 @@ def remove_from_wishlist(request):
         car_id = request.POST.get('car_id')
         user = request.user
         try:
-            print(f"Trying to find Wishlist item for user: {user}, car_id: {car_id}")
             wishlist_item = Wishlist.objects.get(user=user, car__id=car_id)
-            print(f"Found Wishlist item: {wishlist_item}")
             wishlist_item.delete()
             return JsonResponse({'status': 'success', 'message': 'Item removed from wishlist.'}, status=200)
         except Wishlist.DoesNotExist:
@@ -77,8 +73,6 @@ def get_wishlist(request):
     user = request.user
     wishlist_items = Wishlist.objects.filter(user=user)
     return JsonResponse({'wishlist': list(wishlist_items.values())})
-
-from wishlist.forms import WishlistNoteForm
 
 def check_wishlist(request):
     car_id = request.GET.get('car_id')
@@ -97,22 +91,22 @@ def check_wishlist(request):
         'note': note  
     })
 
-@login_required(login_url='/auth/login/')
+@csrf_exempt
 def edit_note(request, pk):
     wishlist_item = get_object_or_404(Wishlist, pk=pk, user=request.user)
-    
     if request.method == 'POST':
         form = WishlistNoteForm(request.POST, instance=wishlist_item)
         if form.is_valid():
-            form.save() 
+            form.save()
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'success', 'message': 'Note updated successfully.'}, status=200)
             return redirect('wishlist:wishlist_view')  
+        else:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Form validation failed.', 'errors': form.errors}, status=400)
     else:
-        form = WishlistNoteForm(instance=wishlist_item)  
-    
+        form = WishlistNoteForm(instance=wishlist_item)
     return render(request, 'wishlist/edit_note.html', {'form': form, 'wishlist_item': wishlist_item})
-
-from django.http import JsonResponse
-from .models import Wishlist
 
 def show_json(request):
     wishlist_items = Wishlist.objects.filter(user=request.user).select_related('car__showroom')
@@ -130,7 +124,19 @@ def show_json(request):
             'created_at': item.created_at.isoformat(),
         })
 
-    # Return the custom data as JSON
     return JsonResponse(data, safe=False)
 
-    
+@csrf_exempt
+def edit_note_api(request):
+    if request.method == 'POST':
+        car_id = request.POST.get('car_id')
+        new_note = request.POST.get('note', '')
+        user = request.user
+        try:
+            wishlist_item = Wishlist.objects.get(user=user, car__id=car_id)
+            wishlist_item.notes = new_note
+            wishlist_item.save()
+            return JsonResponse({'status': 'success', 'message': 'Note updated successfully.'}, status=200)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    return JsonResponse({'status': 'bad request', 'message': 'Invalid request method.'}, status=400)
