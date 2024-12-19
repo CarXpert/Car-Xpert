@@ -18,3 +18,4 @@ urlpatterns = [
     path('api/<int:id>/edit/', views.edit_article_api, name='edit_article_api'),
     path('api/<int:id>/delete/', views.delete_article_api, name='delete_article_api'),
 ]
+

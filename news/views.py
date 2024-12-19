@@ -103,13 +103,36 @@ def news_detail(request, id):
 @csrf_exempt
 def add_article_api(request):
     if request.method == "POST":
-        data = json.loads(request.body.decode('utf-8'))
-        form = NewsArticleForm(data)
+        if 'image' in request.FILES:
+            image = request.FILES['image']
+            if not image.name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+                return JsonResponse({
+                    "success": False,
+                    "errors": {
+                        "image": ["Invalid image format. Please use PNG, JPG, JPEG, or GIF."]
+                    }
+                }, status=400)
+       
+        form = NewsArticleForm(request.POST, request.FILES)
         if form.is_valid():
             article = form.save()
-            return JsonResponse({"success": True, "id": article.id})
-        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+            image_url = None
+            if article.image:
+                image_url = f"http://127.0.0.1:8000/{article.image.url}"
+           
+            return JsonResponse({
+                "success": True,
+                "id": article.id,
+                "image_url": image_url,  # Changed from image_name to image_url
+                "message": "Article successfully created"
+            })
+        else:
+            return JsonResponse({
+                "success": False,
+                "errors": dict(form.errors)
+            }, status=400)
     return JsonResponse({"message": "Invalid request method"}, status=405)
+
 
 @csrf_exempt
 def edit_article_api(request, id):

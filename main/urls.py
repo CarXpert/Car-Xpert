@@ -18,4 +18,8 @@ urlpatterns = [
     path('main/delete_car/<uuid:car_id>/', views.delete_car, name='delete_car'),
     path('main/json/', views.show_json, name='show_json'),
     path('showrooms_data/', views.showrooms_data, name='showrooms_data')
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # Menambahkan static URL
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
