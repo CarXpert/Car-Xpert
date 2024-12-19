@@ -137,13 +137,36 @@ def add_article_api(request):
 @csrf_exempt
 def edit_article_api(request, id):
     article = get_object_or_404(NewsArticle, id=id)
-    if request.method == "PUT":
-        data = json.loads(request.body.decode('utf-8'))
-        form = NewsArticleForm(data, instance=article)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({"success": True})
-        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+    
+    if request.method == "POST":  # Gunakan POST untuk multipart/form-data
+        try:
+            # Handle form data dan file
+            form = NewsArticleForm(request.POST, request.FILES, instance=article)
+            
+            if form.is_valid():
+                article = form.save()
+                
+                # Siapkan URL gambar jika ada gambar baru
+                image_url = None
+                if article.image:
+                    image_url = article.image.url
+                
+                return JsonResponse({
+                    "success": True,
+                    "image_url": image_url
+                })
+            
+            return JsonResponse({
+                "success": False, 
+                "errors": form.errors
+            }, status=400)
+            
+        except Exception as e:
+            return JsonResponse({
+                "success": False,
+                "errors": str(e)
+            }, status=500)
+    
     return JsonResponse({"message": "Invalid request method"}, status=405)
 
 @csrf_exempt
