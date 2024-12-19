@@ -165,7 +165,7 @@
                 <div class="card-content">
                     <h3>{{ item.car.brand }} - {{ item.car.car_type|title }}</h3>
                     <p class="showroom-name">{{ item.car.showroom.showroom_name|title }}</p>
-                    <p class="wishlist-note">{{ item.notes|default:"No notes yet" }}</p>
+                    <p class="wishlist-note">{{ item.wishlist_item.notes|default:"No notes yet" }}</p>
                 </div>
                 <div class="action-buttons">
                     <div class="tooltip">
@@ -175,7 +175,7 @@
                         <span class="tooltiptext">Remove from Wishlist</span>
                     </div>
                     <div class="tooltip">
-                        <a href="{% url 'wishlist:edit_note' item.id %}" class="edit-note-icon">
+                        <a href="{% url 'wishlist:edit_note' item.wishlist_item.id %}" class="edit-note-icon">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
                         <span class="tooltiptext">Add or Edit Note</span>

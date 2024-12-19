@@ -24,6 +24,9 @@ CSRF_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SAMESITE = 'None'
 CSRF_TRUSTED_ORIGINS = ['http://localhost','http://127.0.0.1']
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:57078",  # Add your frontend URL here
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -55,6 +58,8 @@ INSTALLED_APPS = [
     'cars',
     'authentication', 
     'bookshowroom',
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [

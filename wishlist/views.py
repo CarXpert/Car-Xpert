@@ -12,17 +12,33 @@ from django.core import serializers
 def show_wishlist(request):
     sort_order = request.GET.get('sort', 'newest')
     wishlist_items = Wishlist.objects.filter(user=request.user)
+    
     if sort_order == 'newest':
-        wishlist_items = Wishlist.objects.filter(user=request.user).order_by('-created_at')
+        wishlist_items = wishlist_items.order_by('-created_at')
     else:
-        wishlist_items = Wishlist.objects.filter(user=request.user).order_by('created_at')
+        wishlist_items = wishlist_items.order_by('created_at')
+
+    # Fetching the related Car objects for each wishlist item
+    car_ids = wishlist_items.values_list('car', flat=True)
+    car_objects = Car.objects.filter(id__in=car_ids)
+
+    # Creating a list of dictionaries with both Wishlist and Car data
+    wishlist_with_cars = []
+    for item in wishlist_items:
+        car = item.car
+        wishlist_with_cars.append({
+            'wishlist_item': item,
+            'car': car
+        })
+
     context = {
-        'wishlist_items': wishlist_items,
+        'wishlist_items': wishlist_with_cars,  # List of dictionaries with both wishlist and car objects
         'sort_order': sort_order,
     }
+
     return render(request, 'wishlist/wishlist_page.html', context)
 
-@login_required(login_url='/auth/login/')
+@csrf_exempt
 def add_remove_wishlist(request):
     if request.method == 'POST':
         car_id = request.POST.get('car_id')
@@ -40,13 +56,15 @@ def add_remove_wishlist(request):
             return JsonResponse({'error': 'Car not found'}, status=404)
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-@login_required(login_url='/auth/login/')
+@csrf_exempt
 def remove_from_wishlist(request):
     if request.method == 'POST':
         car_id = request.POST.get('car_id')
         user = request.user
         try:
+            print(f"Trying to find Wishlist item for user: {user}, car_id: {car_id}")
             wishlist_item = Wishlist.objects.get(user=user, car__id=car_id)
+            print(f"Found Wishlist item: {wishlist_item}")
             wishlist_item.delete()
             return JsonResponse({'status': 'success', 'message': 'Item removed from wishlist.'}, status=200)
         except Wishlist.DoesNotExist:
@@ -93,6 +111,26 @@ def edit_note(request, pk):
     
     return render(request, 'wishlist/edit_note.html', {'form': form, 'wishlist_item': wishlist_item})
 
+from django.http import JsonResponse
+from .models import Wishlist
+
 def show_json(request):
-    data = Wishlist.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    wishlist_items = Wishlist.objects.filter(user=request.user).select_related('car__showroom')
+    data = []
+    for item in wishlist_items:
+        data.append({
+            'pk': item.pk,
+            'car': {
+                'carId': item.car.pk,
+                'brand': item.car.brand,
+                'car_type': item.car.car_type.capitalize(),
+                'showroom': item.car.showroom.showroom_name.capitalize()  
+            },
+            'notes': item.notes,
+            'created_at': item.created_at.isoformat(),
+        })
+
+    # Return the custom data as JSON
+    return JsonResponse(data, safe=False)
+
+    
