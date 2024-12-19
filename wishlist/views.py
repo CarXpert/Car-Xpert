@@ -140,3 +140,52 @@ def edit_note_api(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     return JsonResponse({'status': 'bad request', 'message': 'Invalid request method.'}, status=400)
+
+@csrf_exempt
+def toggle_wishlist(request):
+    if request.method == 'POST':
+        car_id = request.POST.get('car_id')
+        user = request.user
+        
+        try:
+            car = Car.objects.get(id=car_id)
+            wishlist_item, created = Wishlist.objects.get_or_create(user=user, car=car)
+            
+            if created:  # Item berhasil ditambahkan
+                in_wishlist = True
+            else:  # Item sudah ada, maka dihapus
+                wishlist_item.delete()
+                in_wishlist = False
+
+            return JsonResponse({
+                'in_wishlist': in_wishlist,
+                'message': 'Wishlist updated successfully.',
+                'status' : 'success'
+            })
+
+        except Car.DoesNotExist:
+            return JsonResponse({'error': 'Car not found'}, status=404)
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@csrf_exempt
+def check_wishlist_status(request):
+    if request.method == 'POST':
+        car_id = request.POST.get('car_id')  # Mendapatkan car_id dari request
+        user = request.user  # Mengambil pengguna yang sedang login
+
+        try:
+            car = Car.objects.get(id=car_id)  # Mencari mobil berdasarkan ID
+        except Car.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Car not found'}, status=404)
+
+        # Cek apakah mobil sudah ada di wishlist
+        wishlist_item = Wishlist.objects.filter(user=user, car=car).exists()
+
+        return JsonResponse({
+            'status': 'success',
+            'in_wishlist': wishlist_item,
+            'message': 'Car is in wishlist' if wishlist_item else 'Car is not in wishlist'
+        })
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)

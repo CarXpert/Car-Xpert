@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import show_wishlist, add_remove_wishlist, remove_from_wishlist, check_wishlist, edit_note, show_json, edit_note_api
+from .views import show_wishlist, add_remove_wishlist, remove_from_wishlist, check_wishlist, edit_note, show_json, edit_note_api, toggle_wishlist, check_wishlist_status
 
 app_name = 'wishlist' 
 
@@ -11,5 +11,6 @@ urlpatterns = [
     path('edit-note/<int:pk>/', edit_note, name='edit_note'),  
     path('json/', show_json, name='show_json'),
     path('edit-note-api/', edit_note_api, name='edit_note_api'),
-
+    path('toggle/', toggle_wishlist, name='toggle_wishlist'),
+    path('check/', check_wishlist_status, name='check_status'),
 ]
