@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import authenticate, login as auth_login
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import logout as auth_logout
+import json
 
 def login_view(request):
     if request.method == 'POST':
@@ -58,13 +63,6 @@ def logout_view(request):
     logout(request)
     # Redirect to the login page after logging out
     return redirect('authentication:login')
-
-from django.contrib.auth import authenticate, login as auth_login
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
-from django.contrib.auth import logout as auth_logout
-import json
 
 @csrf_exempt
 def login_django(request):
@@ -139,11 +137,11 @@ def logout_django(request):
         auth_logout(request)
         return JsonResponse({
             "username": username,
-            "status": True,
+            "status": "success",
             "message": "Logout berhasil!"
         }, status=200)
-    except:
+    except Exception as e:
         return JsonResponse({
-        "status": False,
-        "message": "Logout gagal."
-        }, status=401)
+            "status": "error",
+            "message": f"Logout gagal. {str(e)}"
+        }, status=500)
