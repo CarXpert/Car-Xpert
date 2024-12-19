@@ -201,15 +201,24 @@ def get_cars_filtered(request, query):
     return JsonResponse({"cars": cars_data, "query": query}, safe=False)
 
 @login_required
+@csrf_exempt
 def delete_car(request, car_id):
-    if request.method == 'DELETE' and request.user.is_staff:
+    try:
+        data = json.loads(request.body)
+        method = data.get('method', '').upper()
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+
+    if method == 'DELETE':
         try:
             car = Car.objects.get(id=car_id)
             car.delete()
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'message': 'Mobil berhasil dihapus.'})
         except Car.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Car not found'})
-    return JsonResponse({'success': False, 'error': 'Unauthorized or invalid request'})
+            return JsonResponse({'success': False, 'error': 'Mobil tidak ditemukan.'}, status=404)
+    else:
+        return JsonResponse({'success': False, 'error': 'Permintaan tidak diizinkan atau metode tidak didukung.'}, status=403)
+
 
 def showrooms_data(request):
     # Mengambil semua data dari model ShowRoom
