@@ -383,3 +383,67 @@ def create_booking_flutter(request):
 def show_booking_object(request):
     data = Booking.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+from django.shortcuts import get_object_or_404
+@csrf_exempt
+def delete_booking_flutter(request, booking_id_str):
+    try:
+        booking_id = uuid.UUID(booking_id_str)
+    except ValueError:
+        return JsonResponse({'error': 'Invalid showroom ID format.'}, status=400)
+    
+
+    booking = get_object_or_404(Booking, id=booking_id)
+    if booking != None:
+        booking.delete()
+        return JsonResponse({'success': True, 'message': 'Booking deleted successfully.'}, status=204)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
+
+
+@login_required(login_url='/auth/login/')
+@csrf_exempt
+def edit_booking_flutter(request):
+    data = json.loads(request.body)
+    booking_id_str = data.get('booking_id')
+    try:
+        booking_id = uuid.UUID(booking_id_str)
+    except ValueError:
+        return JsonResponse({'error': 'Invalid showroom ID format.'}, status=400)
+    
+    booking = get_object_or_404(Booking, id=booking_id)
+    
+    if request.method == 'POST':
+        showroom_id = data.get("showroom_id")
+        car_id = data.get("car_id")
+        visit_date = data.get('visit_date')
+        visit_time = data.get('visit_time')
+        visit_date = datetime.strptime(visit_date, "%Y-%m-%d").date()
+        visit_time = datetime.strptime(visit_time, "%I:%M %p").time()
+        notes = data.get('notes')
+
+        errors = {}
+        if not visit_date:  
+            errors['visit_date'] = 'This field is required.'
+        if not visit_time:
+            errors['visit_time'] = 'This field is required.'
+        
+        if errors:
+            return JsonResponse({'success': False, 'errors': errors})
+        
+        booking.car = Car.objects.get(id=car_id)
+        booking.showroom = ShowRoom.objects.get(id=showroom_id)
+        booking.visit_date = visit_date
+        booking.visit_time = visit_time
+        booking.notes = notes
+        booking.save()
+
+        return JsonResponse({'success': True, 'message': 'Booking updated successfully!'})
+
+ 
+    return JsonResponse({'form': {
+        'visit_date': booking.visit_date,
+        'visit_time': booking.visit_time,
+        'status': booking.status,
+        'notes': booking.notes,
+    }})
