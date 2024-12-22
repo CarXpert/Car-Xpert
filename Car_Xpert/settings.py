@@ -25,7 +25,7 @@ SESSION_COOKIE_SAMESITE = 'None'
 CSRF_TRUSTED_ORIGINS = ['https://khoirul-azmi-carxpert.pbp.cs.ui.ac.id','http://localhost','http://127.0.0.1']
 
 CORS_ALLOWED_ORIGINS = [
-    'khoirul-azmi-carxpert.pbp.cs.ui.ac.id',"http://localhost:57078",  # Add your frontend URL here
+     'https://khoirul-azmi-carxpert.pbp.cs.ui.ac.id',"http://localhost:57078",  # Add your frontend URL here
 ]
 
 # Quick-start development settings - unsuitable for production
